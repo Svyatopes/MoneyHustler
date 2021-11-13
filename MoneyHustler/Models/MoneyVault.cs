@@ -45,8 +45,8 @@ namespace MoneyHustler.Models
                 throw new ArgumentException("You can't transfer more money than you already have on this vault.");
             }
 
-            DecreaseBalance(new Expense(amount, date, default(Person), comment, vault,expenseType));
-            vault.IncreaseBalance(new Income(amount, date, default(Person), comment, vault,incomeType));
+            DecreaseBalance(new Expense(amount, date, default(Person), comment, vault, expenseType));
+            vault.IncreaseBalance(new Income(amount, date, default(Person), comment, this, incomeType));
         }
     }
 }
