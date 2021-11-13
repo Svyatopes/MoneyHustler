@@ -38,6 +38,8 @@ namespace MoneyHustler.Models
             Expenses.Add(expense);
         }
 
+        //TODO: change default(Person) to some instance of Person
+        //TODO: maybe need change expenseType and incomeType to some user specific instance
         public void TransferMoney(MoneyVault vault, decimal amount, DateTime date, string comment, ExpenseType expenseType, IncomeType incomeType)
         {
             if (amount > _balance)
