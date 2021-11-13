@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MoneyHustler
+namespace MoneyHustler.Models
 {
     public class Income: AbstractMoneyTraffic //наследует свойства класса AbstractMoneyTraffic
     {
