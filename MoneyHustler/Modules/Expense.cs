@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoneyHustler
 {
-    class Expense : AbstractMoneyTraffic //наследует свойства класса AbstractMoneyTraffic
+    public class Expense : AbstractMoneyTraffic //наследует свойства класса AbstractMoneyTraffic
     {
         public ExpenseType Type { get; set; } // делегирует класс категории расхода
 

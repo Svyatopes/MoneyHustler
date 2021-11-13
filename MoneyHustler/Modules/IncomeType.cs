@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoneyHustler
 {
-    class IncomeType //класс категории дохода
+    public class IncomeType //класс категории дохода
     {
         public string Name { get; set; } //название категории
     }

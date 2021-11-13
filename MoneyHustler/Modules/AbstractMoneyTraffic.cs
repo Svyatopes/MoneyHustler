@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoneyHustler
 {
-    abstract class AbstractMoneyTraffic //абстрактный класс с информацией о финансовом обороте
+    public abstract class AbstractMoneyTraffic //абстрактный класс с информацией о финансовом обороте
     {
         public decimal Amount { get; set; } //сумма
         public DateTime Date { get; set; } //дата

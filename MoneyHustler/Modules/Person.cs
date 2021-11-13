@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoneyHustler
 {
-    class Person //класс члена семьи
+    public class Person //класс члена семьи
     {
         public string Name { get; set; } //имя члена
     }
