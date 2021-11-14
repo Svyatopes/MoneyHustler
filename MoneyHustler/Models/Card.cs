@@ -33,12 +33,9 @@ namespace MoneyHustler.Models
         {
             IncomeType incomeTypeCashBack = new IncomeType();
             incomeTypeCashBack.Name = "CashBack";
-            Income income = new Income(expense.Amount * CashBack / 100, expense.Date, expense.Person, expense.Comment, expense.Vault, incomeTypeCashBack); //Создаем новый доход который является кэшбеком
-            _balance += expense.Amount*CashBack/100;
-            income.Vault = this;
-            Incomes.Add(income);// Докидываем в лист доходов доход с кэшбека
-            
+            Income incomeCashback = new Income(expense.Amount * CashBack / 100, expense.Date, expense.Person, expense.Comment, expense.Vault, incomeTypeCashBack); //Создаем новый доход который является кэшбеком изходя из expense
+            IncreaseBalance(incomeCashback);
         }
-        
+
     }
 }
