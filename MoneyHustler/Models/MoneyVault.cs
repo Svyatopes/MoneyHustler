@@ -10,8 +10,8 @@ namespace MoneyHustler.Models
     public abstract class MoneyVault
     {
         public string Name { get; set; }
-        public ReadOnlyCollection<Income> Incomes { get; set; }
-        public ReadOnlyCollection<Expense> Expenses { get; set; }
+        public ReadOnlyCollection<Income> Incomes { get; private set; }
+        public ReadOnlyCollection<Expense> Expenses { get; private set; }
 
         private List<Income> _incomes;
         private List<Expense> _expenses;
