@@ -22,14 +22,7 @@ namespace MoneyHustler.Models
 
             foreach (MoneyVault moneyVault in Vaults)
             {
-                if (!allIncomes.Any())
-                {
-                    allIncomes = moneyVault.Incomes;
-                }
-                else
-                {
-                    allIncomes.AddRange(moneyVault.Incomes);
-                }
+                allIncomes.AddRange(moneyVault.Incomes);
             }
 
             return allIncomes;
@@ -41,14 +34,7 @@ namespace MoneyHustler.Models
 
             foreach (MoneyVault moneyVault in Vaults)
             {
-                if (!allExpences.Any())
-                {
-                    allExpences = moneyVault.Expenses;
-                }
-                else
-                {
-                    allExpences.AddRange(moneyVault.Expenses);
-                }
+                allExpences.AddRange(moneyVault.Expenses);               
             }
 
             return allExpences;
