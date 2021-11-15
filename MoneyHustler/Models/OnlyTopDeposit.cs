@@ -9,7 +9,7 @@ namespace MoneyHustler.Models
     public class OnlyTopDeposit : Deposit
     {
         
-        public DateTime DayOfCloseDeposit { get; set; }
+        public DateTime DayOfCloseDeposit { get; set; } //день закрытия вклада
 
         public OnlyTopDeposit(string name, decimal balance, decimal percent, DateTime openDate, DateTime dayOfCloseDeposit): base(name, balance, percent, openDate)
         {
@@ -39,7 +39,8 @@ namespace MoneyHustler.Models
                 expense.Vault = this;
                 Expenses.Add(expense);
             }
-            //Если дата закрытия не настала, то мы можем сниять только накопленные деньги, а после даты закрытия мы можем сниять весь баланс
+            //Если дата закрытия не настала, то мы можем сниять только накопленные деньги,
+            //а после даты закрытия мы можем сниять весь баланс
         }
 
         public new void EarnIncome()
