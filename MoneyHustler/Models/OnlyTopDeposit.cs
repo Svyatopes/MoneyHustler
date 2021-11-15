@@ -8,7 +8,7 @@ namespace MoneyHustler.Models
 {
     public class OnlyTopDeposit : Deposit
     {
-        
+        public decimal MoneyBox { get; set; } //начисленная сумма с процентов
         public DateTime DayOfCloseDeposit { get; set; } //день закрытия вклада
 
         public OnlyTopDeposit(string name, decimal balance, decimal percent, DateTime openDate, DateTime dayOfCloseDeposit): base(name, balance, percent, openDate)

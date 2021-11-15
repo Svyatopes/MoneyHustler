@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoneyHustler.Models
 {
-    //Никита
-    //Убрал абстрактный класс у депозита, чтобы его можно было использовать как WithdrawDeposit
+    
     public class Deposit : MoneyVault //наследуется от мани волт
     {
         //данный вклад является копилкой и не имеет даты закрытия
@@ -17,7 +16,7 @@ namespace MoneyHustler.Models
         // TODO: число не может быть отрицательным и больше 31, продумать логику set(чтобы не нарушать дату начисления процента) 
 
         //Никита 14.11
-        public decimal MoneyBox { get; set; } //начисленная сумма с процентов
+        
 
         public DateTime OpenDate { get; set; } //дата открытия вклада
 
@@ -29,7 +28,6 @@ namespace MoneyHustler.Models
             Percent = percent;
             OpenDate = openDate;
             PaymentDay = openDate.Day; //день зачисления процентов
-            MoneyBox = 0;
         }
 
 
@@ -38,8 +36,7 @@ namespace MoneyHustler.Models
             if (DateTime.Today.Day == PaymentDay) 
                 //если день даты совпадёт с днём выплаты процентов, то начисляем деньги
             {
-                MoneyBox = _balance * (Percent / 100) / 12;
-                _balance += MoneyBox;
+                _balance += _balance * (Percent / 100) / 12;
             }
         }
 
