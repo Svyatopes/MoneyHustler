@@ -8,6 +8,13 @@
 
   <ItemGroup>
     <None Remove="ImgIncomes.jpg" />
+    <None Remove="Img\Bg.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Img\Bg.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
