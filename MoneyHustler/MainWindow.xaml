@@ -32,6 +32,6 @@
         <Button x:Name="ButtonExpenses" Content="Расходы" Grid.Column="1" Grid.Row="3" Background="#FFC3B9A0" Margin="0,0,0,0" />
         <Button x:Name="ButtonLookThrowCategories" Content="Категории" Grid.Column="1" Grid.Row="5" Background="#FFC3B9A0" Margin="0,0,0,0" />
         <Button x:Name="ButtonMyFamily" Content="Моя семья" Grid.Column="1" Grid.Row="7" Background="#FFC3B9A0" Margin="0,0,0,0" />
-        <Button Content="Button" Grid.Column="1" Grid.Row="9" Background="#FFC3B9A0" Margin="0,0,0,0" />
+        <Button x:Name="ButtonAnalitics" Content="Аналитика" Grid.Column="1" Grid.Row="9" Background="#FFC3B9A0" Margin="0,0,0,0" />
     </Grid>
 </Window>
