@@ -5,8 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoneyHustler"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+        Title="MainWindow" Height="503" Width="885" Background="#FF1F1F1F">
+    <Grid Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="65*"/>
+            <ColumnDefinition Width="108*"/>
+            <ColumnDefinition Width="300*"/>
+            <ColumnDefinition Width="412*"/>
+        </Grid.ColumnDefinitions>
+        <Image x:Name="MainImage" Grid.Column="3" Grid.Row="0" Source="Img/Bg.jpg" Stretch="UniformToFill" Grid.RowSpan="11" Panel.ZIndex="0"/>
+        <Grid Grid.Column="3" Margin="0,0,167,0" OpacityMask="Black" Background="#BF202020" Grid.RowSpan="11" />
+        <Button x:Name="ButtonIncomes" Content="Доходы" Grid.Column="1" Grid.Row="1" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonIncomes_Click" />
+        <Button x:Name="ButtonExpenses" Content="Расходы" Grid.Column="1" Grid.Row="3" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonExpenses_Click" />
+        <Button x:Name="ButtonCategories" Content="Категории" Grid.Column="1" Grid.Row="5" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonCategories_Click" />
+        <Button x:Name="ButtonMyFamily" Content="Моя семья" Grid.Column="1" Grid.Row="7" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonMyFamily_Click" />
+        <Button x:Name="ButtonAnalytics" Content="Аналитика" Grid.Column="1" Grid.Row="9" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonAnalytics_Click" />
     </Grid>
 </Window>
