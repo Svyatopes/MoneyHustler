@@ -5,8 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoneyHustler"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="503" Width="885" Background="#FF1F1F1F">
+    <Grid Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="473*"/>
+            <ColumnDefinition Width="412*"/>
+        </Grid.ColumnDefinitions>
+        <Image Grid.Column="1" Grid.Row="0" Source="/Img/Bg.jpg" Stretch="UniformToFill" Margin="0,0,0,0" />
+        <Grid Grid.Column="1" Margin="0,0,167,0" OpacityMask="Black" Background="#BF202020" >
+
+        </Grid>
 
     </Grid>
 </Window>
