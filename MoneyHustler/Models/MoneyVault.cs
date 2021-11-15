@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,11 +10,20 @@ namespace MoneyHustler.Models
     public abstract class MoneyVault
     {
         public string Name { get; set; }
-        public List<Income> Incomes { get; set; }
-        public List<Expense> Expenses { get; set; }
+        public ReadOnlyCollection<Income> Incomes { get; private set; }
+        public ReadOnlyCollection<Expense> Expenses { get; private set; }
 
-
+        private List<Income> _incomes;
+        private List<Expense> _expenses;
         protected decimal _balance;
+
+        public MoneyVault()
+        {
+            _incomes =  new List<Income>();
+            Incomes = _incomes.AsReadOnly();
+            _expenses  = new List<Expense>();
+            Expenses = _expenses.AsReadOnly();
+        }
 
         public decimal GetBalance()
         {
@@ -24,7 +34,7 @@ namespace MoneyHustler.Models
         {
             _balance += income.Amount;
             income.Vault = this;
-            Incomes.Add(income);
+            _incomes.Add(income);
         }
 
         public void DecreaseBalance(Expense expense)
@@ -35,7 +45,7 @@ namespace MoneyHustler.Models
             }
             _balance -= expense.Amount;
             expense.Vault = this;
-            Expenses.Add(expense);
+            _expenses.Add(expense);
         }
 
         //TODO: change default(Person) to some instance of Person
