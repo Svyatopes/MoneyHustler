@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoneyHustler.AuxiliaryWindows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,36 @@ namespace MoneyHustler
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void ButtonIncomes_Click(object sender, RoutedEventArgs e)
+        {
+            WindowIncomes windowIncomes = new();
+            windowIncomes.ShowDialog();
+        }
+
+        private void ButtonExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            WindowExpenses windowExpences = new();
+            windowExpences.ShowDialog();
+        }
+
+        private void ButtonCategories_Click(object sender, RoutedEventArgs e)
+        {
+            WindowCategories windowCategories = new();
+            windowCategories.ShowDialog();
+        }
+
+        private void ButtonMyFamily_Click(object sender, RoutedEventArgs e)
+        {
+            WindowMyFamily windowMyFamily = new();
+            windowMyFamily.ShowDialog();
+        }
+
+        private void ButtonAnalytics_Click(object sender, RoutedEventArgs e)
+        {
+            WindowAnalytics windowAnalytics = new();
+            windowAnalytics.ShowDialog();
         }
     }
 }
