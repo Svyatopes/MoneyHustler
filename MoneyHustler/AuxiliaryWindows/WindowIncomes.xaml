@@ -4,9 +4,46 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoneyHustler"
+        xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
         mc:Ignorable="d"
         Title="WindowIncomes" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="20*"/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="listViewForIncomes" HorizontalContentAlignment="Stretch" >
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Дата" Width="Auto" DisplayMemberBinding="{Binding Date}"/>
+                    <GridViewColumn Header="Сумма" Width="Auto" DisplayMemberBinding="{Binding Amount}"/>
+                    <GridViewColumn Header="Категория" Width="Auto" DisplayMemberBinding="{Binding Type.Name}"/>
+                    <GridViewColumn Header="Счет" Width="Auto" DisplayMemberBinding="{Binding Vault.Name}"/>
+                    <GridViewColumn Header="Человек" Width="Auto" DisplayMemberBinding="{Binding Person.Name}"/>
+                    <GridViewColumn Header="Комментарий" Width="Auto" DisplayMemberBinding="{Binding Comment}"/>
+                    <GridViewColumn Header="Изменить" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="изменить" Margin="0"  VerticalAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Удалить" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="удалить" Margin="0"  VerticalAlignment="Center" Click="ButtonRemoveIncomeItemClick" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Grid.Row="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить"/>
     </Grid>
 </Window>
