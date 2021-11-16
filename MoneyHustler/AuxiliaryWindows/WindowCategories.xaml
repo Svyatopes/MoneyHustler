@@ -9,10 +9,10 @@
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="77*"/>
-            <RowDefinition Height="65*"/>
             <RowDefinition Height="79*"/>
-            <RowDefinition Height="68*"/>
-            <RowDefinition Height="60*"/>
+            <RowDefinition Height="49*"/>
+            <RowDefinition Height="117*"/>
+            <RowDefinition Height="27*"/>
             <RowDefinition Height="43*"/>
             <RowDefinition Height="43*"/>
         </Grid.RowDefinitions>
@@ -28,13 +28,19 @@
             <ColumnDefinition Width="44*"/>
         </Grid.ColumnDefinitions>
         <Label x:Name="LabelYourCategories" Content="Ваши категории:"  FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="26" FontFamily="Calibri Light" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,20,0,65" Grid.RowSpan="2"/>
-        <Label x:Name="LabelShowCategories" Content="Здесь должны выводиться категории"  FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" FontFamily="Calibri Light" Grid.Column="1" Grid.RowSpan="5" Grid.ColumnSpan="2" Grid.Row="1" />
-        <Label x:Name="LabelAddCategories" Content="Добавить категорию: "  FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="26" FontFamily="Calibri Light" Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="5" Grid.RowSpan="2" Margin="0, 20, 0, 0"/>
-        <Label x:Name="LabelEnterCategories" Content="Введите название категории:"  FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" FontFamily="Calibri Light" Grid.Column="4" Grid.Row="1" Margin="0,0,0,0" Grid.ColumnSpan="5" />
+        <Label x:Name="LabelAddCategories" Content="Добавить категорию: "  FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="26" FontFamily="Calibri Light" Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="5" Margin="0,20,0,65" Grid.RowSpan="2"/>
+        <Label x:Name="LabelEnterCategories" Content="Введите название категории:"  FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" FontFamily="Calibri Light" Grid.Column="4" Grid.Row="1" Margin="0,0,0,9" Grid.ColumnSpan="5" />
         <Rectangle Grid.ColumnSpan="5" Grid.Column="3" Grid.RowSpan="7" Opacity="0.5" Fill="#FF565555" Panel.ZIndex="-1"/>
-        <TextBox x:Name="TextBoxEnterCategory" Grid.Column="4" Margin="0,19,0,11" Grid.Row="2" TextWrapping="Wrap" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="3" IsEnabled="False" />
-        <Button x:Name="ButtonAddCategory" Content="Add" Grid.Column="5" Margin="0,60,0,0" Grid.Row="4" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.RowSpan="2"/>
-        <Button Content="Button" Background="#FFC3B9A0" Margin="0,60,0,0" Grid.Row="4" Grid.Column="1"  FontFamily="Calibri Light" FontSize="16" Grid.RowSpan="2" />
+        <TextBox x:Name="TextBoxEnterCategory" Grid.Column="4" Margin="0,0,0,0" Grid.Row="2" TextWrapping="Wrap" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="3" IsEnabled="False" />
+        <Button x:Name="ButtonAddCategory" Content="Add" Grid.Column="5" Margin="0,1,0,0" Grid.Row="5" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16"/>
+        <Button Content="Button" Background="#FFC3B9A0" Margin="0,1,0,0" Grid.Row="5" Grid.Column="1"  FontFamily="Calibri Light" FontSize="16" />
+        <ListView Grid.ColumnSpan="1" Margin="0,0,0,0" Grid.RowSpan="3" Grid.Row="1" Grid.Column="1" Background="#FFC3B9A0" Foreground="Black">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
 
     </Grid>
