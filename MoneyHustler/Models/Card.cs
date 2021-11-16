@@ -25,7 +25,7 @@ namespace MoneyHustler.Models
             }
             _balance -= expense.Amount;
             expense.Vault = this;
-            Expenses.Add(expense);
+            _expenses.Add(expense);
             EarnCashBack(expense);
         }
 

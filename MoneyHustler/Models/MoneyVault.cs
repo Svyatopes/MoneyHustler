@@ -13,8 +13,8 @@ namespace MoneyHustler.Models
         public ReadOnlyCollection<Income> Incomes { get; private set; }
         public ReadOnlyCollection<Expense> Expenses { get; private set; }
 
-        private List<Income> _incomes;
-        private List<Expense> _expenses;
+        protected List<Income> _incomes;
+        protected List<Expense> _expenses;
         protected decimal _balance;
 
         public MoneyVault()
