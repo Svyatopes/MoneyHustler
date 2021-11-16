@@ -5,8 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoneyHustler.AuxiliaryWindows"
         mc:Ignorable="d"
-        Title="WindowMyFamily" Height="450" Width="800">
-    <Grid>
-        
+        Title="WindowMyFamily" Height="450" Width="800" Background="#FF1F1F1F">
+    <Grid x:Name="MainFamilyWindow" Height="434" VerticalAlignment="Bottom"  >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="20*"/>
+
+        </Grid.RowDefinitions>
+        <Button Content="Добавить участника" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Click="ButtonAddPersonClick" />
+        <ListView x:Name="ListViewPersonsDisplay" Margin="20,10">
+            <ListView.View>
+                
+                <GridView>
+                    <GridViewColumn Width="450" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Width="150" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Изменить" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonEditClick"/>
+                            </DataTemplate>
+                              
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>    
+                    <GridViewColumn Width="250" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Удалить" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonDeleteClick" />
+                            </DataTemplate>
+
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>    
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
