@@ -28,58 +28,62 @@ namespace MoneyHustler
                                             RoutedEventArgs e)
         {
             var headerClicked = e.OriginalSource as GridViewColumnHeader;
+            if (headerClicked == null)
+            {
+                return;
+            }
+
             if ((string)headerClicked.Content == "Удалить" || (string)headerClicked.Content == "Изменить")
             {
                 return;
             }
             ListSortDirection direction;
 
-            if (headerClicked != null)
+           
+            if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
             {
-                if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
+                if (headerClicked != _lastHeaderClicked)
                 {
-                    if (headerClicked != _lastHeaderClicked)
+                    direction = ListSortDirection.Ascending;
+                }
+                else
+                {
+                    if (_lastDirection == ListSortDirection.Ascending)
+                    {
+                        direction = ListSortDirection.Descending;
+                    }
+                    else
                     {
                         direction = ListSortDirection.Ascending;
                     }
-                    else
-                    {
-                        if (_lastDirection == ListSortDirection.Ascending)
-                        {
-                            direction = ListSortDirection.Descending;
-                        }
-                        else
-                        {
-                            direction = ListSortDirection.Ascending;
-                        }
-                    }
-
-                    var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
-                    var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
-
-                    Sort(sortBy, direction);
-
-                    if (direction == ListSortDirection.Ascending)
-                    {
-                        headerClicked.Column.HeaderTemplate =
-                          Resources["HeaderTemplateArrowUp"] as DataTemplate;
-                    }
-                    else
-                    {
-                        headerClicked.Column.HeaderTemplate =
-                          Resources["HeaderTemplateArrowDown"] as DataTemplate;
-                    }
-
-                    // Remove arrow from previously sorted header
-                    if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
-                    {
-                        _lastHeaderClicked.Column.HeaderTemplate = null;
-                    }
-
-                    _lastHeaderClicked = headerClicked;
-                    _lastDirection = direction;
                 }
+
+                var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
+                var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
+
+                Sort(sortBy, direction);
+
+                if (direction == ListSortDirection.Ascending)
+                {
+                    headerClicked.Column.HeaderTemplate =
+                      Resources["HeaderTemplateArrowUp"] as DataTemplate;
+                }
+                else
+                {
+                    headerClicked.Column.HeaderTemplate =
+                      Resources["HeaderTemplateArrowDown"] as DataTemplate;
+                }
+
+                // Remove arrow from previously sorted header
+                if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
+                {
+                    _lastHeaderClicked.Column.HeaderTemplate = null;
+                }
+
+                _lastHeaderClicked = headerClicked;
+                _lastDirection = direction;
             }
+
         }
 
         private void Sort(string sortBy, ListSortDirection direction)
