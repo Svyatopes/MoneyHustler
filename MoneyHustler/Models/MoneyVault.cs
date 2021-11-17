@@ -13,8 +13,8 @@ namespace MoneyHustler.Models
         public ReadOnlyCollection<Income> Incomes { get; private set; }
         public ReadOnlyCollection<Expense> Expenses { get; private set; }
 
-        private List<Income> _incomes;
-        private List<Expense> _expenses;
+        protected List<Income> _incomes;
+        protected List<Expense> _expenses;
         protected decimal _balance;
 
         public MoneyVault()
@@ -57,8 +57,36 @@ namespace MoneyHustler.Models
                 throw new ArgumentException("You can't transfer more money than you already have on this vault.");
             }
 
-            DecreaseBalance(new Expense(amount, date, default(Person), comment, vault, expenseType));
-            vault.IncreaseBalance(new Income(amount, date, default(Person), comment, this, incomeType));
+            DecreaseBalance(new Expense(amount, date, default(Person), comment, expenseType));
+            vault.IncreaseBalance(new Income(amount, date, default(Person), comment, incomeType));
+        }
+
+        public void Remove(Income income)
+        {
+            if(!_incomes.Contains(income) || income.Vault != this)
+            {
+                throw new ArgumentException("Not contains in this list. Check your program logic");
+            }
+
+            if(income.Amount > _balance)
+            {
+                throw new ArgumentException("Your income is bigger than your current balance, you cannot remove this income.");
+            }
+
+            _incomes.Remove(income);
+            _balance -= income.Amount;
+                  
+        }
+        
+        public void Remove(Expense expense)
+        {
+            if (!_expenses.Contains(expense) || expense.Vault != this)
+            {
+                throw new ArgumentException("Not contains in this list. Check your program logic");
+            }
+
+            _expenses.Remove(expense);
+            _balance += expense.Amount;
         }
     }
 }

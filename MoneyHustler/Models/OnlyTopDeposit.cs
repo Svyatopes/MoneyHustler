@@ -26,7 +26,7 @@ namespace MoneyHustler.Models
                 }
                 _balance -= expense.Amount;
                 expense.Vault = this;
-                Expenses.Add(expense);
+                _expenses.Add(expense);
             }
             else
             {
@@ -37,7 +37,7 @@ namespace MoneyHustler.Models
                 MoneyBox -= expense.Amount;
                 _balance -= expense.Amount;
                 expense.Vault = this;
-                Expenses.Add(expense);
+                _expenses.Add(expense);
             }
             //Если дата закрытия не настала, то мы можем сниять только накопленные деньги,
             //а после даты закрытия мы можем сниять весь баланс
