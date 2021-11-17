@@ -36,8 +36,8 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    
-                    <GridViewColumn Header="Дата" Width="Auto" DisplayMemberBinding="{Binding Date}"/>
+
+                    <GridViewColumn Header="Дата" Width="Auto" DisplayMemberBinding="{Binding Date, StringFormat=d, ConverterCulture=ru-RU}"/>
                     <GridViewColumn Header="Сумма" Width="Auto" DisplayMemberBinding="{Binding Amount}"/>
                     <GridViewColumn Header="Категория" Width="Auto" DisplayMemberBinding="{Binding Type.Name}"/>
                     <GridViewColumn Header="Счет" Width="Auto" DisplayMemberBinding="{Binding Vault.Name}"/>

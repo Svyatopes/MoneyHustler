@@ -68,6 +68,12 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
+            if (enteredAmount < 0)
+            {
+                MessageBox.Show("Amount can't be less than zero.");
+                return;
+            }
+
             if (ComboBoxIncomeTypes.SelectedItem == null)
             {
                 MessageBox.Show("You need to choose IncomeType!");

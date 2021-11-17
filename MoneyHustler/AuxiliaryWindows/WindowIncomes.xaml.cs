@@ -28,6 +28,10 @@ namespace MoneyHustler
                                             RoutedEventArgs e)
         {
             var headerClicked = e.OriginalSource as GridViewColumnHeader;
+            if ((string)headerClicked.Content == "Удалить" || (string)headerClicked.Content == "Изменить")
+            {
+                return;
+            }
             ListSortDirection direction;
 
             if (headerClicked != null)
