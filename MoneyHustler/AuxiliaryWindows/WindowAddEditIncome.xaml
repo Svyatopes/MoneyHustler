@@ -21,17 +21,20 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Label HorizontalAlignment="Center" VerticalAlignment="Center">Количество</Label>
-        <TextBox Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
+        <TextBox x:Name="TextBoxAmount" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Тип прихода</Label>
-        <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></ComboBox>
+        <ComboBox x:Name="ComboBoxIncomeTypes" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100" 
+                  DisplayMemberPath="Name"/>
         <Label Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">Кошелек</Label>
-        <ComboBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></ComboBox>
+        <ComboBox x:Name="ComboBoxVaults" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"
+                  DisplayMemberPath="Name" ></ComboBox>
         <Label Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center">Дата</Label>
-        <DatePicker Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
+        <DatePicker x:Name="DatePickerIncomeDate" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
         <Label Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">Кто</Label>
-        <ComboBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></ComboBox>
+        <ComboBox x:Name="ComboBoxPersons" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"
+                  DisplayMemberPath="Name"></ComboBox>
         <Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Комментарий</Label>
-        <TextBox Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
-        <Button Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">Сохранить</Button>
+        <TextBox x:Name="TextBoxComment" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
+        <Button Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSaveClick">Сохранить</Button>
     </Grid>
 </Window>

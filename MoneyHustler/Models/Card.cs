@@ -36,7 +36,7 @@ namespace MoneyHustler.Models
 
             //Информация по категории "CashBack", зависит от расхода по this Card 
             Income incomeCashback = new Income(expense.Amount * CashBack / 100, 
-                expense.Date, expense.Person, expense.Comment, expense.Vault, 
+                expense.Date, expense.Person, expense.Comment, 
                 incomeTypeCashBack); //Создаем новый доход который является кэшбеком изходя из expense
             IncreaseBalance(incomeCashback);
         }

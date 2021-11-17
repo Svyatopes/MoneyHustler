@@ -4,15 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoneyHustler"
-        xmlns:col="clr-namespace:System.Collections;assembly=mscorlib"
         mc:Ignorable="d"
         Title="WindowIncomes" Height="450" Width="800">
+    <Window.Resources>
+        <DataTemplate x:Key="HeaderTemplateArrowUp">
+            <DockPanel LastChildFill="True" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}">
+                <Path x:Name="arrowUp" StrokeThickness="1" Fill="Gray" Data="M 5,10 L 15,10 L 10,5 L 5,10" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
+                <TextBlock Text="{Binding }" />
+            </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="HeaderTemplateArrowDown">
+            <DockPanel LastChildFill="True" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}">
+                <Path x:Name="arrowDown" StrokeThickness="1" Fill="Gray"  Data="M 5,5 L 10,10 L 15,5 L 5,5" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
+                <TextBlock Text="{Binding }" />
+            </DockPanel>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80*"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
-        <ListView x:Name="listViewForIncomes" HorizontalContentAlignment="Stretch" >
+        <ListView x:Name="listViewForIncomes" HorizontalContentAlignment="Stretch" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" >
+           
+            
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -20,6 +36,7 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
+                    
                     <GridViewColumn Header="Дата" Width="Auto" DisplayMemberBinding="{Binding Date}"/>
                     <GridViewColumn Header="Сумма" Width="Auto" DisplayMemberBinding="{Binding Amount}"/>
                     <GridViewColumn Header="Категория" Width="Auto" DisplayMemberBinding="{Binding Type.Name}"/>
@@ -29,7 +46,7 @@
                     <GridViewColumn Header="Изменить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="изменить" Margin="0"  VerticalAlignment="Center" />
+                                <Button  Content="изменить" Margin="0"  VerticalAlignment="Center" Click="ButtonEditIncomeClick"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -43,7 +60,8 @@
 
                 </GridView>
             </ListView.View>
+            
         </ListView>
-        <Button Grid.Row="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить"/>
+        <Button Grid.Row="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить" Click="ButtonAddIncomeClick"/>
     </Grid>
 </Window>
