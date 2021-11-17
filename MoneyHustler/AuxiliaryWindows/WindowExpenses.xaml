@@ -14,12 +14,11 @@
         <Button Grid.Row="1" Content="Add" Margin="320,20,320,20" Click="ButtonAdd_Click"/>
 
         <StackPanel x:Name="ParentStackPanel" Orientation="Horizontal" Height="25" VerticalAlignment="Top" Margin="10,10">
-            <DatePicker x:Name="DatePick" IsDropDownOpen="True" SelectedDateFormat="Short" Margin="10,0"/>
-            <TextBox x:Name="Amount" Text="Сумма " HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0"/>
-            <TextBox x:Name="Person" Text="Кто " HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0"/>
-            <TextBox x:Name="Vault" Text="Счёт "  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0"/>
-            <Button  Content="Редактировать" Margin="10,0" Padding="10,0"/>
-            <Button Content="Удалить" Margin="10,0" Padding="10,0"/>
+            <DatePicker x:Name="DatePick" IsDropDownOpen="True" SelectedDateFormat="Short" Margin="50,0"/>
+            <TextBox x:Name="Amount" Text="Сумма " HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="50,0" Padding="20,0"/>
+            <TextBox x:Name="Person" Text="Кто " HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="50,0" Padding="20,0"/>
+            <TextBox x:Name="Vault" Text="Счёт "  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="50,0" Padding="20,0"/>
+           
         </StackPanel>
         
         

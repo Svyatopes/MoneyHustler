@@ -21,8 +21,8 @@ namespace MoneyHustler.AuxiliaryWindows
     public partial class WindowExpenses : Window
     {
         List<Button> editButtons = new List<Button>();
+        List<Button> deleteButtons = new List<Button>();
 
-        private int indexName = 1;
 
         public WindowExpenses()
         {
@@ -32,7 +32,9 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            StackPanel sp = (StackPanel)((Button)e.OriginalSource).Parent;
+
+            listBox1.Items.Remove(sp);
         }
 
         private void Edit_Click(object sender, RoutedEventArgs e)
@@ -61,12 +63,9 @@ namespace MoneyHustler.AuxiliaryWindows
                     foreach (UIElement item in sp.Children)
                     {
                         if (!(item is Button))
-                        {
                             item.IsEnabled = false;
-                        }
-                        
+                         
                     }
-
                 }
             }
 
@@ -75,10 +74,6 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            //string contentString = DatePick.SelectedDate + "                     ";
-            //contentString += Amount.Text + "                     ";
-            //contentString += Person.Text + "                     ";
-            //contentString += Vault.Text + "                     ";
 
             TextBox amountBox = new TextBox { Text = Amount.Text, IsEnabled = false };
             TextBox personBox = new TextBox { Text = Person.Text, IsEnabled = false };
@@ -90,10 +85,14 @@ namespace MoneyHustler.AuxiliaryWindows
             stackPanel.Children.Add(personBox);
             stackPanel.Children.Add(vaultBox);
             stackPanel.Children.Add(datePicker);
+
             editButtons.Add(new Button { Content = "Edit" });
             editButtons[editButtons.Count - 1].Click += Edit_Click;
-            stackPanel.Children.Add(editButtons[editButtons.Count - 1]);
+            deleteButtons.Add(new Button { Content = "Delete" });
+            deleteButtons[deleteButtons.Count - 1].Click += Delete_Click;
 
+            stackPanel.Children.Add(editButtons[editButtons.Count - 1]);
+            stackPanel.Children.Add(deleteButtons[editButtons.Count - 1]);
             listBox1.Items.Add(stackPanel);
             //listBox1.Items.Add(delete);
 
