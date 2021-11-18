@@ -57,6 +57,15 @@ namespace MoneyHustler.AuxiliaryWindows
             //if (Storage.IncomeTypes.Contains())
         }
 
+        private void ButtonRenameIncomeCategoryClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ButtonRenameExpenseCategoryClick(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
 

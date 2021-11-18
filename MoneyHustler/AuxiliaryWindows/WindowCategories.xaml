@@ -41,6 +41,14 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Категория" Width= "auto" />
+
+                            <GridViewColumn Header="Переименовать" Width="auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button  Content="переименовать" Margin="0"  VerticalAlignment="Center" Click="ButtonRenameIncomeCategoryClick" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             
                             <GridViewColumn Header="Удалить" Width="auto">
                                 <GridViewColumn.CellTemplate>
@@ -50,7 +58,6 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <GridViewColumn/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -94,17 +101,26 @@
                 <ListView x:Name="ListViewExpenses" Grid.ColumnSpan="1" Margin="0,0,0,0" Grid.RowSpan="3" Grid.Row="1" Grid.Column="1" Background="#FFC3B9A0" Foreground="Black">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Категория" Width= "auto" />
+                            <GridViewColumn Header="Категория" Width= "auto"/>
 
+                            <GridViewColumn Header="Переименовать" Width="auto">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button  Content="переименовать" Margin="0"  VerticalAlignment="Center" Click="ButtonRenameExpenseCategoryClick" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            
                             <GridViewColumn Header="Удалить" Width="auto">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button  Content="удалить" Margin="0"  VerticalAlignment="Center" Click="ButtonRemoveExpenseCategoryClick" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
+                                
                             </GridViewColumn>
 
-                            <GridViewColumn/>
+                            
                         </GridView>
                     </ListView.View>
                 </ListView>
