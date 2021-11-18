@@ -17,13 +17,12 @@
             <ListView.View>
                 
                 <GridView>
-                    <GridViewColumn Width="450" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Width="450" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
                     <GridViewColumn Width="150" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Content="Изменить" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonEditClick"/>
                             </DataTemplate>
-                              
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>    
                     <GridViewColumn Width="250" >

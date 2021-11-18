@@ -34,12 +34,14 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonAddPersonClick(object sender, RoutedEventArgs e)
         {
-
+            WindowAddEditMyFamily WindowAddEditMyFamily = new();
+            WindowAddEditMyFamily.ShowDialog();
         }
 
         private void ButtonEditClick(object sender, RoutedEventArgs e)
         {
-
+            WindowAddEditMyFamily WindowAddEditMyFamily = new();
+            WindowAddEditMyFamily.ShowDialog();
         }
 
         private void ButtonDeleteClick(object sender, RoutedEventArgs e)
