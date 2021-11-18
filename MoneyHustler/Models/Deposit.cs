@@ -20,6 +20,11 @@ namespace MoneyHustler.Models
 
         public DateTime OpenDate { get; set; } //дата открытия вклада
 
+        public Deposit()
+        {
+
+        }
+
         public Deposit(string name, decimal balance, decimal percent, DateTime openDate) //string name) : base(name) нужно сделать конструктор для мани волт,
                                                                                          //чтобы в конструкторе депозита использовать параметры, такие как имя и баланс 
         {

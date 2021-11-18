@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,11 +11,16 @@ namespace MoneyHustler.Models
     public abstract class MoneyVault
     {
         public string Name { get; set; }
-        public ReadOnlyCollection<Income> Incomes { get; private set; }
-        public ReadOnlyCollection<Expense> Expenses { get; private set; }
+        [JsonIgnore]
+        public ReadOnlyCollection<Income> Incomes { get; set; }
+        [JsonIgnore]
+        public ReadOnlyCollection<Expense> Expenses { get; set; }
 
+        [JsonProperty]
         protected List<Income> _incomes;
+        [JsonProperty]
         protected List<Expense> _expenses;
+        [JsonProperty]
         protected decimal _balance;
 
         public MoneyVault()

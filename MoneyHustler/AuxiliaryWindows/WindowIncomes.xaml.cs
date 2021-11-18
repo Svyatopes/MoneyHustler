@@ -24,8 +24,7 @@ namespace MoneyHustler
             listViewForIncomes.ItemsSource = listOfIncomesView;
         }
 
-        void GridViewColumnHeaderClickedHandler(object sender,
-                                            RoutedEventArgs e)
+        private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
             var headerClicked = e.OriginalSource as GridViewColumnHeader;
             if (headerClicked == null)
@@ -39,7 +38,7 @@ namespace MoneyHustler
             }
             ListSortDirection direction;
 
-           
+
             if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
             {
                 if (headerClicked != _lastHeaderClicked)
@@ -88,8 +87,7 @@ namespace MoneyHustler
 
         private void Sort(string sortBy, ListSortDirection direction)
         {
-            ICollectionView dataView =
-              CollectionViewSource.GetDefaultView(listViewForIncomes.ItemsSource);
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(listViewForIncomes.ItemsSource);
 
             dataView.SortDescriptions.Clear();
             SortDescription sd = new SortDescription(sortBy, direction);
@@ -108,8 +106,6 @@ namespace MoneyHustler
             windowIncomes.ShowDialog();
             UpdateIncomesView();
 
-            //TODO: serialize
-
         }
 
 
@@ -120,7 +116,7 @@ namespace MoneyHustler
             var income = (Income)button.DataContext;
             listOfIncomesView.Remove(income);
             income.Vault.Remove(income);
-            //TODO: serialize
+            Storage.Save();
         }
 
         private void ButtonAddIncomeClick(object sender, RoutedEventArgs e)
@@ -129,7 +125,6 @@ namespace MoneyHustler
             windowIncomes.ShowDialog();
 
             UpdateIncomesView();
-            //TODO: serialize
 
         }
 
