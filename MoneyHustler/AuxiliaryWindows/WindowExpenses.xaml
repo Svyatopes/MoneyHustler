@@ -11,19 +11,19 @@
             <RowDefinition Height="51*"/>
             <RowDefinition Height="11*"/>
         </Grid.RowDefinitions>
-        <Button x:Name="AddButton" Grid.Row="1" Content="Add" Margin="320,20,320,20" Click="ButtonAdd_Click"/>
+        <Button x:Name="AddButton" Grid.Row="1" Content="Add" Margin="320,20,320,20" Click="ButtonAdd_Click" />
 
         <StackPanel x:Name="ParentStackPanel" Orientation="Horizontal" Height="25" VerticalAlignment="Top" Margin="10,10">
             <DatePicker x:Name="DatePick" IsDropDownOpen="True" SelectedDateFormat="Short" Margin="10,0"/>
-            <TextBox x:Name="Amount" Text="Сумма " HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0"/>
-            <ComboBox x:Name="Person" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0"/>
-            <ComboBox x:Name="Vault"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0"/>
+            <TextBox x:Name="Amount" Text="Сумма " HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0" TextChanged="Amount_TextChanged"/>
+            <ComboBox x:Name="Person" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0" DisplayMemberPath="Name"/>
+            <ComboBox x:Name="Vault"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0" DisplayMemberPath="Name"/>
             <TextBox x:Name="Comment" Text="Комментарий"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0"/>
-            <ComboBox  x:Name="TypeComboBox" Width="100"/>
+            <ComboBox  x:Name="TypeComboBox" MinWidth="100" DisplayMemberPath="Name"/>
         </StackPanel>
         
         
-        <ListBox x:Name="listBox1" Margin="10,58,10,10">
+        <ListBox x:Name="listBox1" Margin="10,58,10,10 " >
             
             
         </ListBox>
