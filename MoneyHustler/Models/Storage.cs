@@ -15,6 +15,8 @@ namespace MoneyHustler.Models
         public static List<MoneyVault> Vaults;
         public static List<IncomeType> IncomeTypes;
         public static List<ExpenseType> ExpenseTypes;
+        public static List<Credit> Credits;
+
 
         public static List<Income> GetAllIncomes()
         {
@@ -39,5 +41,7 @@ namespace MoneyHustler.Models
 
             return allExpences;
         }
+        
+
     }
 }
