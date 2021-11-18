@@ -22,11 +22,37 @@ namespace MoneyHustler.AuxiliaryWindows
     {
         List<Button> editButtons = new List<Button>();
         List<Button> deleteButtons = new List<Button>();
+        List<ComboBoxItem> typesExpense = new List<ComboBoxItem>();
+        List<MoneyVault> vaults = new();
+        List<ExpenseType> expenseTypes = new();
+        List<Person> people = new();
+        Binding namePeople = new Binding { };
 
+        private void TestInitComponents()
+        {
+            Card halva = new Card("Halva", 1000m, 1.5m);
+            Card sber = new Card("SberBank", 5000m, 0.5m);
 
+            Person ivan = new() { Name = "Иван" };
+            Person petya = new() { Name = "Пётр" };
+
+            ExpenseType food = new() { Name = "Хавка" };
+            ExpenseType sport = new() { Name = "Качалка" };
+
+            vaults.Add(sber); vaults.Add(halva);
+
+            expenseTypes.Add(food); expenseTypes.Add(sport);
+
+            people.Add(ivan); people.Add(petya);
+        }
         public WindowExpenses()
         {
+            TestInitComponents();
             InitializeComponent();
+            PersonInit();
+            VaultInit();
+            TypeInit();
+            
             
         }
 
@@ -39,8 +65,10 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
-            if (((Button)e.OriginalSource).Content == "Edit")
+            
+            if ((string)((Button)e.OriginalSource).Content == "Edit")
             {
+                AddButton.IsEnabled = false;
                 ((Button)e.OriginalSource).Content = "Save";
                 if(((Button)e.OriginalSource).Parent is StackPanel)
                 {
@@ -50,11 +78,11 @@ namespace MoneyHustler.AuxiliaryWindows
                     {
                         item.IsEnabled = true;
                     }
-                    
                 }
             }
-            else if (((Button)e.OriginalSource).Content == "Save")
+            else if ((string)((Button)e.OriginalSource).Content == "Save")
             {
+                AddButton.IsEnabled = true;
                 ((Button)e.OriginalSource).Content = "Edit";
                 if (((Button)e.OriginalSource).Parent is StackPanel)
                 {
@@ -63,8 +91,7 @@ namespace MoneyHustler.AuxiliaryWindows
                     foreach (UIElement item in sp.Children)
                     {
                         if (!(item is Button))
-                            item.IsEnabled = false;
-                         
+                            item.IsEnabled = false;   
                     }
                 }
             }
@@ -74,17 +101,21 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-
+            
             TextBox amountBox = new TextBox { Text = Amount.Text, IsEnabled = false };
-            TextBox personBox = new TextBox { Text = Person.Text, IsEnabled = false };
-            TextBox vaultBox = new TextBox { Text = Vault.Text, IsEnabled = false };
-            DatePicker datePicker = new DatePicker { SelectedDate = DatePick.SelectedDate, IsEnabled = false };
+            ComboBox personBox = CreateNewComboBox(Person, Person.Text);
+            ComboBox vaultBox = CreateNewComboBox(Vault, Vault.Text);
+            TextBox commentBox = new TextBox { Text = Comment.Text, IsEnabled = false };
+            ComboBox typeBox = CreateNewComboBox(TypeComboBox, TypeComboBox.Text); 
+            DatePicker datePicker = new DatePicker {  SelectedDate = DatePick.SelectedDate, IsEnabled = false };
 
             StackPanel stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
+            stackPanel.Children.Add(datePicker);
             stackPanel.Children.Add(amountBox);
             stackPanel.Children.Add(personBox);
             stackPanel.Children.Add(vaultBox);
-            stackPanel.Children.Add(datePicker);
+            stackPanel.Children.Add(commentBox);
+            stackPanel.Children.Add(typeBox);
 
             editButtons.Add(new Button { Content = "Edit" });
             editButtons[editButtons.Count - 1].Click += Edit_Click;
@@ -94,10 +125,67 @@ namespace MoneyHustler.AuxiliaryWindows
             stackPanel.Children.Add(editButtons[editButtons.Count - 1]);
             stackPanel.Children.Add(deleteButtons[editButtons.Count - 1]);
             listBox1.Items.Add(stackPanel);
-            //listBox1.Items.Add(delete);
+
+            Expense expense = new Expense(
+                Convert.ToDecimal(Amount.Text),
+                (DateTime)DatePick.SelectedDate,
+                people[0],
+                "насвай",
+                new ExpenseType { Name = "В ротик" }
+                );
+
 
         }
 
+
+        private void TypeInit( )
+        {
+            bool isSelected = true;
+            foreach (ExpenseType item in expenseTypes)
+            {
+                TypeComboBox.Items.Add(new ComboBoxItem { Content = item.Name, IsSelected = isSelected });
+                isSelected = false;
+            }
+        }
+
+        private void PersonInit()
+        {
+
+            bool isSelected = true;
+            foreach (Person item in people)
+            {
+                Person.Items.Add(new ComboBoxItem {  Content = item.Name, IsSelected = isSelected });
+                isSelected = false;
+            }
+        }
+
+        private void VaultInit()
+        {
+            bool isSelected = true;
+            foreach (MoneyVault item in vaults)
+            {
+                Vault.Items.Add(new ComboBoxItem { Content = item.Name, IsSelected = isSelected });
+                isSelected = false;
+            }
+        }
+
+        private ComboBox CreateNewComboBox(ComboBox box, string contentSelectedItem)
+        {
+            ComboBox comboBox = new ComboBox { IsEnabled = false};
+            bool isSelected = false;
+            foreach (ComboBoxItem item in box.Items)
+            {
+                if ((string)item.Content == contentSelectedItem)
+                {
+                    isSelected = true;
+                }
+                comboBox.Items.Add(new ComboBoxItem { Content = item.Content, IsSelected = isSelected });
+                isSelected = false;
+            }
+            return comboBox;
+        }
+
         
+
     }
 }
