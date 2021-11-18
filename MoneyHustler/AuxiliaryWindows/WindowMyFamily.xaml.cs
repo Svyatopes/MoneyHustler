@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,11 +21,15 @@ namespace MoneyHustler.AuxiliaryWindows
     /// </summary>
     public partial class WindowMyFamily : Window
     {
-        private List<Person> _person;
+        private ObservableCollection<Person> _persons;
         public WindowMyFamily()
         {
-            
+            Storage.Persons = new List<Person>();
+            Storage.Persons.Add(new Person() { Name = "Sasha"});
+            Storage.Persons.Add(new Person() { Name = "Pasha"});
             InitializeComponent();
+            _persons = new ObservableCollection<Person>(Storage.Persons);
+            ListViewPersonsDisplay.ItemsSource = _persons; 
         }
 
         private void ButtonAddPersonClick(object sender, RoutedEventArgs e)
@@ -39,7 +44,15 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonDeleteClick(object sender, RoutedEventArgs e)
         {
-
+            var button = (Button)sender;
+            var person = (Person)button.DataContext;
+            if (Storage.GetAllIncomes().Any(item => item.Person == person)|| Storage.GetAllExpences().Any(item => item.Person == person))
+            {
+                MessageBox.Show("You can't remove this person, cause this name is already used in incomes/expenses");
+                return;
+            }
+            Storage.Persons.Remove(person);
+            _persons.Remove(person);
         }
     }
 }
