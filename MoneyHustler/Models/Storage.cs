@@ -68,7 +68,7 @@ namespace MoneyHustler.Models
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
-                PreserveReferencesHandling = PreserveReferencesHandling.All,
+                PreserveReferencesHandling = PreserveReferencesHandling.All
             };
             var storageInstance = (StorageInstance)JsonConvert.DeserializeObject(jsonString, settings);
 
@@ -76,6 +76,11 @@ namespace MoneyHustler.Models
             Storage.Persons = storageInstance.Persons;
             Storage.ExpenseTypes = storageInstance.ExpenseTypes;
             Storage.IncomeTypes = storageInstance.IncomeTypes;
+
+            foreach(var vault in Storage.Vaults)
+            {
+                vault.AfterDeserialize();
+            }
 
             int stop = 1;
         }

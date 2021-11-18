@@ -11,8 +11,10 @@ namespace MoneyHustler.Models
     public abstract class MoneyVault
     {
         public string Name { get; set; }
-        public ReadOnlyCollection<Income> Incomes { get; private set; }
-        public ReadOnlyCollection<Expense> Expenses { get; private set; }
+        [JsonIgnore]
+        public ReadOnlyCollection<Income> Incomes { get; set; }
+        [JsonIgnore]
+        public ReadOnlyCollection<Expense> Expenses { get; set; }
 
         [JsonProperty]
         protected List<Income> _incomes;
@@ -27,6 +29,20 @@ namespace MoneyHustler.Models
             Incomes = _incomes.AsReadOnly();
             _expenses  = new List<Expense>();
             Expenses = _expenses.AsReadOnly();
+        }
+
+        public void AfterDeserialize()
+        {
+            Incomes = _incomes.AsReadOnly();
+            Expenses = _expenses.AsReadOnly();
+            foreach(var income in Incomes)
+            {
+                income.Vault = this;
+            }
+            foreach(var expense in Expenses)
+            {
+                expense.Vault = this;
+            }
         }
 
         public decimal GetBalance()
