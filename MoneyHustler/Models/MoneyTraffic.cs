@@ -15,13 +15,12 @@ namespace MoneyHustler.Models
 
         public MoneyVault Vault { get; set; } // какой кошелек
 
-        public MoneyTraffic(decimal amount, DateTime date, Person person, string comment, MoneyVault vault)
+        public MoneyTraffic(decimal amount, DateTime date, Person person, string comment)
         {
             Amount = amount;
             Date = date;
             Person = person;
             Comment = comment;
-            Vault = vault;
         }
     }
 }
