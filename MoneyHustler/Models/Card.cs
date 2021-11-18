@@ -10,6 +10,11 @@ namespace MoneyHustler.Models
     {
         public decimal CashBack { get; set; } //Вводиться в ввиде процента
 
+        public Card()
+        {
+
+        }
+
         public Card(string name, decimal balance, decimal cashback)
         {
             Name = name;

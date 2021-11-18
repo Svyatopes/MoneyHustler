@@ -31,20 +31,6 @@ namespace MoneyHustler.Models
             Expenses = _expenses.AsReadOnly();
         }
 
-        public void AfterDeserialize()
-        {
-            Incomes = _incomes.AsReadOnly();
-            Expenses = _expenses.AsReadOnly();
-            foreach(var income in Incomes)
-            {
-                income.Vault = this;
-            }
-            foreach(var expense in Expenses)
-            {
-                expense.Vault = this;
-            }
-        }
-
         public decimal GetBalance()
         {
             return _balance;

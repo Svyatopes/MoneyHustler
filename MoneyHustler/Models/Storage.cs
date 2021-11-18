@@ -46,13 +46,15 @@ namespace MoneyHustler.Models
         {
             var storageInstance = new StorageInstance(true);
 
-            JsonSerializerSettings settings = new JsonSerializerSettings
+            var _jsonSettings = new JsonSerializerSettings()
             {
-                TypeNameHandling = TypeNameHandling.All,
-                PreserveReferencesHandling = PreserveReferencesHandling.All,
+                TypeNameHandling = TypeNameHandling.Auto,
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                ObjectCreationHandling = ObjectCreationHandling.Auto
             };
 
-            string jsonString = JsonConvert.SerializeObject(storageInstance, settings);
+            string jsonString = JsonConvert.SerializeObject(storageInstance, Formatting.Indented, _jsonSettings);
             File.WriteAllText(_path, jsonString);
         }
 
@@ -65,24 +67,20 @@ namespace MoneyHustler.Models
 
             string jsonString = File.ReadAllText(_path);
 
-            JsonSerializerSettings settings = new JsonSerializerSettings
+            var _jsonSettings = new JsonSerializerSettings()
             {
-                TypeNameHandling = TypeNameHandling.All,
-                PreserveReferencesHandling = PreserveReferencesHandling.All
+                TypeNameHandling = TypeNameHandling.Auto,
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                ObjectCreationHandling = ObjectCreationHandling.Auto
             };
-            var storageInstance = (StorageInstance)JsonConvert.DeserializeObject(jsonString, settings);
+
+            var storageInstance = JsonConvert.DeserializeObject<StorageInstance>(jsonString, _jsonSettings);
 
             Storage.Vaults = storageInstance.Vaults;
             Storage.Persons = storageInstance.Persons;
             Storage.ExpenseTypes = storageInstance.ExpenseTypes;
             Storage.IncomeTypes = storageInstance.IncomeTypes;
-
-            foreach(var vault in Storage.Vaults)
-            {
-                vault.AfterDeserialize();
-            }
-
-            int stop = 1;
         }
     }
 }
