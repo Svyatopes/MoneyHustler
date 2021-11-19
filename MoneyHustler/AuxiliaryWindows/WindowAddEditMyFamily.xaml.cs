@@ -60,6 +60,15 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
+            for (int i = 1; i < enteredPerson.Length; i++)
+            {
+                if (Char.IsUpper(enteredPerson[i]))
+                {
+                    MessageBox.Show("Имя не может содержать заглавные буквы, кроме первой");
+                    return;
+                }
+            }
+
             foreach (Person item in Storage.Persons)
             {
                 if (item.Name == enteredPerson)
