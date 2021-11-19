@@ -6,6 +6,37 @@
         xmlns:local="clr-namespace:MoneyHustler.AuxiliaryWindows"
         mc:Ignorable="d"
         Title="WindowExpenses" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="placeHolder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <TextBox Text="{Binding Path=Text,
+                                                RelativeSource={RelativeSource TemplatedParent}, 
+                                                Mode=TwoWay,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 x:Name="textSource" 
+                                 Background="Transparent" 
+                                 Panel.ZIndex="2" />
+                            <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="Foreground" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
+                                                <Setter Property="Foreground" Value="LightGray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="51*"/>
@@ -14,11 +45,11 @@
         <Button x:Name="AddButton" Grid.Row="1" Content="Add" Margin="320,20,320,20" Click="ButtonAdd_Click" />
 
         <StackPanel x:Name="ParentStackPanel" Orientation="Horizontal" Height="25" VerticalAlignment="Top" Margin="10,10">
-            <DatePicker x:Name="DatePick" IsDropDownOpen="True" SelectedDateFormat="Short" Margin="10,0"/>
-            <TextBox x:Name="Amount" Text="Сумма " HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0" TextChanged="Amount_TextChanged"/>
+            <DatePicker x:Name="DatePick" SelectedDateFormat="Short" Margin="10,0"/>
+            <TextBox x:Name="Amount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0" TextChanged="Amount_TextChanged"/>
             <ComboBox x:Name="Person" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0" DisplayMemberPath="Name"/>
             <ComboBox x:Name="Vault"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0" DisplayMemberPath="Name"/>
-            <TextBox x:Name="Comment" Text="Комментарий"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0"/>
+            <TextBox x:Name="Comment" Style="{StaticResource placeHolder}" MinWidth="100" Tag="Комментарий"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0"/>
             <ComboBox  x:Name="TypeComboBox" MinWidth="100" DisplayMemberPath="Name"/>
         </StackPanel>
 

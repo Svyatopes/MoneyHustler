@@ -37,12 +37,11 @@ namespace MoneyHustler.AuxiliaryWindows
             TypeComboBox.SelectedItem = Storage.ExpenseTypes[0];
             DatePick.SelectedDate = DateTime.Now;
             listViewForExpenses.ItemsSource = listOfExpensesView;
-            
+
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("понял");
             var button = (Button)sender;
             var expense = (Expense)button.DataContext;
             listOfExpensesView.Remove(expense);
@@ -52,13 +51,17 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
-            
-            if ((string)((Button)e.OriginalSource).Content == "Изменить")
+            var button = (Button)sender;
+            if (button == null)
             {
-                var button = (Button)sender;
-                var expense = (Expense)button.DataContext;
-                ((Button)e.OriginalSource).Content = "Сохранить";
-                AddButton.Content = "Сохраните!";
+                return;
+            }
+            var expense = (Expense)button.DataContext;
+
+            if ((string)button.Content == "Изменить")
+            {
+                AddButton.Content = "Сохраните";
+                listViewForExpenses.IsEnabled = false;
                 AddButton.IsEnabled = false;
                 Person.SelectedItem = expense.Person;
                 Vault.SelectedItem = expense.Vault;
@@ -69,11 +72,8 @@ namespace MoneyHustler.AuxiliaryWindows
             }
             else if ((string)((Button)e.OriginalSource).Content == "Сохранить")
             {
-                
-                var button = (Button)sender;
-                var expense = (Expense)button.DataContext;
-                
-                ((Button)e.OriginalSource).Content = "Изменить";
+
+                button.Content = "Изменить";
                 AddButton.IsEnabled = true;
                 AddButton.Content = "Add";
 
@@ -105,10 +105,10 @@ namespace MoneyHustler.AuxiliaryWindows
                 }
                 catch (ArgumentException)
                 {
-                    MessageBox.Show("не согласны\n понял???");
+                    MessageBox.Show("не согласны\n понял???", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            
+
 
         }
 
@@ -130,12 +130,12 @@ namespace MoneyHustler.AuxiliaryWindows
             }
             catch (ArgumentException)
             {
-                MessageBox.Show("не потратил\nок");
+                MessageBox.Show("не потратил\nок", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            
+
         }
 
-       
+
 
         private void Amount_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -145,14 +145,14 @@ namespace MoneyHustler.AuxiliaryWindows
                 AddButton.IsEnabled = false;
                 AddButton.Content = "Зайди правильно";
                 Amount.Background = Brushes.Yellow;
-                
+
             }
-            else if((string)AddButton.Content != "Сохраните!")
+            else if ((string)AddButton.Content != "Сохраните!")
             {
                 AddButton.IsEnabled = true;
                 Amount.Background = Brushes.White;
                 AddButton.Content = "Add";
-            }  
+            }
         }
 
         private void UpdateIncomesView()
