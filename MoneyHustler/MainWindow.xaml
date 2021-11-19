@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MoneyHustler"
         mc:Ignorable="d"
-        Title="MainWindow" Height="503" Width="885" Background="#FF1F1F1F">
+        Title="MainWindow" Height="503" Width="885" Background="#FF1F1F1F" WindowStartupLocation="CenterScreen">
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

@@ -39,6 +39,7 @@ namespace MoneyHustler.AuxiliaryWindows
             ListViewExpenses.ItemsSource = _expenseTypes;
 
             SetIncomeLabelsForAdding();
+            SetExpenseLabelsForAdding();
         }
 
         private void ButtonRemoveIncomeCategoryClick(object sender, RoutedEventArgs e)
@@ -97,14 +98,29 @@ namespace MoneyHustler.AuxiliaryWindows
             TextBoxEnterIncomeCategory.Text = "";
         }
 
-        private void SetExpenseLabelsForEditing()
+        private void SetExpenseLabelsForEditing(string name)
         {
+            LabelAddExpenseCategories.Content = $"Переименовать: {name}";
+            LabelEnterExpenseCategories.Content = "Введите новое название: ";
 
+
+            ButtonRenameFinallyExpenseCategory.IsEnabled = true;
+            ButtonRenameFinallyExpenseCategory.Visibility = Visibility.Visible;
+            ButtonAddExpenseCategory.IsEnabled = false;
+            ButtonAddExpenseCategory.Visibility = Visibility.Hidden;
+            TextBoxEnterExpenseCategory.Text = "";
         }
 
         private void SetExpenseLabelsForAdding()
         {
+            LabelAddExpenseCategories.Content = "Добавить категорию: ";
+            LabelEnterExpenseCategories.Content = "Введите название категории: ";
 
+            ButtonRenameFinallyExpenseCategory.IsEnabled = false;
+            ButtonRenameFinallyExpenseCategory.Visibility = Visibility.Hidden;
+            ButtonAddExpenseCategory.IsEnabled = true;
+            ButtonAddExpenseCategory.Visibility = Visibility.Visible;
+            TextBoxEnterExpenseCategory.Text = "";
         }
 
         private void ButtonRenameIncomeCategoryClick(object sender, RoutedEventArgs e)
@@ -120,7 +136,11 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonRenameExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
+            var button = (Button)sender;
+            var expenseType = (ExpenseType)button.DataContext;
 
+            SetExpenseLabelsForEditing(expenseType.Name);
+            _expenseTypeToRename = expenseType;
         }
 
 
@@ -131,7 +151,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
-            if (Storage.GetAllExpences().Any(item => item.Type.Name == TextBoxEnterIncomeCategory.Text))
+            if (Storage.GetAllIncomes().Any(item => item.Type.Name == TextBoxEnterIncomeCategory.Text))
             {
                 MessageBox.Show("Категория с таким именем уже существует!");
                 return;
@@ -148,11 +168,33 @@ namespace MoneyHustler.AuxiliaryWindows
 
             MessageBox.Show("Успешно переименовано!");
             SetIncomeLabelsForAdding();
+
         }
 
         private void ButtonRenameFinallyExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
+            if (TextBoxEnterExpenseCategory.Text.Length == 0)
+            {
+                return;
+            }
 
+            if (Storage.GetAllExpences().Any(item => item.Type.Name == TextBoxEnterExpenseCategory.Text))
+            {
+                MessageBox.Show("Категория с таким именем уже существует!");
+                return;
+            }
+
+            ExpenseType expenseType = Storage.ExpenseTypes.Find(x => x.Name == _expenseTypeToRename.Name);
+            expenseType.Name = TextBoxEnterExpenseCategory.Text;
+
+            _expenseTypes.Clear();
+            foreach (ExpenseType type in Storage.ExpenseTypes)
+            {
+                _expenseTypes.Add(type);
+            }
+
+            MessageBox.Show("Успешно переименовано!");
+            SetExpenseLabelsForAdding();
         }
 
 
@@ -180,10 +222,15 @@ namespace MoneyHustler.AuxiliaryWindows
             }
             Storage.ExpenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
             _expenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
-            TextBoxEnterIncomeCategory.Text = "";
+            TextBoxEnterExpenseCategory.Text = "";
         }
 
         private void ButtonToMainScreenClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+        }
+
+        private void ButtonToMainScreenExpensesClick(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
         }
