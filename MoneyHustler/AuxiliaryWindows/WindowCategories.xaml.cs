@@ -131,6 +131,12 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
+            if (Storage.GetAllExpences().Any(item => item.Type.Name == TextBoxEnterIncomeCategory.Text))
+            {
+                MessageBox.Show("Категория с таким именем уже существует!");
+                return;
+            }
+
             IncomeType incomeType = Storage.IncomeTypes.Find(x => x.Name == _incomeTypeToRename.Name);
             incomeType.Name = TextBoxEnterIncomeCategory.Text;
 
@@ -142,8 +148,6 @@ namespace MoneyHustler.AuxiliaryWindows
 
             MessageBox.Show("Успешно переименовано!");
             SetIncomeLabelsForAdding();
-
-            
         }
 
         private void ButtonRenameFinallyExpenseCategoryClick(object sender, RoutedEventArgs e)
@@ -177,6 +181,11 @@ namespace MoneyHustler.AuxiliaryWindows
             Storage.ExpenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
             _expenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
             TextBoxEnterIncomeCategory.Text = "";
+        }
+
+        private void ButtonToMainScreenClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
         }
     }
 }
