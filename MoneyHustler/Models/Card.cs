@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoneyHustler.Models
 {
-    class Card: MoneyVault
+    class Card : MoneyVault
     {
         public decimal CashBack { get; set; } //Вводиться в ввиде процента
 
@@ -37,13 +37,19 @@ namespace MoneyHustler.Models
         private void EarnCashBack(Expense expense)
         {
             //Создание нового Income для начисления кэшбэка с категорией дохода "CashBack"
-            IncomeType incomeTypeCashBack = new IncomeType { Name = "CashBack" };
+            var incomeTypeCashBack = Storage.IncomeTypes.FirstOrDefault(item => item.Name == "CashBack");
+            if (incomeTypeCashBack == null)
+            {
+                incomeTypeCashBack = new IncomeType { Name = "CashBack" };
+                Storage.IncomeTypes.Add(incomeTypeCashBack);
+            }
 
             //Информация по категории "CashBack", зависит от расхода по this Card 
-            Income incomeCashback = new Income(expense.Amount * CashBack / 100, 
-                expense.Date, expense.Person, expense.Comment, 
+            Income incomeCashback = new Income(expense.Amount * CashBack / 100,
+                expense.Date, expense.Person, expense.Comment,
                 incomeTypeCashBack); //Создаем новый доход который является кэшбеком изходя из expense
             IncreaseBalance(incomeCashback);
+            Storage.Save();
         }
 
     }
