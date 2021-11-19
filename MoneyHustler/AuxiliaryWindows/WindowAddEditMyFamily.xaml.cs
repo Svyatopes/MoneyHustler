@@ -45,38 +45,13 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
-            if (enteredPerson.Contains("0") || enteredPerson.Contains("1") || enteredPerson.Contains("2") ||
-                enteredPerson.Contains("3") || enteredPerson.Contains("4") || enteredPerson.Contains("5") ||
-                enteredPerson.Contains("6") || enteredPerson.Contains("7") || enteredPerson.Contains("8") ||
-                enteredPerson.Contains("9") || enteredPerson.Contains(" "))
+
+            if (Storage.Persons.Any(item => item.Name == enteredPerson))
             {
-                MessageBox.Show("Имя не должно содержать цифр и пробелов!");
+                MessageBox.Show("Такое имя уже существует");
                 return;
             }
 
-            if (Char.IsLower(enteredPerson[0]))
-            {
-                MessageBox.Show("Имя должно начинаться с большой буквы!");
-                return;
-            }
-
-            for (int i = 1; i < enteredPerson.Length; i++)
-            {
-                if (Char.IsUpper(enteredPerson[i]))
-                {
-                    MessageBox.Show("Имя не может содержать заглавные буквы, кроме первой");
-                    return;
-                }
-            }
-
-            foreach (Person item in Storage.Persons)
-            {
-                if (item.Name == enteredPerson)
-                {
-                    MessageBox.Show("Такое имя уже существует");
-                    return;
-                }
-            }
 
             if (_person == null)
             {
