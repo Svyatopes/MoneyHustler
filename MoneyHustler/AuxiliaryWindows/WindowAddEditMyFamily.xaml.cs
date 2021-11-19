@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MoneyHustler.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ namespace MoneyHustler.AuxiliaryWindows
     /// </summary>
     public partial class WindowAddEditMyFamily : Window
     {
+        private ObservableCollection<Person> _persons;
         public WindowAddEditMyFamily()
         {
             InitializeComponent();
