@@ -62,14 +62,14 @@ namespace MoneyHustler.AuxiliaryWindows
             var button = (Button)sender;
             var expenseType = (ExpenseType)button.DataContext;
 
-            if (Storage.GetAllExpenses().Any(item => item.Type == expenseType))
+            if (Storage.GetAllExpences().Any(item => item.Type == expenseType))
             {
                 MessageBox.Show("Эта категория используется вами!");
                 return;
             }
 
-            Storage.IncomeTypes.Remove(expenseType);
-            _incomeTypes.Remove(expenseType);
+            Storage.ExpenseTypes.Remove(expenseType);
+            _expenseTypes.Remove(expenseType);
         }
 
         private void SetIncomeLabelsForEditing(string name)
@@ -82,6 +82,7 @@ namespace MoneyHustler.AuxiliaryWindows
             ButtonRenameFinallyIncomeCategory.Visibility = Visibility.Visible;
             ButtonAddIncomeCategory.IsEnabled = false;
             ButtonAddIncomeCategory.Visibility = Visibility.Hidden;
+            TextBoxEnterIncomeCategory.Text = "";
         }
 
         private void SetIncomeLabelsForAdding()
@@ -93,6 +94,7 @@ namespace MoneyHustler.AuxiliaryWindows
             ButtonRenameFinallyIncomeCategory.Visibility = Visibility.Hidden;
             ButtonAddIncomeCategory.IsEnabled = true;
             ButtonAddIncomeCategory.Visibility = Visibility.Visible;
+            TextBoxEnterIncomeCategory.Text = "";
         }
 
         private void SetExpenseLabelsForEditing()
@@ -109,7 +111,7 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             var button = (Button)sender;
             var incomeType = (IncomeType)button.DataContext;
-                
+
             SetIncomeLabelsForEditing(incomeType.Name);
             _incomeTypeToRename = incomeType;
         }
@@ -132,28 +134,17 @@ namespace MoneyHustler.AuxiliaryWindows
             IncomeType incomeType = Storage.IncomeTypes.Find(x => x.Name == _incomeTypeToRename.Name);
             incomeType.Name = TextBoxEnterIncomeCategory.Text;
 
-            //foreach (IncomeType incomeType in Storage.IncomeTypes)
-            //{
-            //    if (incomeType.Name == _incomeTypeToRename.Name)
-            //    {
-            //        incomeType.Name = TextBoxEnterIncomeCategory.Text;
-            //    }
-            //}
-
-            incomeType = (IncomeType)_incomeTypes.Where(x => x.Name == _incomeTypeToRename.Name);
-            incomeType.Name = TextBoxEnterIncomeCategory.Text;
-
-            //foreach (IncomeType incomeType in _incomeTypes)
-            //{
-            //    if (incomeType.Name == _incomeTypeToRename.Name)
-            //    {
-            //        incomeType.Name = TextBoxEnterIncomeCategory.Text;
-            //    }
-            //}
+            _incomeTypes.Clear();
+            foreach (IncomeType type in Storage.IncomeTypes)
+            {
+                _incomeTypes.Add(type);
+            }
 
             MessageBox.Show("Успешно переименовано!");
             SetIncomeLabelsForAdding();
-;        }
+
+            
+        }
 
         private void ButtonRenameFinallyExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
@@ -172,6 +163,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
             Storage.IncomeTypes.Add(new IncomeType() { Name = TextBoxEnterIncomeCategory.Text });
             _incomeTypes.Add(new IncomeType() { Name = TextBoxEnterIncomeCategory.Text });
+            TextBoxEnterIncomeCategory.Text = "";
         }
 
         private void ButtonAddExpenseCategoryClick(object sender, RoutedEventArgs e)
@@ -184,6 +176,7 @@ namespace MoneyHustler.AuxiliaryWindows
             }
             Storage.ExpenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
             _expenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
+            TextBoxEnterIncomeCategory.Text = "";
         }
     }
 }

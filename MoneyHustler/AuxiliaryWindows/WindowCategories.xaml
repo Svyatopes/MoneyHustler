@@ -35,7 +35,8 @@
                 <Label x:Name="LabelEnterIncomeCategories" Content="Введите название категории:"  FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" FontFamily="Calibri Light" Grid.Column="4" Margin="0,87,0,9" Grid.ColumnSpan="5" Grid.RowSpan="2" />
                 <Rectangle Grid.ColumnSpan="6" Grid.Column="2" Grid.RowSpan="7" Opacity="0.5" Fill="#FF565555" Panel.ZIndex="-1" Margin="56,0,0,0"/>
                 <TextBox x:Name="TextBoxEnterIncomeCategory" Grid.Column="4" Margin="0,1,34,0" Grid.Row="2" TextWrapping="Wrap" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="4" />
-                <Button x:Name="ButtonAddIncomeCategory" Content="Add" Grid.Column="5" Margin="0,0,0,0" Grid.Row="5" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="1" Click="ButtonAddIncomeCategory_Click"/>
+                <Button x:Name="ButtonAddIncomeCategory" Content="Add" Grid.Column="5" Margin="0,0,0,0" Grid.Row="5" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="1" Click="ButtonAddIncomeCategoryClick"/>
+                <Button x:Name="ButtonRenameFinallyIncomeCategory" Content="Rename" Grid.Column="5" Grid.Row="5" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="1" Click="ButtonRenameFinallyIncomeCategoryClick"/>
                 <ListView x:Name="ListViewIncomes" Grid.ColumnSpan="2" Margin="0,87,56,0" Grid.RowSpan="6" Grid.Column="1" Background="#FFC3B9A0" Foreground="Black">
                     <ListView.View>
                         <GridView>
@@ -60,7 +61,6 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Button x:Name="ButtonRenameFinallyIncomeCategory" Content="Rename" Grid.Column="5" Grid.Row="5" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="1" Click="ButtonRenameFinallyIncomeCategory"/>
             </Grid>
         </TabItem>
         <TabItem Header="Категории расходов" BorderBrush="#FFC3B9A0" Width="auto">
