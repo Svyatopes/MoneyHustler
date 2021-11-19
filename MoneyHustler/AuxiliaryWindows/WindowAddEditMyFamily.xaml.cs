@@ -37,7 +37,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonSaveClick(object sender, RoutedEventArgs e)
         {
-            string enteredPerson = TextBoxChangesInput.Text;
+            string enteredPerson = TextBoxChangesInput.Text.Trim();
 
             if (TextBoxChangesInput.Text == String.Empty)
             {
