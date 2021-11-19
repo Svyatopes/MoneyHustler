@@ -29,13 +29,13 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             InitializeComponent();
             listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
-            Person.ItemsSource = Storage.Persons;
-            Person.SelectedItem = Storage.Persons[0];
-            Vault.ItemsSource = Storage.Vaults;
-            Vault.SelectedItem = Storage.Vaults[0];
-            TypeComboBox.ItemsSource = Storage.ExpenseTypes;
-            TypeComboBox.SelectedItem = Storage.ExpenseTypes[0];
-            DatePick.SelectedDate = DateTime.Now;
+            ComboBoxExpensePerson.ItemsSource = Storage.Persons;
+            ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
+            ComboBoxExpenseVault.ItemsSource = Storage.Vaults;
+            ComboBoxExpenseVault.SelectedItem = Storage.Vaults[0];
+            ComboBoxExpenseType.ItemsSource = Storage.ExpenseTypes;
+            ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
+            DatePickerExpenseDate.SelectedDate = DateTime.Now;
             listViewForExpenses.ItemsSource = listOfExpensesView;
 
         }
@@ -63,12 +63,12 @@ namespace MoneyHustler.AuxiliaryWindows
                 AddButton.Content = "Сохраните";
                 listViewForExpenses.IsEnabled = false;
                 AddButton.IsEnabled = false;
-                Person.SelectedItem = expense.Person;
-                Vault.SelectedItem = expense.Vault;
-                TypeComboBox.SelectedItem = expense.Type;
-                DatePick.SelectedDate = expense.Date;
-                Comment.Text = expense.Comment;
-                Amount.Text = expense.Amount.ToString();
+                ComboBoxExpensePerson.SelectedItem = expense.Person;
+                ComboBoxExpenseVault.SelectedItem = expense.Vault;
+                ComboBoxExpenseType.SelectedItem = expense.Type;
+                DatePickerExpenseDate.SelectedDate = expense.Date;
+                TextBoxExpenseComment.Text = expense.Comment;
+                TextBoxExpenseAmount.Text = expense.Amount.ToString();
             }
             else if ((string)((Button)e.OriginalSource).Content == "Сохранить")
             {
@@ -79,24 +79,24 @@ namespace MoneyHustler.AuxiliaryWindows
 
                 try
                 {
-                    expense.Amount = Convert.ToDecimal(Amount.Text);
-                    expense.Comment = Comment.Text;
-                    expense.Date = (DateTime)DatePick.SelectedDate;
-                    expense.Person = (Person)Person.SelectedItem;
-                    expense.Type = (ExpenseType)TypeComboBox.SelectedItem;
+                    expense.Amount = Convert.ToDecimal(TextBoxExpenseAmount.Text);
+                    expense.Comment = TextBoxExpenseComment.Text;
+                    expense.Date = (DateTime)DatePickerExpenseDate.SelectedDate;
+                    expense.Person = (Person)ComboBoxExpensePerson.SelectedItem;
+                    expense.Type = (ExpenseType)ComboBoxExpenseType.SelectedItem;
 
-                    if (expense.Vault != (MoneyVault)Vault.SelectedItem)
+                    if (expense.Vault != (MoneyVault)ComboBoxExpenseVault.SelectedItem)
                     {
                         expense.Vault.Remove(expense);
-                        expense.Vault = (MoneyVault)Vault.SelectedItem;
+                        expense.Vault = (MoneyVault)ComboBoxExpenseVault.SelectedItem;
                         expense.Vault.DecreaseBalance(
                             new Expense
                             (
-                          Convert.ToDecimal(Amount.Text),
-                          (DateTime)DatePick.SelectedDate,
-                          (Person)Person.SelectedItem,
-                          Comment.Text,
-                          (ExpenseType)TypeComboBox.SelectedItem
+                          Convert.ToDecimal(TextBoxExpenseAmount.Text),
+                          (DateTime)DatePickerExpenseDate.SelectedDate,
+                          (Person)ComboBoxExpensePerson.SelectedItem,
+                          TextBoxExpenseComment.Text,
+                          (ExpenseType)ComboBoxExpenseType.SelectedItem
                             )
                         );
                     }
@@ -116,15 +116,15 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             Expense newExpense = new Expense
             (
-               Convert.ToDecimal(Amount.Text),
-               (DateTime)DatePick.SelectedDate,
-               (Person)Person.SelectedItem,
-               Comment.Text,
-               (ExpenseType)TypeComboBox.SelectedItem
+               Convert.ToDecimal(TextBoxExpenseAmount.Text),
+               (DateTime)DatePickerExpenseDate.SelectedDate,
+               (Person)ComboBoxExpensePerson.SelectedItem,
+               TextBoxExpenseComment.Text,
+               (ExpenseType)ComboBoxExpenseType.SelectedItem
             );
             try
             {
-                ((MoneyVault)Vault.SelectedItem).DecreaseBalance(newExpense);
+                ((MoneyVault)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
                 MessageBox.Show("потратил\nок");
                 UpdateIncomesView();
             }
@@ -140,26 +140,26 @@ namespace MoneyHustler.AuxiliaryWindows
         private void Amount_TextChanged(object sender, TextChangedEventArgs e)
         {
             decimal n = 0;
-            if (!Decimal.TryParse(Amount.Text, out n))
+            if (!Decimal.TryParse(TextBoxExpenseAmount.Text, out n))
             {
                 AddButton.IsEnabled = false;
                 AddButton.Content = "Зайди правильно";
-                Amount.Background = Brushes.Yellow;
+                TextBoxExpenseAmount.Background = Brushes.Yellow;
 
             }
             else if ((string)AddButton.Content != "Сохраните!")
             {
                 AddButton.IsEnabled = true;
-                Amount.Background = Brushes.White;
+                TextBoxExpenseAmount.Background = Brushes.White;
                 AddButton.Content = "Add";
             }
         }
 
         private void UpdateIncomesView()
         {
-            Amount.Text = "Сумма";
-            Comment.Text = "Комментарий";
-            DatePick.SelectedDate = DateTime.Today;
+            TextBoxExpenseAmount.Text = "Сумма";
+            TextBoxExpenseComment.Text = "Комментарий";
+            DatePickerExpenseDate.SelectedDate = DateTime.Today;
             listOfExpensesView.Clear();
             var allExpenses = Storage.GetAllExpences();
             foreach (var item in allExpenses)

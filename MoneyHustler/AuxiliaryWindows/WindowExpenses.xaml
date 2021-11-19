@@ -25,7 +25,7 @@
                                         <Setter Property="Foreground" Value="Transparent"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
-                                                <Setter Property="Foreground" Value="LightGray"/>
+                                                <Setter Property="Foreground" Value="#FF807463"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -37,24 +37,29 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid>
+    <Grid Background="#FF1F1F1F">
         <Grid.RowDefinitions>
             <RowDefinition Height="51*"/>
             <RowDefinition Height="11*"/>
         </Grid.RowDefinitions>
-        <Button x:Name="AddButton" Grid.Row="1" Content="Add" Margin="320,20,320,20" Click="ButtonAdd_Click" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="321*"/>
+            <ColumnDefinition Width="79*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="AddButton" Grid.Row="1" Content="Add" Margin="320,20,87,20" Click="ButtonAdd_Click" />
 
-        <StackPanel x:Name="ParentStackPanel" Orientation="Horizontal" Height="25" VerticalAlignment="Top" Margin="10,10">
-            <DatePicker x:Name="DatePick" SelectedDateFormat="Short" Margin="10,0"/>
-            <TextBox x:Name="Amount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0" TextChanged="Amount_TextChanged"/>
-            <ComboBox x:Name="Person" HorizontalAlignment="Center" VerticalAlignment="Center"  Margin="10,0" Padding="20,0" DisplayMemberPath="Name"/>
-            <ComboBox x:Name="Vault"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0" DisplayMemberPath="Name"/>
-            <TextBox x:Name="Comment" Style="{StaticResource placeHolder}" MinWidth="100" Tag="Комментарий"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0"/>
-            <ComboBox  x:Name="TypeComboBox" MinWidth="100" DisplayMemberPath="Name"/>
+        <StackPanel x:Name="ParentStackPanel" Grid.Row="0" Grid.Column="1" 
+                    Orientation="Vertical" Height="177" VerticalAlignment="Top" Margin="10,10,0,0" HorizontalAlignment="Left">
+            <DatePicker Background="#FFC3B9A0" x:Name="DatePickerExpenseDate" SelectedDateFormat="Short" Margin="0,0,0,5"/>
+            <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseAmount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" TextChanged="Amount_TextChanged" ToolTip="Сколько?"/>
+            <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpensePerson" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Кто?"/>
+            <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpenseVault"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Откуда?"/>
+            <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseComment" Style="{StaticResource placeHolder}" MinWidth="100" Tag="Комментарий"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,5,0,5" Padding="20,0" ToolTip="Поясните"/>
+            <ComboBox  Background="#FFC3B9A0" x:Name="ComboBoxExpenseType" MinWidth="100" DisplayMemberPath="Name" Margin="0,5,0,1" ToolTip="На что?" />
         </StackPanel>
 
 
-        <ListView x:Name="listViewForExpenses" Margin="23,60,23,10">
+        <ListView x:Name="listViewForExpenses" Margin="23,10,23,10" Background="#FFC3B9A0">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -88,7 +93,7 @@
             </ListView.View>
         </ListView>
 
-        
+
     </Grid>
 
 
