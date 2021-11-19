@@ -38,6 +38,37 @@ namespace MoneyHustler.AuxiliaryWindows
         private void ButtonSaveClick(object sender, RoutedEventArgs e)
         {
             string enteredPerson = TextBoxChangesInput.Text;
+
+            if (TextBoxChangesInput.Text == String.Empty)
+            {
+                MessageBox.Show("Введите имя пользователя!");
+                return;
+            }
+
+            if (enteredPerson.Contains("0") || enteredPerson.Contains("1") || enteredPerson.Contains("2") ||
+                enteredPerson.Contains("3") || enteredPerson.Contains("4") || enteredPerson.Contains("5") ||
+                enteredPerson.Contains("6") || enteredPerson.Contains("7") || enteredPerson.Contains("8") ||
+                enteredPerson.Contains("9") || enteredPerson.Contains(" "))
+            {
+                MessageBox.Show("Имя не должно содержать цифр и пробелов!");
+                return;
+            }
+
+            if (Char.IsLower(enteredPerson[0]))
+            {
+                MessageBox.Show("Имя должно начинаться с большой буквы!");
+                return;
+            }
+
+            foreach (Person item in Storage.Persons)
+            {
+                if (item.Name == enteredPerson)
+                {
+                    MessageBox.Show("Такое имя уже существует");
+                    return;
+                }
+            }
+
             if (_person == null)
             {
                 _person = new Person { Name = enteredPerson };
