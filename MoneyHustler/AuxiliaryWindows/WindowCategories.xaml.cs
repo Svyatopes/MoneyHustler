@@ -94,11 +94,24 @@ namespace MoneyHustler.AuxiliaryWindows
             LabelAddIncomeCategories.Content = "Добавить категорию: ";
             LabelEnterIncomeCategories.Content = "Введите название категории: ";
 
-            ButtonRenameFinallyIncomeCategory.IsEnabled = false;
-            ButtonRenameFinallyIncomeCategory.Visibility = Visibility.Hidden;
-            ButtonAddIncomeCategory.IsEnabled = true;
-            ButtonAddIncomeCategory.Visibility = Visibility.Visible;
+            SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, false);
+            SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, true);
+
             TextBoxEnterIncomeCategory.Text = string.Empty;
+        }
+
+        private void SetButtonEnabledAndVisibility(Button button, bool enabled)
+        {
+            if(enabled)
+            {
+                button.Visibility = Visibility.Visible;
+                button.IsEnabled = true;
+            }
+            else
+            {
+                button.Visibility = Visibility.Hidden;
+                button.IsEnabled = false;
+            }
         }
 
         private void SetExpenseLabelsForEditing(string name)
@@ -209,15 +222,18 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonAddIncomeCategoryClick(object sender, RoutedEventArgs e)
         {
-            if (TextBoxEnterIncomeCategory.Text.Length == 0) return;
-            if (_incomeTypes.Any(item => item.Name == TextBoxEnterIncomeCategory.Text))
+          //  if (TextBoxEnterIncomeCategory.Text.Length == 0) return;
+
+            var enteredExpenseTypeName = TextBoxEnterExpenseCategory.Text.Trim();
+
+            if (_incomeTypes.Any(item => item.Name == enteredExpenseTypeName))
             {
                 MessageBox.Show("Такая категория уже существует!");
                 return;
             }
 
-            Storage.IncomeTypes.Add(new IncomeType() { Name = TextBoxEnterIncomeCategory.Text });
-            _incomeTypes.Add(new IncomeType() { Name = TextBoxEnterIncomeCategory.Text });
+            // Storage.IncomeTypes.Add(new IncomeType() { Name = enteredExpenseTypeName });
+            // _incomeTypes.Add(new IncomeType() { Name = enteredExpenseTypeName });
             TextBoxEnterIncomeCategory.Text = string.Empty;
 
             Storage.Save();
@@ -225,14 +241,17 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonAddExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
-            if (TextBoxEnterExpenseCategory.Text.Length == 0) return;
-            if (_incomeTypes.Any(item => item.Name == TextBoxEnterExpenseCategory.Text))
+            //if (TextBoxEnterExpenseCategory.Text.Length == 0) return;
+
+            var enteredExpenseTypeName = TextBoxEnterExpenseCategory.Text.Trim();
+
+            if (_incomeTypes.Any(item => item.Name == enteredExpenseTypeName))
             {
                 MessageBox.Show("Такая категория уже существует!");
                 return;
             }
-            Storage.ExpenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
-            _expenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
+            //   Storage.ExpenseTypes.Add(new ExpenseType() { Name = enteredExpenseTypeName });
+            //   _expenseTypes.Add(new ExpenseType() { Name = enteredExpenseTypeName });
             TextBoxEnterExpenseCategory.Text = string.Empty;
 
             Storage.Save();
