@@ -55,7 +55,8 @@ namespace MoneyHustler.AuxiliaryWindows
 
             Storage.IncomeTypes.Remove(incomeType);
             _incomeTypes.Remove(incomeType);
-           
+
+            Storage.Save();
         }
 
         private void ButtonRemoveExpenseCategoryClick(object sender, RoutedEventArgs e)
@@ -71,6 +72,8 @@ namespace MoneyHustler.AuxiliaryWindows
 
             Storage.ExpenseTypes.Remove(expenseType);
             _expenseTypes.Remove(expenseType);
+
+            Storage.Save();
         }
 
         private void SetIncomeLabelsForEditing(string name)
@@ -170,6 +173,8 @@ namespace MoneyHustler.AuxiliaryWindows
             MessageBox.Show("Успешно переименовано!");
             SetIncomeLabelsForAdding();
 
+            Storage.Save();
+
         }
 
         private void ButtonRenameFinallyExpenseCategoryClick(object sender, RoutedEventArgs e)
@@ -196,6 +201,8 @@ namespace MoneyHustler.AuxiliaryWindows
 
             MessageBox.Show("Успешно переименовано!");
             SetExpenseLabelsForAdding();
+
+            Storage.Save();
         }
 
 
@@ -211,6 +218,8 @@ namespace MoneyHustler.AuxiliaryWindows
             Storage.IncomeTypes.Add(new IncomeType() { Name = TextBoxEnterIncomeCategory.Text });
             _incomeTypes.Add(new IncomeType() { Name = TextBoxEnterIncomeCategory.Text });
             TextBoxEnterIncomeCategory.Text = "";
+
+            Storage.Save();
         }
 
         private void ButtonAddExpenseCategoryClick(object sender, RoutedEventArgs e)
@@ -224,6 +233,8 @@ namespace MoneyHustler.AuxiliaryWindows
             Storage.ExpenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
             _expenseTypes.Add(new ExpenseType() { Name = TextBoxEnterExpenseCategory.Text });
             TextBoxEnterExpenseCategory.Text = "";
+
+            Storage.Save();
         }
 
         private void ButtonToMainScreenClick(object sender, RoutedEventArgs e)
