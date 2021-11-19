@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace MoneyHustler.Models
         public string Comment { get; set; } //комментарий
         public Person Person { get; set; } //кто совершил
 
+        [JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
         public MoneyVault Vault { get; set; } // какой кошелек
 
         public MoneyTraffic(decimal amount, DateTime date, Person person, string comment)
