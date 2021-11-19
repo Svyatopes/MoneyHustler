@@ -24,11 +24,8 @@ namespace MoneyHustler.AuxiliaryWindows
         private ObservableCollection<Person> _persons;
         public WindowMyFamily()
         {
-            Storage.Persons = new List<Person>();
-            Storage.Persons.Add(new Person() { Name = "Sasha" });
-            Storage.Persons.Add(new Person() { Name = "Pasha" });
+            
             InitializeComponent();
-
             _persons = new ObservableCollection<Person>(Storage.Persons);
             ListViewPersonsDisplay.ItemsSource = _persons;
         }
@@ -38,6 +35,8 @@ namespace MoneyHustler.AuxiliaryWindows
             WindowAddEditMyFamily WindowAddEditMyFamily = new();
             WindowAddEditMyFamily.ShowDialog();
             UpdatePersonsView();
+            Storage.Save();
+
         }
 
         private void ButtonEditClick(object sender, RoutedEventArgs e)
@@ -47,6 +46,8 @@ namespace MoneyHustler.AuxiliaryWindows
             WindowAddEditMyFamily WindowAddEditMyFamily = new(person);
             WindowAddEditMyFamily.ShowDialog();
             UpdatePersonsView();
+            Storage.Save();
+
         }
 
         private void ButtonDeleteClick(object sender, RoutedEventArgs e)
@@ -60,6 +61,7 @@ namespace MoneyHustler.AuxiliaryWindows
             }
             Storage.Persons.Remove(person);
             _persons.Remove(person);
+            Storage.Save();
         }
 
         private void UpdatePersonsView()
