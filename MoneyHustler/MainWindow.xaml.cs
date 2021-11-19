@@ -45,17 +45,11 @@ namespace MoneyHustler
             var father = new Person() { Name = "father" };
             Storage.Persons.Add(father);
 
-            var robert = new Person() { Name = "Roberto San Pedras Pedrilas" };
-            Storage.Persons.Add(robert);
-
             var myBox = new Card("MyBox", 100, 0);
             Storage.Vaults.Add(myBox);
 
             var myCard = new Card("myCard", 500, 1);
             Storage.Vaults.Add(myCard);
-
-            var visaPlatina = new Card("Visa Platinum", 500000, 10);
-            Storage.Vaults.Add(visaPlatina);
 
             var incomeTypeFood = new IncomeType() { Name = "Food" };
             Storage.IncomeTypes.Add(incomeTypeFood);
@@ -65,14 +59,6 @@ namespace MoneyHustler
 
             var incomeTypePet = new IncomeType() { Name = "Pet" };
             Storage.IncomeTypes.Add(incomeTypePet);
-
-            ExpenseType food = new() { Name = "Хавка" };
-            ExpenseType sport = new() { Name = "Качалка" };
-            ExpenseType drug = new() { Name = "Мяу (нарко)" };
-
-            Storage.ExpenseTypes.Add(food);
-            Storage.ExpenseTypes.Add(sport);
-            Storage.ExpenseTypes.Add(drug);
 
             myBox.IncreaseBalance(new Income(10000, DateTime.Now, iam, "from selling TV", incomeTypeClothes));
             myBox.IncreaseBalance(new Income(500, DateTime.Now.AddDays(-10), father, "Feed", incomeTypeFood));

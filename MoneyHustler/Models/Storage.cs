@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using Newtonsoft.Json;
 
 namespace MoneyHustler.Models
 {
-    static class Storage
+    public static class Storage
     {
 
         //Класс используется как хранилище всех данных в программе.
 
-        public static List<Person> Persons;
-        public static List<MoneyVault> Vaults;
-        public static List<IncomeType> IncomeTypes;
-        public static List<ExpenseType> ExpenseTypes;
+        public static List<Person> Persons = new List<Person>();
+        public static List<MoneyVault> Vaults = new List<MoneyVault>();
+        public static List<IncomeType> IncomeTypes = new List<IncomeType>();
+        public static List<ExpenseType> ExpenseTypes = new List<ExpenseType>();
+
+        private const string _path = "./storage.json";
 
         public static List<Income> GetAllIncomes()
         {
@@ -26,7 +28,7 @@ namespace MoneyHustler.Models
             }
 
             return allIncomes;
-        } 
+        }
 
         public static List<Expense> GetAllExpences()
         {
@@ -34,10 +36,51 @@ namespace MoneyHustler.Models
 
             foreach (MoneyVault moneyVault in Vaults)
             {
-                allExpences.AddRange(moneyVault.Expenses);               
+                allExpences.AddRange(moneyVault.Expenses);
             }
 
             return allExpences;
+        }
+
+        public static void Save()
+        {
+            var storageInstance = new StorageInstance(true);
+
+            var _jsonSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                ObjectCreationHandling = ObjectCreationHandling.Auto
+            };
+
+            string jsonString = JsonConvert.SerializeObject(storageInstance, Formatting.Indented, _jsonSettings);
+            File.WriteAllText(_path, jsonString);
+        }
+
+        public static void Load()
+        {
+            if (!File.Exists(_path))
+            {
+                return;
+            }
+
+            string jsonString = File.ReadAllText(_path);
+
+            var _jsonSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.Auto,
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                ObjectCreationHandling = ObjectCreationHandling.Auto
+            };
+
+            var storageInstance = JsonConvert.DeserializeObject<StorageInstance>(jsonString, _jsonSettings);
+
+            Storage.Vaults = storageInstance.Vaults;
+            Storage.Persons = storageInstance.Persons;
+            Storage.ExpenseTypes = storageInstance.ExpenseTypes;
+            Storage.IncomeTypes = storageInstance.IncomeTypes;
         }
     }
 }
