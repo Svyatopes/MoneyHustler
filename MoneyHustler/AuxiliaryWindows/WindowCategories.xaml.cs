@@ -81,11 +81,9 @@ namespace MoneyHustler.AuxiliaryWindows
             LabelAddIncomeCategories.Content = $"Переименовать: {name}";
             LabelEnterIncomeCategories.Content = "Введите новое название: ";
 
-
-            ButtonRenameFinallyIncomeCategory.IsEnabled = true;
-            ButtonRenameFinallyIncomeCategory.Visibility = Visibility.Visible;
-            ButtonAddIncomeCategory.IsEnabled = false;
-            ButtonAddIncomeCategory.Visibility = Visibility.Hidden;
+            SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, true);
+            SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, false);
+            
             TextBoxEnterIncomeCategory.Text = string.Empty;
         }
 
@@ -119,11 +117,9 @@ namespace MoneyHustler.AuxiliaryWindows
             LabelAddExpenseCategories.Content = $"Переименовать: {name}";
             LabelEnterExpenseCategories.Content = "Введите новое название: ";
 
+            SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, true);
+            SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, false);
 
-            ButtonRenameFinallyExpenseCategory.IsEnabled = true;
-            ButtonRenameFinallyExpenseCategory.Visibility = Visibility.Visible;
-            ButtonAddExpenseCategory.IsEnabled = false;
-            ButtonAddExpenseCategory.Visibility = Visibility.Hidden;
             TextBoxEnterExpenseCategory.Text = string.Empty;
         }
 
@@ -132,10 +128,9 @@ namespace MoneyHustler.AuxiliaryWindows
             LabelAddExpenseCategories.Content = "Добавить категорию: ";
             LabelEnterExpenseCategories.Content = "Введите название категории: ";
 
-            ButtonRenameFinallyExpenseCategory.IsEnabled = false;
-            ButtonRenameFinallyExpenseCategory.Visibility = Visibility.Hidden;
-            ButtonAddExpenseCategory.IsEnabled = true;
-            ButtonAddExpenseCategory.Visibility = Visibility.Visible;
+            SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, false);
+            SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, true);
+            
             TextBoxEnterExpenseCategory.Text = string.Empty;
         }
 
@@ -222,18 +217,20 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonAddIncomeCategoryClick(object sender, RoutedEventArgs e)
         {
-          //  if (TextBoxEnterIncomeCategory.Text.Length == 0) return;
+            if (string.IsNullOrWhiteSpace(TextBoxEnterIncomeCategory.Text)) return;
 
-            var enteredExpenseTypeName = TextBoxEnterExpenseCategory.Text.Trim();
+            var enteredIncomeTypeName = TextBoxEnterIncomeCategory.Text.Trim();
 
-            if (_incomeTypes.Any(item => item.Name == enteredExpenseTypeName))
+            if (_incomeTypes.Any(item => item.Name == enteredIncomeTypeName))
             {
                 MessageBox.Show("Такая категория уже существует!");
                 return;
             }
+            var incomeType = new IncomeType() { Name = enteredIncomeTypeName };
 
-            // Storage.IncomeTypes.Add(new IncomeType() { Name = enteredExpenseTypeName });
-            // _incomeTypes.Add(new IncomeType() { Name = enteredExpenseTypeName });
+            Storage.IncomeTypes.Add(incomeType);
+           _incomeTypes.Add(incomeType);
+
             TextBoxEnterIncomeCategory.Text = string.Empty;
 
             Storage.Save();
@@ -241,7 +238,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonAddExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
-            //if (TextBoxEnterExpenseCategory.Text.Length == 0) return;
+            if (string.IsNullOrWhiteSpace(TextBoxEnterExpenseCategory.Text)) return;
 
             var enteredExpenseTypeName = TextBoxEnterExpenseCategory.Text.Trim();
 
@@ -250,8 +247,11 @@ namespace MoneyHustler.AuxiliaryWindows
                 MessageBox.Show("Такая категория уже существует!");
                 return;
             }
-            //   Storage.ExpenseTypes.Add(new ExpenseType() { Name = enteredExpenseTypeName });
-            //   _expenseTypes.Add(new ExpenseType() { Name = enteredExpenseTypeName });
+
+            var expenseType = new ExpenseType() { Name = enteredExpenseTypeName };
+            Storage.ExpenseTypes.Add(expenseType);
+            _expenseTypes.Add(expenseType);
+
             TextBoxEnterExpenseCategory.Text = string.Empty;
 
             Storage.Save();
