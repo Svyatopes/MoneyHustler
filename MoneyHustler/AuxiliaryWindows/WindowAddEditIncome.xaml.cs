@@ -116,7 +116,7 @@ namespace MoneyHustler.AuxiliaryWindows
                     enteredVault.IncreaseBalance(_income);
                 }
             }
-
+            Storage.Save();
             this.Close();
         }
     }
