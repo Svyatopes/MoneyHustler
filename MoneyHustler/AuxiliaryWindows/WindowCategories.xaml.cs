@@ -95,7 +95,7 @@ namespace MoneyHustler.AuxiliaryWindows
             ButtonRenameFinallyIncomeCategory.Visibility = Visibility.Hidden;
             ButtonAddIncomeCategory.IsEnabled = true;
             ButtonAddIncomeCategory.Visibility = Visibility.Visible;
-            TextBoxEnterIncomeCategory.Text = "";
+            TextBoxEnterIncomeCategory.Text = string.Empty;
         }
 
         private void SetExpenseLabelsForEditing(string name)
@@ -146,19 +146,20 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonRenameFinallyIncomeCategoryClick(object sender, RoutedEventArgs e)
         {
-            if (TextBoxEnterIncomeCategory.Text.Length == 0)
+            if (string.IsNullOrWhiteSpace(TextBoxEnterIncomeCategory.Text))
             {
                 return;
             }
 
-            if (Storage.GetAllIncomes().Any(item => item.Type.Name == TextBoxEnterIncomeCategory.Text))
+            var enteredIncomeTypeName = TextBoxEnterIncomeCategory.Text.Trim();
+
+            if (Storage.IncomeTypes.Any(item => item.Name == enteredIncomeTypeName))
             {
                 MessageBox.Show("Категория с таким именем уже существует!");
                 return;
             }
 
-            IncomeType incomeType = Storage.IncomeTypes.Find(x => x.Name == _incomeTypeToRename.Name);
-            incomeType.Name = TextBoxEnterIncomeCategory.Text;
+            _incomeTypeToRename.Name = enteredIncomeTypeName;
 
             _incomeTypes.Clear();
             foreach (IncomeType type in Storage.IncomeTypes)
