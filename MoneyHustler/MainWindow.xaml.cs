@@ -45,11 +45,20 @@ namespace MoneyHustler
             var father = new Person() { Name = "father" };
             Storage.Persons.Add(father);
 
+            var wolf = new Person() { Name = "волк" };
+            Storage.Persons.Add(wolf);
+
             var myBox = new Card("MyBox", 100, 0);
             Storage.Vaults.Add(myBox);
 
             var myCard = new Card("myCard", 500, 1);
             Storage.Vaults.Add(myCard);
+
+            var visa = new Card("Visa", 100000, 10);
+            Storage.Vaults.Add(visa);
+
+            var visa2 = new Card("хуIsa", 8000000, 40);
+            Storage.Vaults.Add(visa2);
 
             var incomeTypeFood = new IncomeType() { Name = "Food" };
             Storage.IncomeTypes.Add(incomeTypeFood);
@@ -60,6 +69,22 @@ namespace MoneyHustler
             var incomeTypePet = new IncomeType() { Name = "Pet" };
             Storage.IncomeTypes.Add(incomeTypePet);
 
+            var expenseDrugs = new ExpenseType() { Name = "Наркота" };
+            Storage.ExpenseTypes.Add(expenseDrugs);
+
+            var expenseWhores = new ExpenseType() { Name = "Шлюхи" };
+            Storage.ExpenseTypes.Add(expenseWhores);
+
+            var expenseGuns = new ExpenseType() { Name = "Стволы" };
+            Storage.ExpenseTypes.Add(expenseGuns);
+
+            var expenseForWolf = new ExpenseType() { Name = "не цирк" };
+            Storage.ExpenseTypes.Add(expenseGuns);
+
+            var expenseHairStyle = new ExpenseType() { Name = "Барбишоп" };
+            Storage.ExpenseTypes.Add(expenseHairStyle);
+
+
             myBox.IncreaseBalance(new Income(10000, DateTime.Now, iam, "from selling TV", incomeTypeClothes));
             myBox.IncreaseBalance(new Income(500, DateTime.Now.AddDays(-10), father, "Feed", incomeTypeFood));
             myBox.IncreaseBalance(new Income(300, DateTime.Now.AddDays(-2), mother, "for my shooes", incomeTypeClothes));
@@ -68,6 +93,10 @@ namespace MoneyHustler
             myCard.IncreaseBalance(new Income(1000, DateTime.Now.AddDays(-4), mother, "for food", incomeTypeFood));
             myCard.IncreaseBalance(new Income(750, DateTime.Now.AddDays(-8), iam, "from cat", incomeTypePet));
 
+            visa.DecreaseBalance(new Expense(3000, DateTime.Now, iam, "объебусь", expenseDrugs));
+            visa.DecreaseBalance(new Expense(10000, DateTime.Now.AddDays(1), iam, "поебусь", expenseWhores));
+            visa.DecreaseBalance(new Expense(50000, DateTime.Now.AddDays(2), iam, "застрелюсь", expenseGuns));
+            visa2.DecreaseBalance(new Expense(3000, DateTime.Now.AddDays(2), father, "сходил в этот ваш", expenseHairStyle));
         }
 
         private void ButtonIncomes_Click(object sender, RoutedEventArgs e)

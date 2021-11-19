@@ -21,18 +21,13 @@ namespace MoneyHustler.AuxiliaryWindows
     /// </summary>
     public partial class WindowExpenses : Window
     {
-        List<Button> editButtons = new List<Button>();
-        List<Button> deleteButtons = new List<Button>();
-        List<ComboBoxItem> typesExpense = new List<ComboBoxItem>();
-        List<MoneyVault> vaults = new();
-        List<ExpenseType> expenseTypes = new();
-        List<Person> people = new();
+
+        private Expense _expense;
 
         private ObservableCollection<Expense> listOfExpensesView;
         public WindowExpenses()
         {
             InitializeComponent();
-            initExpenses();
             listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
             Person.ItemsSource = Storage.Persons;
             Person.SelectedItem = Storage.Persons[0];
@@ -41,115 +36,106 @@ namespace MoneyHustler.AuxiliaryWindows
             TypeComboBox.ItemsSource = Storage.ExpenseTypes;
             TypeComboBox.SelectedItem = Storage.ExpenseTypes[0];
             DatePick.SelectedDate = DateTime.Now;
-            //listBox1.ItemsSource = listOfExpensesView;
+            listViewForExpenses.ItemsSource = listOfExpensesView;
             
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            StackPanel sp = (StackPanel)((Button)e.OriginalSource).Parent;
-
-            listBox1.Items.Remove(sp);
+            MessageBox.Show("понял");
+            var button = (Button)sender;
+            var expense = (Expense)button.DataContext;
+            listOfExpensesView.Remove(expense);
+            expense.Vault.Remove(expense);
+            Storage.Save();
         }
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
             
-            if ((string)((Button)e.OriginalSource).Content == "Edit")
+            if ((string)((Button)e.OriginalSource).Content == "Изменить")
             {
+                var button = (Button)sender;
+                var expense = (Expense)button.DataContext;
+                ((Button)e.OriginalSource).Content = "Сохранить";
+                AddButton.Content = "Сохраните!";
                 AddButton.IsEnabled = false;
-                ((Button)e.OriginalSource).Content = "Save";
-                if(((Button)e.OriginalSource).Parent is StackPanel)
-                {
-                    StackPanel sp = (StackPanel)((Button)e.OriginalSource).Parent;
-
-                    foreach (UIElement item in sp.Children)
-                    {
-                        item.IsEnabled = true;
-                    }
-                }
+                Person.SelectedItem = expense.Person;
+                Vault.SelectedItem = expense.Vault;
+                TypeComboBox.SelectedItem = expense.Type;
+                DatePick.SelectedDate = expense.Date;
+                Comment.Text = expense.Comment;
+                Amount.Text = expense.Amount.ToString();
             }
-            else if ((string)((Button)e.OriginalSource).Content == "Save")
+            else if ((string)((Button)e.OriginalSource).Content == "Сохранить")
             {
+                
+                var button = (Button)sender;
+                var expense = (Expense)button.DataContext;
+                
+                ((Button)e.OriginalSource).Content = "Изменить";
                 AddButton.IsEnabled = true;
-                ((Button)e.OriginalSource).Content = "Edit";
-                if (((Button)e.OriginalSource).Parent is StackPanel)
-                {
-                    StackPanel sp = (StackPanel)((Button)e.OriginalSource).Parent;
+                AddButton.Content = "Add";
 
-                    foreach (UIElement item in sp.Children)
+                try
+                {
+                    expense.Amount = Convert.ToDecimal(Amount.Text);
+                    expense.Comment = Comment.Text;
+                    expense.Date = (DateTime)DatePick.SelectedDate;
+                    expense.Person = (Person)Person.SelectedItem;
+                    expense.Type = (ExpenseType)TypeComboBox.SelectedItem;
+
+                    if (expense.Vault != (MoneyVault)Vault.SelectedItem)
                     {
-                        if (!(item is Button))
-                            item.IsEnabled = false;   
+                        expense.Vault.Remove(expense);
+                        expense.Vault = (MoneyVault)Vault.SelectedItem;
+                        expense.Vault.DecreaseBalance(
+                            new Expense
+                            (
+                          Convert.ToDecimal(Amount.Text),
+                          (DateTime)DatePick.SelectedDate,
+                          (Person)Person.SelectedItem,
+                          Comment.Text,
+                          (ExpenseType)TypeComboBox.SelectedItem
+                            )
+                        );
                     }
+                    UpdateIncomesView();
+                    MessageBox.Show("ок");
                 }
-            }
-
-
-        }
-
-        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
-        {
-            List<UIElement> listUI = new();
-
-            listUI.Add(new DatePicker { SelectedDate = DatePick.SelectedDate, IsEnabled = false });
-            listUI.Add( new TextBox { Text = Amount.Text, IsEnabled = false });
-            listUI.Add(CreateNewComboBox(Person));
-            listUI.Add(CreateNewComboBox(Vault));
-            listUI.Add( new TextBox { Text = Comment.Text, IsEnabled = false });
-            listUI.Add( CreateNewComboBox(TypeComboBox));
-
-            StackPanel stackPanel = CreateStackPanel(listUI);
-
-            editButtons.Add(new Button { Content = "Edit" });
-            editButtons[editButtons.Count - 1].Click += Edit_Click;
-            deleteButtons.Add(new Button { Content = "Delete" });
-            deleteButtons[deleteButtons.Count - 1].Click += Delete_Click;
-
-            stackPanel.Children.Add(editButtons[editButtons.Count - 1]);
-            stackPanel.Children.Add(deleteButtons[editButtons.Count - 1]);
-            listBox1.Items.Add(stackPanel);
-
-            Expense expense = new Expense
-            (
-                Convert.ToDecimal(Amount.Text),
-                (DateTime)DatePick.SelectedDate,
-                (Person)Person.SelectedItem,
-                Comment.Text,
-                (ExpenseType)TypeComboBox.SelectedItem
-            );
-
-            foreach(MoneyVault item in Storage.Vaults)
-            {
-                if (item == Vault.SelectedItem)
+                catch (ArgumentException)
                 {
-                    item.DecreaseBalance(expense);
-                    break;
+                    MessageBox.Show("не согласны\n понял???");
                 }
             }
             
 
         }
 
-        private ComboBox CreateNewComboBox(ComboBox box)
+        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            ComboBox comboBox = new ComboBox { IsEnabled = false, DisplayMemberPath = "Name"};
-            comboBox.SelectedItem = box.SelectedItem;
-            comboBox.ItemsSource = box.ItemsSource;
-            return comboBox;
-        }
-
-        private StackPanel CreateStackPanel( List<UIElement> uIElements)
-        {
-            StackPanel stackPanel = new StackPanel { Orientation = Orientation.Horizontal };
-
-            foreach (UIElement item in uIElements)
+            Expense newExpense = new Expense
+            (
+               Convert.ToDecimal(Amount.Text),
+               (DateTime)DatePick.SelectedDate,
+               (Person)Person.SelectedItem,
+               Comment.Text,
+               (ExpenseType)TypeComboBox.SelectedItem
+            );
+            try
             {
-                stackPanel.Children.Add(item);
+                ((MoneyVault)Vault.SelectedItem).DecreaseBalance(newExpense);
+                MessageBox.Show("потратил\nок");
+                UpdateIncomesView();
             }
-
-            return stackPanel;
+            catch (ArgumentException)
+            {
+                MessageBox.Show("не потратил\nок");
+            }
+            
         }
+
+       
 
         private void Amount_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -158,10 +144,10 @@ namespace MoneyHustler.AuxiliaryWindows
             {
                 AddButton.IsEnabled = false;
                 AddButton.Content = "Зайди правильно";
-                Amount.Background = Brushes.Red;
+                Amount.Background = Brushes.Yellow;
                 
             }
-            else
+            else if((string)AddButton.Content != "Сохраните!")
             {
                 AddButton.IsEnabled = true;
                 Amount.Background = Brushes.White;
@@ -169,33 +155,17 @@ namespace MoneyHustler.AuxiliaryWindows
             }  
         }
 
-        private void initExpenses()
+        private void UpdateIncomesView()
         {
-            listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
-
-            foreach (Expense item in listOfExpensesView)
+            Amount.Text = "Сумма";
+            Comment.Text = "Комментарий";
+            DatePick.SelectedDate = DateTime.Today;
+            listOfExpensesView.Clear();
+            var allExpenses = Storage.GetAllExpences();
+            foreach (var item in allExpenses)
             {
-                List<UIElement> listUI = new();
-
-                listUI.Add(new DatePicker { SelectedDate = item.Date, IsEnabled = false });
-                listUI.Add(new TextBox { Text = Convert.ToString(item.Amount), IsEnabled = false });
-                listUI.Add(new ComboBox { ItemsSource = Storage.Persons, DisplayMemberPath = "Name", SelectedItem = item.Person, IsEnabled = false });
-                listUI.Add(new ComboBox { ItemsSource = Storage.Vaults, DisplayMemberPath = "Name", SelectedItem = item.Vault, IsEnabled = false });
-                listUI.Add(new TextBox { Text = item.Comment, IsEnabled = false });
-                listUI.Add(new ComboBox { ItemsSource = Storage.ExpenseTypes, DisplayMemberPath = "Name", SelectedItem = item.Type, IsEnabled = false });
-
-                StackPanel stackPanel = CreateStackPanel(listUI);
-
-                editButtons.Add(new Button { Content = "Edit" });
-                editButtons[editButtons.Count - 1].Click += Edit_Click;
-                deleteButtons.Add(new Button { Content = "Delete" });
-                deleteButtons[deleteButtons.Count - 1].Click += Delete_Click;
-
-                stackPanel.Children.Add(editButtons[editButtons.Count - 1]);
-                stackPanel.Children.Add(deleteButtons[editButtons.Count - 1]);
-                listBox1.Items.Add(stackPanel);
+                listOfExpensesView.Add(item);
             }
-            
         }
     }
 }

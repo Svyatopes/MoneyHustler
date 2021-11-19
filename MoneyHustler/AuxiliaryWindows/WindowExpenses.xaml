@@ -21,12 +21,41 @@
             <TextBox x:Name="Comment" Text="Комментарий"  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0" Padding="20,0"/>
             <ComboBox  x:Name="TypeComboBox" MinWidth="100" DisplayMemberPath="Name"/>
         </StackPanel>
-        
-        
-        <ListBox x:Name="listBox1" Margin="10,58,10,10 " >
-            
-            
-        </ListBox>
+
+
+        <ListView x:Name="listViewForExpenses" Margin="23,60,23,10">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+
+                    <GridViewColumn Header="Дата" Width="Auto" DisplayMemberBinding="{Binding Date, StringFormat=d, ConverterCulture=ru-RU}"/>
+                    <GridViewColumn Header="Сумма" Width="Auto" DisplayMemberBinding="{Binding Amount}"/>
+                    <GridViewColumn Header="Категория" Width="Auto" DisplayMemberBinding="{Binding Type.Name}"/>
+                    <GridViewColumn Header="Счет" Width="Auto" DisplayMemberBinding="{Binding Vault.Name}"/>
+                    <GridViewColumn Header="Человек" Width="Auto" DisplayMemberBinding="{Binding Person.Name}"/>
+                    <GridViewColumn Header="Комментарий" Width="Auto" DisplayMemberBinding="{Binding Comment}"/>
+                    <GridViewColumn Header="Изменить" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="Изменить" Margin="0"  VerticalAlignment="Center" Click="Edit_Click"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Удалить" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="Удалить" Margin="0"  VerticalAlignment="Center" Click="Delete_Click" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                </GridView>
+            </ListView.View>
+        </ListView>
 
         
     </Grid>
