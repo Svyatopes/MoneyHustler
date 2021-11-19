@@ -57,5 +57,10 @@ namespace MoneyHustler
             WindowAnalytics windowAnalytics = new();
             windowAnalytics.ShowDialog();
         }
+        private void ButtonCredit_Click(object sender, RoutedEventArgs e)
+        {
+            WindowCredits windowCredits = new();
+            windowCredits.ShowDialog();
+        }
     }
 }
