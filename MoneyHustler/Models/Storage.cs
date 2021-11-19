@@ -28,7 +28,7 @@ namespace MoneyHustler.Models
             return allIncomes;
         } 
 
-        public static List<Expense> GetAllExpences()
+        public static List<Expense> GetAllExpenses()
         {
             List<Expense> allExpences = new List<Expense>();
 

@@ -25,6 +25,9 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private ObservableCollection<ExpenseType> _expenseTypes;
 
+        private IncomeType _incomeTypeToRename;
+        private ExpenseType _expenseTypeToRename;
+
         public WindowCategories()
         {
             InitializeComponent();
@@ -34,6 +37,8 @@ namespace MoneyHustler.AuxiliaryWindows
 
             ListViewIncomes.ItemsSource = _incomeTypes;
             ListViewExpenses.ItemsSource = _expenseTypes;
+
+            SetIncomeLabelsForAdding();
         }
 
         private void ButtonRemoveIncomeCategoryClick(object sender, RoutedEventArgs e)
@@ -55,9 +60,9 @@ namespace MoneyHustler.AuxiliaryWindows
         private void ButtonRemoveExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
-            var expenseType = (IncomeType)button.DataContext;
+            var expenseType = (ExpenseType)button.DataContext;
 
-            if (Storage.GetAllIncomes().Any(item => item.Type == expenseType))
+            if (Storage.GetAllExpenses().Any(item => item.Type == expenseType))
             {
                 MessageBox.Show("Эта категория используется вами!");
                 return;
@@ -67,17 +72,96 @@ namespace MoneyHustler.AuxiliaryWindows
             _incomeTypes.Remove(expenseType);
         }
 
-        private void ButtonRenameIncomeCategoryClick(object sender, RoutedEventArgs e)
+        private void SetIncomeLabelsForEditing(string name)
+        {
+            LabelAddIncomeCategories.Content = $"Переименовать: {name}";
+            LabelEnterIncomeCategories.Content = "Введите новое название: ";
+
+
+            ButtonRenameFinallyIncomeCategory.IsEnabled = true;
+            ButtonRenameFinallyIncomeCategory.Visibility = Visibility.Visible;
+            ButtonAddIncomeCategory.IsEnabled = false;
+            ButtonAddIncomeCategory.Visibility = Visibility.Hidden;
+        }
+
+        private void SetIncomeLabelsForAdding()
+        {
+            LabelAddIncomeCategories.Content = "Добавить категорию: ";
+            LabelEnterIncomeCategories.Content = "Введите название категории: ";
+
+            ButtonRenameFinallyIncomeCategory.IsEnabled = false;
+            ButtonRenameFinallyIncomeCategory.Visibility = Visibility.Hidden;
+            ButtonAddIncomeCategory.IsEnabled = true;
+            ButtonAddIncomeCategory.Visibility = Visibility.Visible;
+        }
+
+        private void SetExpenseLabelsForEditing()
         {
 
         }
+
+        private void SetExpenseLabelsForAdding()
+        {
+
+        }
+
+        private void ButtonRenameIncomeCategoryClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var incomeType = (IncomeType)button.DataContext;
+                
+            SetIncomeLabelsForEditing(incomeType.Name);
+            _incomeTypeToRename = incomeType;
+        }
+
+        
 
         private void ButtonRenameExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void ButtonAddIncomeCategory_Click(object sender, RoutedEventArgs e)
+
+        private void ButtonRenameFinallyIncomeCategoryClick(object sender, RoutedEventArgs e)
+        {
+            if (TextBoxEnterIncomeCategory.Text.Length == 0)
+            {
+                return;
+            }
+
+            IncomeType incomeType = Storage.IncomeTypes.Find(x => x.Name == _incomeTypeToRename.Name);
+            incomeType.Name = TextBoxEnterIncomeCategory.Text;
+
+            //foreach (IncomeType incomeType in Storage.IncomeTypes)
+            //{
+            //    if (incomeType.Name == _incomeTypeToRename.Name)
+            //    {
+            //        incomeType.Name = TextBoxEnterIncomeCategory.Text;
+            //    }
+            //}
+
+            incomeType = (IncomeType)_incomeTypes.Where(x => x.Name == _incomeTypeToRename.Name);
+            incomeType.Name = TextBoxEnterIncomeCategory.Text;
+
+            //foreach (IncomeType incomeType in _incomeTypes)
+            //{
+            //    if (incomeType.Name == _incomeTypeToRename.Name)
+            //    {
+            //        incomeType.Name = TextBoxEnterIncomeCategory.Text;
+            //    }
+            //}
+
+            MessageBox.Show("Успешно переименовано!");
+            SetIncomeLabelsForAdding();
+;        }
+
+        private void ButtonRenameFinallyExpenseCategoryClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+        private void ButtonAddIncomeCategoryClick(object sender, RoutedEventArgs e)
         {
             if (TextBoxEnterIncomeCategory.Text.Length == 0) return;
             if (_incomeTypes.Any(item => item.Name == TextBoxEnterIncomeCategory.Text))
@@ -90,7 +174,7 @@ namespace MoneyHustler.AuxiliaryWindows
             _incomeTypes.Add(new IncomeType() { Name = TextBoxEnterIncomeCategory.Text });
         }
 
-        private void ButtonAddExpenseCategory_Click(object sender, RoutedEventArgs e)
+        private void ButtonAddExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
             if (TextBoxEnterExpenseCategory.Text.Length == 0) return;
             if (_incomeTypes.Any(item => item.Name == TextBoxEnterExpenseCategory.Text))
