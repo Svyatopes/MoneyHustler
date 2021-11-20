@@ -27,11 +27,14 @@ namespace MoneyHustler.AuxiliaryWindows
         private ListSortDirection _lastDirection = ListSortDirection.Ascending;
         public WindowCredits()
         {
-            Storage.Credits = new List<Credit> { };
-
+            if (Storage.Credits == null)
+            {
+                Storage.Credits = new List<Credit> { };
+            }
+            
             InitializeComponent();
             listOfCreditsView = new ObservableCollection<Credit>(Storage.Credits);
-            listViewForIncomes.ItemsSource = listOfCreditsView;
+            listViewForCredits.ItemsSource = listOfCreditsView;
         }
 
         private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
@@ -83,7 +86,7 @@ namespace MoneyHustler.AuxiliaryWindows
                       Resources["HeaderTemplateArrowDown"] as DataTemplate;
                 }
 
-                // Remove arrow from previously sorted header
+                
                 if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
                 {
                     _lastHeaderClicked.Column.HeaderTemplate = null;
@@ -97,12 +100,57 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void Sort(string sortBy, ListSortDirection direction)
         {
-            ICollectionView dataView = CollectionViewSource.GetDefaultView(listViewForIncomes.ItemsSource);
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(listViewForCredits.ItemsSource);
 
             dataView.SortDescriptions.Clear();
             SortDescription sd = new SortDescription(sortBy, direction);
             dataView.SortDescriptions.Add(sd);
             dataView.Refresh();
+        }
+
+        private void ButtonAddCreditClick(object sender, RoutedEventArgs e)
+        {
+            AuxiliaryWindows.WindowAddEditCredit windowIncomes = new();
+            windowIncomes.ShowDialog();
+
+            UpdateCreditsView();
+        }
+
+        private void ButtonEditCreditClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var credit = (Credit)button.DataContext;
+
+            AuxiliaryWindows.WindowAddEditCredit windowCredits = new(credit);
+            windowCredits.ShowDialog();
+            UpdateCreditsView();
+
+        }
+
+        private void UpdateCreditsView()
+        {
+            listOfCreditsView.Clear();
+            var allCredits = Storage.Credits;
+            foreach (var income in allCredits)
+            {
+                listOfCreditsView.Add(income);
+            }
+        }
+
+        private void InitTestCredits()
+        {
+            Storage.Credits.Add(new Credit("Test1", 10, 1000, new Card("test", 10000, 10), DateTime.Today, DateTime.Today));
+            Storage.Credits.Add(new Credit("Test2", 12, 1020, new Card("test2", 10000, 10), DateTime.Today, DateTime.Today));
+            
+        }
+
+        private void ButtonRemoveCreditItemClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var credit = (Credit)button.DataContext;
+            listOfCreditsView.Remove(credit);
+            Storage.Credits.Remove(credit);
+            Storage.Save();
         }
 
 

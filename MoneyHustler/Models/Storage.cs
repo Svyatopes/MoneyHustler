@@ -82,6 +82,7 @@ namespace MoneyHustler.Models
             Storage.Persons = storageInstance.Persons;
             Storage.ExpenseTypes = storageInstance.ExpenseTypes;
             Storage.IncomeTypes = storageInstance.IncomeTypes;
+            Storage.Credits = storageInstance.Credits;
         }
     }
 }

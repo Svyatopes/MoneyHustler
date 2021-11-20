@@ -26,7 +26,7 @@
             <RowDefinition Height="80*"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
-        <ListView x:Name="listViewForIncomes" HorizontalContentAlignment="Stretch" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" >
+        <ListView x:Name="listViewForCredits" HorizontalContentAlignment="Stretch" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler" >
 
 
             <ListView.ItemContainerStyle>
@@ -37,21 +37,23 @@
             <ListView.View>
                 <GridView>
 
-                    <GridViewColumn Header="Дата" Width="Auto" DisplayMemberBinding="{Binding Date, StringFormat=d, ConverterCulture=ru-RU}"/>
-                    <GridViewColumn Header="Сумма" Width="Auto" DisplayMemberBinding="{Binding Amount}"/>
-                    <GridViewColumn Header="Счет" Width="Auto" DisplayMemberBinding="{Binding Vault.Name}"/>
-                    <GridViewColumn Header="Комментарий" Width="Auto" DisplayMemberBinding="{Binding Comment}"/>
+                    <GridViewColumn Header="Название" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Сумма" Width="Auto" DisplayMemberBinding="{Binding Value}"/>
+                    <GridViewColumn Header="Дата открытия" Width="Auto" DisplayMemberBinding="{Binding DayOpen, StringFormat=d, ConverterCulture=ru-RU}"/>
+                    <GridViewColumn Header="Дата закрытия" Width="Auto" DisplayMemberBinding="{Binding DayClose, StringFormat=d, ConverterCulture=ru-RU}"/>
+                    <GridViewColumn Header="Процент" Width="Auto" DisplayMemberBinding="{Binding Percent}"/>
+                    <GridViewColumn Header="Счет" Width="Auto" DisplayMemberBinding="{Binding BindedCard.Name}"/>
                     <GridViewColumn Header="Изменить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="изменить" Margin="0"  VerticalAlignment="Center" />
+                                <Button  Content="изменить" Margin="0"  VerticalAlignment="Center" Click="ButtonEditCreditClick"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Удалить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="удалить" Margin="0"  VerticalAlignment="Center"  />
+                                <Button  Content="удалить" Margin="0"  VerticalAlignment="Center"  Click="ButtonRemoveCreditItemClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -60,7 +62,7 @@
             </ListView.View>
 
         </ListView>
-        <Button Grid.Row="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить" />
+        <Button Grid.Row="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить" Click="ButtonAddCreditClick"/>
 
     </Grid>
 </Window>
