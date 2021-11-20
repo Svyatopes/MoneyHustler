@@ -254,5 +254,117 @@ namespace MoneyHustler.AuxiliaryWindows
             dataView.SortDescriptions.Add(sd);
             dataView.Refresh();
         }
+
+        private void ButtonViewClassificationExpenses_Click(object sender, RoutedEventArgs e)
+        {
+            if ((string)ButtonViewClassificationExpenses.Content == "Показать расходы по")
+            {
+                ButtonViewClassificationExpenses.Content = "К общему списку";
+                StackPanelControlTemplateExpense.IsEnabled = false;
+                ComboBoxExpensePerson.SelectedItem = null;
+                ComboBoxExpenseVault.SelectedItem = null;
+                ComboBoxExpenseType.SelectedItem = null;
+                DatePickerExpenseDate.SelectedDate = null;
+                ComboBoxOfClassificationExpenses.IsEnabled = true;
+                ComboBoxClassExpenses.IsEnabled = true;
+
+            }
+            else if ((string)ButtonViewClassificationExpenses.Content == "К общему списку")
+            {
+                ButtonViewClassificationExpenses.Content = "Показать расходы по";
+                StackPanelControlTemplateExpense.IsEnabled = true;
+                ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
+                ComboBoxExpenseVault.SelectedItem = Storage.Vaults[0];
+                ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
+                DatePickerExpenseDate.SelectedDate = DateTime.Now;
+                ComboBoxOfClassificationExpenses.IsEnabled = false;
+                ComboBoxClassExpenses.IsEnabled = false;
+                UpdateIncomesView();
+            }
+        }
+
+        private void ComboBoxOfClassificationExpenses_Selected(object sender, RoutedEventArgs e)
+        {
+            if(ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[0])
+            {
+                ComboBoxClassExpenses.ItemsSource = Storage.Vaults;
+                ComboBoxClassExpenses.SelectedItem = Storage.Vaults[0];
+                listOfExpensesView.Clear();
+                var allExpenses = Storage.GetAllExpences();
+                foreach (var item in allExpenses)
+                {
+                    if (item.Vault == ComboBoxClassExpenses.SelectedItem)
+                    {
+                        listOfExpensesView.Add(item);
+                    }
+                }
+            }
+
+            else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[1])
+            {
+                ComboBoxClassExpenses.ItemsSource = Storage.ExpenseTypes;
+                ComboBoxClassExpenses.SelectedItem = Storage.ExpenseTypes[0];
+                listOfExpensesView.Clear();
+                var allExpenses = Storage.GetAllExpences();
+                foreach (var item in allExpenses)
+                {
+                    if (item.Type == ComboBoxClassExpenses.SelectedItem)
+                    {
+                        listOfExpensesView.Add(item);
+                    }
+                }
+            }
+
+            else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[2])
+            {
+                ComboBoxClassExpenses.ItemsSource = Storage.Persons;
+                ComboBoxClassExpenses.SelectedItem = Storage.Persons[0];
+                
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        private void ComboBoxClassExpenses_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboBoxClassExpenses.ItemsSource == Storage.Persons)
+            {
+                listOfExpensesView.Clear();
+                var allExpenses = Storage.GetAllExpences();
+                foreach (var item in allExpenses)
+                {
+                    if (item.Person == ComboBoxClassExpenses.SelectedItem)
+                    {
+                        listOfExpensesView.Add(item);
+                    }
+                }
+            }
+            else if (ComboBoxClassExpenses.ItemsSource == Storage.Vaults)
+            {
+                listOfExpensesView.Clear();
+                var allExpenses = Storage.GetAllExpences();
+                foreach (var item in allExpenses)
+                {
+                    if (item.Vault == ComboBoxClassExpenses.SelectedItem)
+                    {
+                        listOfExpensesView.Add(item);
+                    }
+                }
+            }
+            else if (ComboBoxClassExpenses.ItemsSource == Storage.ExpenseTypes)
+            {
+                listOfExpensesView.Clear();
+                var allExpenses = Storage.GetAllExpences();
+                foreach (var item in allExpenses)
+                {
+                    if (item.Type == ComboBoxClassExpenses.SelectedItem)
+                    {
+                        listOfExpensesView.Add(item);
+                    }
+                }
+            }
+        }
     }
 }

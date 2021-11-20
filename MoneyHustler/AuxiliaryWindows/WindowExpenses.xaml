@@ -63,7 +63,7 @@
         <Button x:Name="ButtonAddExpense" Grid.Row="1" Content="Добавить" Margin="250,20,184,20" Click="ButtonAddExpense_Click" />
 
         <StackPanel x:Name="StackPanelControlTemplateExpense" Grid.Row="0" Grid.Column="1" 
-                    Orientation="Vertical" Height="206" VerticalAlignment="Top" Margin="10,43,0,0" HorizontalAlignment="Left">
+                    Orientation="Vertical" Height="184" VerticalAlignment="Top" Margin="0,19,0,0" HorizontalAlignment="Center" Width="128">
             <DatePicker Background="#FFC3B9A0" x:Name="DatePickerExpenseDate" SelectedDateFormat="Short" Margin="0,0,0,5" ToolTip="Когда?"/>
             <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseAmount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" TextChanged="Amount_TextChanged" ToolTip="Сколько?" Height="20"/>
             <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpensePerson" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Кто?" Height="20"/>
@@ -71,6 +71,23 @@
             <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseComment" Style="{StaticResource placeHolder}" MinWidth="100" Tag="Комментарий"  HorizontalAlignment="Stretch" Margin="0,5,0,5" Padding="20,0" ToolTip="Поясните" 
                     Height="20" TextWrapping="Wrap" MaxLength="100" IsUndoEnabled="False" TextAlignment="Justify" MinLines="2"/>
             <ComboBox  Background="#FFC3B9A0" x:Name="ComboBoxExpenseType" MinWidth="100" DisplayMemberPath="Name" Margin="0,5,0,1" ToolTip="На что?" Height="20" />
+        </StackPanel>
+
+        <StackPanel x:Name="StackPanelOnlyExpense" Grid.Row="0" Grid.Column="1" 
+                    Orientation="Vertical" Height="125" VerticalAlignment="Top" Margin="0,208,0,0" HorizontalAlignment="Center" Width="128">
+            <Button x:Name="ButtonViewClassificationExpenses" Height="26" Content="Показать расходы по" Margin="0,0,0,20" Click="ButtonViewClassificationExpenses_Click" />
+            <ComboBox x:Name="ComboBoxOfClassificationExpenses" Margin="0,0,0,20" SelectionChanged="ComboBoxOfClassificationExpenses_Selected" IsEnabled="False">
+                <ComboBoxItem>
+                    По счетам
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    По категориям
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    По членам
+                </ComboBoxItem>
+            </ComboBox>
+            <ComboBox x:Name="ComboBoxClassExpenses" Margin="0,0,0,20" DisplayMemberPath="Name" IsEnabled="False" SelectionChanged="ComboBoxClassExpenses_SelectionChanged"/>
         </StackPanel>
 
 
