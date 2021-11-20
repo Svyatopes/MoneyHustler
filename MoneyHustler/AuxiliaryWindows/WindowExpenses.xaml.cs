@@ -27,12 +27,19 @@ namespace MoneyHustler.AuxiliaryWindows
         private Expense _expense;
 
         private ObservableCollection<Expense> listOfExpensesView;
-        SoundPlayer sp = new SoundPlayer();
+        private List<ComboBoxItem> itemsForComboBoxOfExpesesPeriod;
         private GridViewColumnHeader _lastHeaderClicked = null;
         private ListSortDirection _lastDirection = ListSortDirection.Ascending;
+
+        
         public WindowExpenses()
         {
             InitializeComponent();
+            itemsForComboBoxOfExpesesPeriod = new();
+            itemsForComboBoxOfExpesesPeriod.Add(new ComboBoxItem { Content = "сегодня" });
+            itemsForComboBoxOfExpesesPeriod.Add(new ComboBoxItem { Content = "прошедшая неделя" });
+            itemsForComboBoxOfExpesesPeriod.Add(new ComboBoxItem { Content = "прошедший месяц" });
+            itemsForComboBoxOfExpesesPeriod.Add(new ComboBoxItem { Content = "прошедший год" });
             SoundPlayer spZdarova = new SoundPlayer();
             spZdarova.SoundLocation = "Audio/zdarova.wav";
             spZdarova.LoadAsync();
@@ -52,14 +59,15 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonDeleteExpense_Click(object sender, RoutedEventArgs e)
         {
+            SoundPlayer spDelete = new SoundPlayer();
+            spDelete.SoundLocation = "Audio/nePonyal.wav";
+            spDelete.LoadAsync();
+            spDelete.Play();
             var button = (Button)sender;
             var expense = (Expense)button.DataContext;
             listOfExpensesView.Remove(expense);
             expense.Vault.Remove(expense);
             Storage.Save();
-            //sp.SoundLocation = "C:/Users/Anton/Downloads/pushistiyEbalnik.wav";
-            //sp.Load();
-            //sp.Play();
         }
 
         private void ButtonEditExpense_Click(object sender, RoutedEventArgs e)
@@ -126,6 +134,12 @@ namespace MoneyHustler.AuxiliaryWindows
                     TextBoxExpenseAmount.Text = string.Empty;
                     TextBoxExpenseComment.Text = string.Empty;
                     DatePickerExpenseDate.SelectedDate = DateTime.Today;
+
+                    SoundPlayer spMaloDeneg = new();
+                    spMaloDeneg.SoundLocation = "Audio/kavo.wav";
+                    spMaloDeneg.Load();
+                    spMaloDeneg.Play();
+
                     MessageBox.Show("На выбранном счёте не достаточно средств", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -156,6 +170,10 @@ namespace MoneyHustler.AuxiliaryWindows
                     TextBoxExpenseAmount.Text = string.Empty;
                     TextBoxExpenseComment.Text = string.Empty;
                     DatePickerExpenseDate.SelectedDate = DateTime.Today;
+                    SoundPlayer spMaloDeneg = new();
+                    spMaloDeneg.SoundLocation = "Audio/maloBabla.wav";
+                    spMaloDeneg.Load();
+                    spMaloDeneg.Play();
                     MessageBox.Show("На выбранном счёте не достаточно средств", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -266,6 +284,11 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             if ((string)ButtonViewClassificationExpenses.Content == "Показать расходы по")
             {
+                listViewForExpenses.IsEnabled = false;
+                SoundPlayer spOnView = new SoundPlayer();
+                spOnView.SoundLocation = "Audio/onView.wav";
+                spOnView.LoadAsync();
+                spOnView.Play();
                 ButtonViewClassificationExpenses.Content = "К общему списку";
                 StackPanelControlTemplateExpense.IsEnabled = false;
                 ComboBoxExpensePerson.SelectedItem = null;
@@ -278,6 +301,7 @@ namespace MoneyHustler.AuxiliaryWindows
             }
             else if ((string)ButtonViewClassificationExpenses.Content == "К общему списку")
             {
+                listViewForExpenses.IsEnabled = true;
                 ButtonViewClassificationExpenses.Content = "Показать расходы по";
                 StackPanelControlTemplateExpense.IsEnabled = true;
                 ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
@@ -294,8 +318,10 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ComboBoxOfClassificationExpenses_Selected(object sender, RoutedEventArgs e)
         {
-            if(ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[0])
+            
+            if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[0])
             {
+                ComboBoxClassExpenses.DisplayMemberPath = "Name";
                 ComboBoxClassExpenses.ItemsSource = Storage.Vaults;
                 ComboBoxClassExpenses.SelectedItem = Storage.Vaults[0];
                 
@@ -303,6 +329,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
             else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[1])
             {
+                ComboBoxClassExpenses.DisplayMemberPath = "Name";
                 ComboBoxClassExpenses.ItemsSource = Storage.ExpenseTypes;
                 ComboBoxClassExpenses.SelectedItem = Storage.ExpenseTypes[0];
                 
@@ -310,17 +337,20 @@ namespace MoneyHustler.AuxiliaryWindows
 
             else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[2])
             {
+                ComboBoxClassExpenses.DisplayMemberPath = "Name";
                 ComboBoxClassExpenses.ItemsSource = Storage.Persons;
                 ComboBoxClassExpenses.SelectedItem = Storage.Persons[0];
                 
             }
             else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[3])
             {
-                ComboBoxClassExpenses.ItemsSource = null;
-                ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "сегодня" });
-                ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедшая неделя" });
-                ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедший месяц" });
-                ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедший год" });
+                ComboBoxClassExpenses.DisplayMemberPath = null;
+                ComboBoxClassExpenses.ItemsSource = itemsForComboBoxOfExpesesPeriod;
+                //ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "сегодня" });
+                //ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедшая неделя" });
+                //ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедший месяц" });
+                //ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедший год" });
+                ComboBoxClassExpenses.SelectedItem = ComboBoxClassExpenses.Items[0];
             }
             else
             {
@@ -370,6 +400,7 @@ namespace MoneyHustler.AuxiliaryWindows
             {
                 listOfExpensesView.Clear();
                 var allExpenses = Storage.GetAllExpences();
+
                 foreach (var item in allExpenses)
                 {
                     if (ComboBoxClassExpenses.SelectedItem == ComboBoxClassExpenses.Items[0])
