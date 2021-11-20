@@ -221,7 +221,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
             var enteredIncomeTypeName = TextBoxEnterIncomeCategory.Text.Trim();
 
-            if (_incomeTypes.Any(item => item.Name == enteredIncomeTypeName))
+            if (Storage.IncomeTypes.Any(item => item.Name == enteredIncomeTypeName))
             {
                 MessageBox.Show("Такая категория уже существует!");
                 return;
@@ -242,7 +242,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
             var enteredExpenseTypeName = TextBoxEnterExpenseCategory.Text.Trim();
 
-            if (_incomeTypes.Any(item => item.Name == enteredExpenseTypeName))
+            if (Storage.IncomeTypes.Any(item => item.Name == enteredExpenseTypeName))
             {
                 MessageBox.Show("Такая категория уже существует!");
                 return;
