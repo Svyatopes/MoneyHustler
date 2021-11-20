@@ -33,9 +33,11 @@ namespace MoneyHustler.AuxiliaryWindows
         public WindowExpenses()
         {
             InitializeComponent();
-            //SoundPlayer sp = new SoundPlayer();
-            
-            
+            SoundPlayer spZdarova = new SoundPlayer();
+            spZdarova.SoundLocation = "Audio/zdarova.wav";
+            spZdarova.LoadAsync();
+            spZdarova.Play();
+           
             listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
             ComboBoxExpensePerson.ItemsSource = Storage.Persons;
             ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
@@ -45,7 +47,7 @@ namespace MoneyHustler.AuxiliaryWindows
             ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
             DatePickerExpenseDate.SelectedDate = DateTime.Now;
             listViewForExpenses.ItemsSource = listOfExpensesView;
-
+            
         }
 
         private void ButtonDeleteExpense_Click(object sender, RoutedEventArgs e)
@@ -141,8 +143,13 @@ namespace MoneyHustler.AuxiliaryWindows
                 try
                 {
                     ((MoneyVault)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
+                    SoundPlayer spAuf = new();
+                    spAuf.SoundLocation = "Audio/auf.wav";
+                    spAuf.Load();
+                    spAuf.Play();
                     MessageBox.Show("потратил");
                     UpdateIncomesView();
+                    
                 }
                 catch (ArgumentException)
                 {
