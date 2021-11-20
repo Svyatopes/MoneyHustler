@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:MoneyHustler.AuxiliaryWindows"
         mc:Ignorable="d"
         Title="WindowExpenses" Height="450" Width="800">
+
     <Window.Resources>
         <Style x:Key="placeHolder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
             <Setter Property="Template">
@@ -36,6 +37,19 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <DataTemplate x:Key="HeaderTemplateArrowUp">
+            <DockPanel LastChildFill="True" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}">
+                <Path x:Name="arrowUp" StrokeThickness="1" Fill="Gray" Data="M 5,10 L 15,10 L 10,5 L 5,10" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
+                <TextBlock Text="{Binding }" />
+            </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="HeaderTemplateArrowDown">
+            <DockPanel LastChildFill="True" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}">
+                <Path x:Name="arrowDown" StrokeThickness="1" Fill="Gray"  Data="M 5,5 L 10,10 L 15,5 L 5,5" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
+                <TextBlock Text="{Binding }" />
+            </DockPanel>
+        </DataTemplate>
     </Window.Resources>
     <Grid Background="#FF1F1F1F">
         <Grid.RowDefinitions>
@@ -46,20 +60,21 @@
             <ColumnDefinition Width="321*"/>
             <ColumnDefinition Width="79*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="AddButton" Grid.Row="1" Content="Add" Margin="320,20,87,20" Click="ButtonAdd_Click" />
+        <Button x:Name="ButtonAddExpense" Grid.Row="1" Content="Добавить" Margin="250,20,184,20" Click="ButtonAddExpense_Click" />
 
-        <StackPanel x:Name="ParentStackPanel" Grid.Row="0" Grid.Column="1" 
-                    Orientation="Vertical" Height="177" VerticalAlignment="Top" Margin="10,10,0,0" HorizontalAlignment="Left">
-            <DatePicker Background="#FFC3B9A0" x:Name="DatePickerExpenseDate" SelectedDateFormat="Short" Margin="0,0,0,5"/>
-            <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseAmount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" TextChanged="Amount_TextChanged" ToolTip="Сколько?"/>
-            <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpensePerson" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Кто?"/>
-            <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpenseVault"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Откуда?"/>
-            <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseComment" Style="{StaticResource placeHolder}" MinWidth="100" Tag="Комментарий"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,5,0,5" Padding="20,0" ToolTip="Поясните"/>
-            <ComboBox  Background="#FFC3B9A0" x:Name="ComboBoxExpenseType" MinWidth="100" DisplayMemberPath="Name" Margin="0,5,0,1" ToolTip="На что?" />
+        <StackPanel x:Name="StackPanelControlTemplateExpense" Grid.Row="0" Grid.Column="1" 
+                    Orientation="Vertical" Height="206" VerticalAlignment="Top" Margin="10,43,0,0" HorizontalAlignment="Left">
+            <DatePicker Background="#FFC3B9A0" x:Name="DatePickerExpenseDate" SelectedDateFormat="Short" Margin="0,0,0,5" ToolTip="Когда?"/>
+            <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseAmount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" TextChanged="Amount_TextChanged" ToolTip="Сколько?" Height="20"/>
+            <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpensePerson" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Кто?" Height="20"/>
+            <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpenseVault"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Откуда?" Height="20"/>
+            <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseComment" Style="{StaticResource placeHolder}" MinWidth="100" Tag="Комментарий"  HorizontalAlignment="Stretch" Margin="0,5,0,5" Padding="20,0" ToolTip="Поясните" 
+                    Height="20" TextWrapping="Wrap" MaxLength="100" IsUndoEnabled="False" TextAlignment="Justify" MinLines="2"/>
+            <ComboBox  Background="#FFC3B9A0" x:Name="ComboBoxExpenseType" MinWidth="100" DisplayMemberPath="Name" Margin="0,5,0,1" ToolTip="На что?" Height="20" />
         </StackPanel>
 
 
-        <ListView x:Name="listViewForExpenses" Margin="23,10,23,10" Background="#FFC3B9A0">
+        <ListView x:Name="listViewForExpenses" Margin="23,10,23,10" Background="#FFC3B9A0" GridViewColumnHeader.Click="GridViewColumnHeaderExpenses_ClickedOnHeader">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -77,14 +92,14 @@
                     <GridViewColumn Header="Изменить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="Изменить" Margin="0"  VerticalAlignment="Center" Click="Edit_Click"/>
+                                <Button  Content="Изменить" Margin="0"  VerticalAlignment="Center" Click="ButtonEditExpense_Click"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Удалить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="Удалить" Margin="0"  VerticalAlignment="Center" Click="Delete_Click" />
+                                <Button  Content="Удалить" Margin="0"  VerticalAlignment="Center" Click="ButtonDeleteExpense_Click" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -92,7 +107,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
 
     </Grid>
 

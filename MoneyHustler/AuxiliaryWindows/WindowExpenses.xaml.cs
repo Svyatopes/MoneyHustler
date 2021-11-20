@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,9 +27,15 @@ namespace MoneyHustler.AuxiliaryWindows
         private Expense _expense;
 
         private ObservableCollection<Expense> listOfExpensesView;
+        SoundPlayer sp = new SoundPlayer();
+        private GridViewColumnHeader _lastHeaderClicked = null;
+        private ListSortDirection _lastDirection = ListSortDirection.Ascending;
         public WindowExpenses()
         {
             InitializeComponent();
+            //SoundPlayer sp = new SoundPlayer();
+            
+            
             listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
             ComboBoxExpensePerson.ItemsSource = Storage.Persons;
             ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
@@ -40,16 +48,19 @@ namespace MoneyHustler.AuxiliaryWindows
 
         }
 
-        private void Delete_Click(object sender, RoutedEventArgs e)
+        private void ButtonDeleteExpense_Click(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var expense = (Expense)button.DataContext;
             listOfExpensesView.Remove(expense);
             expense.Vault.Remove(expense);
             Storage.Save();
+            //sp.SoundLocation = "C:/Users/Anton/Downloads/pushistiyEbalnik.wav";
+            //sp.Load();
+            //sp.Play();
         }
 
-        private void Edit_Click(object sender, RoutedEventArgs e)
+        private void ButtonEditExpense_Click(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             if (button == null)
@@ -58,81 +69,89 @@ namespace MoneyHustler.AuxiliaryWindows
             }
             var expense = (Expense)button.DataContext;
 
-            if ((string)button.Content == "Изменить")
-            {
-                AddButton.Content = "Сохраните";
-                listViewForExpenses.IsEnabled = false;
-                AddButton.IsEnabled = false;
-                ComboBoxExpensePerson.SelectedItem = expense.Person;
-                ComboBoxExpenseVault.SelectedItem = expense.Vault;
-                ComboBoxExpenseType.SelectedItem = expense.Type;
-                DatePickerExpenseDate.SelectedDate = expense.Date;
-                TextBoxExpenseComment.Text = expense.Comment;
-                TextBoxExpenseAmount.Text = expense.Amount.ToString();
-            }
-            else if ((string)((Button)e.OriginalSource).Content == "Сохранить")
-            {
+            ButtonAddExpense.Content = "Сохраните";
+            listViewForExpenses.IsEnabled = false;
+            ComboBoxExpensePerson.SelectedItem = expense.Person;
+            ComboBoxExpenseVault.SelectedItem = expense.Vault;
+            ComboBoxExpenseType.SelectedItem = expense.Type;
+            DatePickerExpenseDate.SelectedDate = expense.Date;
+            TextBoxExpenseComment.Text = expense.Comment;
+            TextBoxExpenseAmount.Text = expense.Amount.ToString();
+            _expense = expense;
+        }
 
-                button.Content = "Изменить";
-                AddButton.IsEnabled = true;
-                AddButton.Content = "Add";
-
+        private void ButtonAddExpense_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if ((string)ButtonAddExpense.Content == "Сохраните")
+            {
+                listViewForExpenses.IsEnabled = true;
+                ButtonAddExpense.Content = "Добавить";
+                //var button = (Button)sender;
+                //if (button == null)
+                //{
+                //    return;
+                //}
+                //var expense = (Expense)button.DataContext;
                 try
                 {
-                    expense.Amount = Convert.ToDecimal(TextBoxExpenseAmount.Text);
-                    expense.Comment = TextBoxExpenseComment.Text;
-                    expense.Date = (DateTime)DatePickerExpenseDate.SelectedDate;
-                    expense.Person = (Person)ComboBoxExpensePerson.SelectedItem;
-                    expense.Type = (ExpenseType)ComboBoxExpenseType.SelectedItem;
+                    _expense.Amount = Convert.ToDecimal(TextBoxExpenseAmount.Text);
+                    _expense.Comment = TextBoxExpenseComment.Text;
+                    _expense.Date = (DateTime)DatePickerExpenseDate.SelectedDate;
+                    _expense.Person = (Person)ComboBoxExpensePerson.SelectedItem;
+                    _expense.Type = (ExpenseType)ComboBoxExpenseType.SelectedItem;
 
-                    if (expense.Vault != (MoneyVault)ComboBoxExpenseVault.SelectedItem)
-                    {
-                        expense.Vault.Remove(expense);
-                        expense.Vault = (MoneyVault)ComboBoxExpenseVault.SelectedItem;
-                        expense.Vault.DecreaseBalance(
-                            new Expense
-                            (
-                          Convert.ToDecimal(TextBoxExpenseAmount.Text),
-                          (DateTime)DatePickerExpenseDate.SelectedDate,
-                          (Person)ComboBoxExpensePerson.SelectedItem,
-                          TextBoxExpenseComment.Text,
-                          (ExpenseType)ComboBoxExpenseType.SelectedItem
-                            )
-                        );
-                    }
+                    // if (_expense.Vault != (MoneyVault)ComboBoxExpenseVault.SelectedItem)
+                    // {
+                    _expense.Vault.Remove(_expense);
+                    _expense.Vault = (MoneyVault)ComboBoxExpenseVault.SelectedItem;
+                    _expense.Vault.DecreaseBalance(
+                        new Expense
+                        (
+                      Convert.ToDecimal(TextBoxExpenseAmount.Text),
+                      (DateTime)DatePickerExpenseDate.SelectedDate,
+                      (Person)ComboBoxExpensePerson.SelectedItem,
+                      TextBoxExpenseComment.Text,
+                      (ExpenseType)ComboBoxExpenseType.SelectedItem
+                        )
+                    );
+                    // }
                     UpdateIncomesView();
                     MessageBox.Show("ок");
                 }
                 catch (ArgumentException)
                 {
-                    MessageBox.Show("не согласны\n понял???", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    TextBoxExpenseAmount.Text = string.Empty;
+                    TextBoxExpenseComment.Text = string.Empty;
+                    DatePickerExpenseDate.SelectedDate = DateTime.Today;
+                    MessageBox.Show("На выбранном счёте не достаточно средств", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
 
-
-        }
-
-        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
-        {
-            Expense newExpense = new Expense
-            (
-               Convert.ToDecimal(TextBoxExpenseAmount.Text),
-               (DateTime)DatePickerExpenseDate.SelectedDate,
-               (Person)ComboBoxExpensePerson.SelectedItem,
-               TextBoxExpenseComment.Text,
-               (ExpenseType)ComboBoxExpenseType.SelectedItem
-            );
-            try
+            else if ((string)ButtonAddExpense.Content == "Добавить")
             {
-                ((MoneyVault)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
-                MessageBox.Show("потратил\nок");
-                UpdateIncomesView();
+                Expense newExpense = new Expense
+                (
+                   Convert.ToDecimal(TextBoxExpenseAmount.Text),
+                   (DateTime)DatePickerExpenseDate.SelectedDate,
+                   (Person)ComboBoxExpensePerson.SelectedItem,
+                   TextBoxExpenseComment.Text,
+                   (ExpenseType)ComboBoxExpenseType.SelectedItem
+                );
+                try
+                {
+                    ((MoneyVault)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
+                    MessageBox.Show("потратил");
+                    UpdateIncomesView();
+                }
+                catch (ArgumentException)
+                {
+                    TextBoxExpenseAmount.Text = string.Empty;
+                    TextBoxExpenseComment.Text = string.Empty;
+                    DatePickerExpenseDate.SelectedDate = DateTime.Today;
+                    MessageBox.Show("На выбранном счёте не достаточно средств", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            catch (ArgumentException)
-            {
-                MessageBox.Show("не потратил\nок", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
         }
 
 
@@ -142,23 +161,21 @@ namespace MoneyHustler.AuxiliaryWindows
             decimal n = 0;
             if (!Decimal.TryParse(TextBoxExpenseAmount.Text, out n))
             {
-                AddButton.IsEnabled = false;
-                AddButton.Content = "Зайди правильно";
-                TextBoxExpenseAmount.Background = Brushes.Yellow;
-
+                ButtonAddExpense.IsEnabled = false;
+                //TextBoxExpenseAmount.Background = Brushes.HotPink;
+                
             }
-            else if ((string)AddButton.Content != "Сохраните!")
+            else
             {
-                AddButton.IsEnabled = true;
-                TextBoxExpenseAmount.Background = Brushes.White;
-                AddButton.Content = "Add";
+                ButtonAddExpense.IsEnabled = true;
+                //TextBoxExpenseAmount.Background = Brushes.Yellow;
             }
         }
 
         private void UpdateIncomesView()
         {
-            TextBoxExpenseAmount.Text = "Сумма";
-            TextBoxExpenseComment.Text = "Комментарий";
+            TextBoxExpenseAmount.Text = string.Empty;
+            TextBoxExpenseComment.Text = string.Empty;
             DatePickerExpenseDate.SelectedDate = DateTime.Today;
             listOfExpensesView.Clear();
             var allExpenses = Storage.GetAllExpences();
@@ -166,6 +183,76 @@ namespace MoneyHustler.AuxiliaryWindows
             {
                 listOfExpensesView.Add(item);
             }
+        }
+
+        private void GridViewColumnHeaderExpenses_ClickedOnHeader(object sender, RoutedEventArgs e)
+        {
+            var headerClicked = e.OriginalSource as GridViewColumnHeader;
+            if (headerClicked == null)
+            {
+                return;
+            }
+
+            if ((string)headerClicked.Content == "Удалить" || (string)headerClicked.Content == "Изменить")
+            {
+                return;
+            }
+            ListSortDirection direction;
+
+
+            if (headerClicked.Role != GridViewColumnHeaderRole.Padding)
+            {
+                if (headerClicked != _lastHeaderClicked)
+                {
+                    direction = ListSortDirection.Ascending;
+                }
+                else
+                {
+                    if (_lastDirection == ListSortDirection.Ascending)
+                    {
+                        direction = ListSortDirection.Descending;
+                    }
+                    else
+                    {
+                        direction = ListSortDirection.Ascending;
+                    }
+                }
+
+                var columnBinding = headerClicked.Column.DisplayMemberBinding as Binding;
+                var sortBy = columnBinding?.Path.Path ?? headerClicked.Column.Header as string;
+
+                SortExpenses(sortBy, direction);
+
+                if (direction == ListSortDirection.Ascending)
+                {
+                    headerClicked.Column.HeaderTemplate =
+                      Resources["HeaderTemplateArrowUp"] as DataTemplate;
+                }
+                else
+                {
+                    headerClicked.Column.HeaderTemplate =
+                      Resources["HeaderTemplateArrowDown"] as DataTemplate;
+                }
+
+                // Remove arrow from previously sorted header
+                if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
+                {
+                    _lastHeaderClicked.Column.HeaderTemplate = null;
+                }
+
+                _lastHeaderClicked = headerClicked;
+                _lastDirection = direction;
+            }
+
+        }
+        private void SortExpenses(string sortBy, ListSortDirection direction)
+        {
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(listViewForExpenses.ItemsSource);
+
+            dataView.SortDescriptions.Clear();
+            SortDescription sd = new SortDescription(sortBy, direction);
+            dataView.SortDescriptions.Add(sd);
+            dataView.Refresh();
         }
     }
 }
