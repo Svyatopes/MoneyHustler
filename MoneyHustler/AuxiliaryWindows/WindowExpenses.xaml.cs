@@ -279,6 +279,8 @@ namespace MoneyHustler.AuxiliaryWindows
                 DatePickerExpenseDate.SelectedDate = DateTime.Now;
                 ComboBoxOfClassificationExpenses.IsEnabled = false;
                 ComboBoxClassExpenses.IsEnabled = false;
+                ComboBoxOfClassificationExpenses.SelectedItem = null;
+                ComboBoxClassExpenses.SelectedItem = null;
                 UpdateIncomesView();
             }
         }
@@ -289,30 +291,14 @@ namespace MoneyHustler.AuxiliaryWindows
             {
                 ComboBoxClassExpenses.ItemsSource = Storage.Vaults;
                 ComboBoxClassExpenses.SelectedItem = Storage.Vaults[0];
-                listOfExpensesView.Clear();
-                var allExpenses = Storage.GetAllExpences();
-                foreach (var item in allExpenses)
-                {
-                    if (item.Vault == ComboBoxClassExpenses.SelectedItem)
-                    {
-                        listOfExpensesView.Add(item);
-                    }
-                }
+                
             }
 
             else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[1])
             {
                 ComboBoxClassExpenses.ItemsSource = Storage.ExpenseTypes;
                 ComboBoxClassExpenses.SelectedItem = Storage.ExpenseTypes[0];
-                listOfExpensesView.Clear();
-                var allExpenses = Storage.GetAllExpences();
-                foreach (var item in allExpenses)
-                {
-                    if (item.Type == ComboBoxClassExpenses.SelectedItem)
-                    {
-                        listOfExpensesView.Add(item);
-                    }
-                }
+                
             }
 
             else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[2])
@@ -320,6 +306,14 @@ namespace MoneyHustler.AuxiliaryWindows
                 ComboBoxClassExpenses.ItemsSource = Storage.Persons;
                 ComboBoxClassExpenses.SelectedItem = Storage.Persons[0];
                 
+            }
+            else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[3])
+            {
+                ComboBoxClassExpenses.ItemsSource = null;
+                ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "сегодня" });
+                ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедшая неделя" });
+                ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедший месяц" });
+                ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедший год" });
             }
             else
             {
@@ -362,6 +356,35 @@ namespace MoneyHustler.AuxiliaryWindows
                     if (item.Type == ComboBoxClassExpenses.SelectedItem)
                     {
                         listOfExpensesView.Add(item);
+                    }
+                }
+            }
+            else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[3])
+            {
+                listOfExpensesView.Clear();
+                var allExpenses = Storage.GetAllExpences();
+                foreach (var item in allExpenses)
+                {
+                    if (ComboBoxClassExpenses.SelectedItem == ComboBoxClassExpenses.Items[0])
+                    {
+                        if (DateTime.Today <= item.Date)
+                            listOfExpensesView.Add(item);
+
+                    }
+                    else if (ComboBoxClassExpenses.SelectedItem == ComboBoxClassExpenses.Items[1])
+                    {
+                        if (DateTime.Today.AddDays(-7) < item.Date)
+                            listOfExpensesView.Add(item);
+                    }
+                    else if (ComboBoxClassExpenses.SelectedItem == ComboBoxClassExpenses.Items[2])
+                    {
+                        if (DateTime.Today.AddMonths(-1) < item.Date)
+                            listOfExpensesView.Add(item);
+                    }
+                    else if (ComboBoxClassExpenses.SelectedItem == ComboBoxClassExpenses.Items[3])
+                    {
+                        if (DateTime.Today.AddYears(-1) < item.Date)
+                            listOfExpensesView.Add(item);
                     }
                 }
             }
