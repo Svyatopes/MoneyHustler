@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -29,9 +30,11 @@ namespace MoneyHustler.AuxiliaryWindows
         private ObservableCollection<Expense> listOfExpensesView;
         private List<ComboBoxItem> itemsForComboBoxOfExpesesPeriod;
         private GridViewColumnHeader _lastHeaderClicked = null;
-        private ListSortDirection _lastDirection = ListSortDirection.Ascending;
+        private ListSortDirection _lastDirection = ListSortDirection.Descending;
 
-        
+
+        //TODO: сделать более понятные названия x:Name
+
         public WindowExpenses()
         {
             InitializeComponent();
@@ -44,27 +47,36 @@ namespace MoneyHustler.AuxiliaryWindows
             spZdarova.SoundLocation = "Audio/zdarova.wav";
             spZdarova.LoadAsync();
             spZdarova.Play();
-           
+
             listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
-            ComboBoxExpensePerson.ItemsSource = Storage.Persons;
-            ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
+            listViewForExpenses.ItemsSource = listOfExpensesView;
+
+            //TODO: перевести на SetItemSourceAndSelectedIndexToZero
+            SetItemSourceAndSelectedIndexToZero(ComboBoxExpensePerson, Storage.Persons);
             ComboBoxExpenseVault.ItemsSource = Storage.Vaults;
             ComboBoxExpenseVault.SelectedItem = Storage.Vaults[0];
             ComboBoxExpenseType.ItemsSource = Storage.ExpenseTypes;
             ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
+
             DatePickerExpenseDate.SelectedDate = DateTime.Now;
-            listViewForExpenses.ItemsSource = listOfExpensesView;
-            
+            SortExpenses("Date", _lastDirection);
+        }
+
+        private void SetItemSourceAndSelectedIndexToZero(ComboBox comboBox, IEnumerable source)
+        {
+            ComboBoxExpensePerson.ItemsSource = source;
+            ComboBoxExpensePerson.SelectedIndex = 0;
         }
 
         private void ButtonDeleteExpense_Click(object sender, RoutedEventArgs e)
         {
-            SoundPlayer spDelete = new SoundPlayer();
-            spDelete.SoundLocation = "Audio/nePonyal.wav";
+            SoundPlayer spDelete = new() { SoundLocation = "Audio/nePonyal.wav" };
             spDelete.LoadAsync();
             spDelete.Play();
+
             var button = (Button)sender;
             var expense = (Expense)button.DataContext;
+
             listOfExpensesView.Remove(expense);
             expense.Vault.Remove(expense);
             Storage.Save();
@@ -79,7 +91,8 @@ namespace MoneyHustler.AuxiliaryWindows
             }
             var expense = (Expense)button.DataContext;
 
-            ButtonAddExpense.Content = "Сохраните";
+            //TODO: попробовать вынести в отдельный метод все изменения View
+            ButtonAddEditExpense.Content = "Сохраните";
             listViewForExpenses.IsEnabled = false;
             ComboBoxExpensePerson.SelectedItem = expense.Person;
             ComboBoxExpenseVault.SelectedItem = expense.Vault;
@@ -90,43 +103,44 @@ namespace MoneyHustler.AuxiliaryWindows
             _expense = expense;
         }
 
-        private void ButtonAddExpense_Click(object sender, RoutedEventArgs e)
+        private void ButtonAddEditExpense_Click(object sender, RoutedEventArgs e)
         {
-            
-            if ((string)ButtonAddExpense.Content == "Сохраните")
+
+            if ((string)ButtonAddEditExpense.Content == "Сохраните")
             {
                 listViewForExpenses.IsEnabled = true;
-                ButtonAddExpense.Content = "Добавить";
-                //var button = (Button)sender;
-                //if (button == null)
-                //{
-                //    return;
-                //}
-                //var expense = (Expense)button.DataContext;
+                ButtonAddEditExpense.Content = "Добавить";
+
                 try
                 {
+                    //TODO: проверка достаточно ли средств на данную дату чтобы сделать расход
+                    //(учитывая изменение суммы:
+                    // 1) если сумма выросла, может не хватить средств
+                    // 2) мы должны учитывать что баланс на ту дату изменится когда мы поменяем этот расход
+                    // 2.1) если мы получаем баланс на дату 5000, а нужно 5500 расход сделать не факт, что мы не можем, потому что
+                    // при переносе расхода вперед по датам баланс увеличится
                     _expense.Amount = Convert.ToDecimal(TextBoxExpenseAmount.Text);
                     _expense.Comment = TextBoxExpenseComment.Text;
                     _expense.Date = (DateTime)DatePickerExpenseDate.SelectedDate;
                     _expense.Person = (Person)ComboBoxExpensePerson.SelectedItem;
                     _expense.Type = (ExpenseType)ComboBoxExpenseType.SelectedItem;
 
-                    // if (_expense.Vault != (MoneyVault)ComboBoxExpenseVault.SelectedItem)
-                    // {
-                    _expense.Vault.Remove(_expense);
-                    _expense.Vault = (MoneyVault)ComboBoxExpenseVault.SelectedItem;
-                    _expense.Vault.DecreaseBalance(
-                        new Expense
-                        (
-                      Convert.ToDecimal(TextBoxExpenseAmount.Text),
-                      (DateTime)DatePickerExpenseDate.SelectedDate,
-                      (Person)ComboBoxExpensePerson.SelectedItem,
-                      TextBoxExpenseComment.Text,
-                      (ExpenseType)ComboBoxExpenseType.SelectedItem
-                        )
-                    );
-                    // }
-                    UpdateIncomesView();
+                    if (_expense.Vault != (MoneyVault)ComboBoxExpenseVault.SelectedItem)
+                    {
+                        _expense.Vault.Remove(_expense);
+                        _expense.Vault = (MoneyVault)ComboBoxExpenseVault.SelectedItem;
+                        _expense.Vault.DecreaseBalance(
+                            new Expense
+                            (
+                          Convert.ToDecimal(TextBoxExpenseAmount.Text),
+                          (DateTime)DatePickerExpenseDate.SelectedDate,
+                          (Person)ComboBoxExpensePerson.SelectedItem,
+                          TextBoxExpenseComment.Text,
+                          (ExpenseType)ComboBoxExpenseType.SelectedItem
+                            )
+                        );
+                    }
+                    UpdateIncomesViewAndClearAddEditArea();
                     MessageBox.Show("ок");
                 }
                 catch (ArgumentException)
@@ -144,7 +158,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 }
             }
 
-            else if ((string)ButtonAddExpense.Content == "Добавить")
+            else if ((string)ButtonAddEditExpense.Content == "Добавить")
             {
                 Expense newExpense = new Expense
                 (
@@ -162,8 +176,8 @@ namespace MoneyHustler.AuxiliaryWindows
                     spAuf.Load();
                     spAuf.Play();
                     MessageBox.Show("потратил");
-                    UpdateIncomesView();
-                    
+                    UpdateIncomesViewAndClearAddEditArea();
+
                 }
                 catch (ArgumentException)
                 {
@@ -186,18 +200,18 @@ namespace MoneyHustler.AuxiliaryWindows
             decimal n = 0;
             if (!Decimal.TryParse(TextBoxExpenseAmount.Text, out n))
             {
-                ButtonAddExpense.IsEnabled = false;
+                ButtonAddEditExpense.IsEnabled = false;
                 //TextBoxExpenseAmount.Background = Brushes.HotPink;
-                
+
             }
             else
             {
-                ButtonAddExpense.IsEnabled = true;
+                ButtonAddEditExpense.IsEnabled = true;
                 //TextBoxExpenseAmount.Background = Brushes.Yellow;
             }
         }
 
-        private void UpdateIncomesView()
+        private void UpdateIncomesViewAndClearAddEditArea()
         {
             TextBoxExpenseAmount.Text = string.Empty;
             TextBoxExpenseComment.Text = string.Empty;
@@ -289,6 +303,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 spOnView.SoundLocation = "Audio/onView.wav";
                 spOnView.LoadAsync();
                 spOnView.Play();
+                //TODO: отдельный метод
                 ButtonViewClassificationExpenses.Content = "К общему списку";
                 StackPanelControlTemplateExpense.IsEnabled = false;
                 ComboBoxExpensePerson.SelectedItem = null;
@@ -301,6 +316,7 @@ namespace MoneyHustler.AuxiliaryWindows
             }
             else if ((string)ButtonViewClassificationExpenses.Content == "К общему списку")
             {
+                //TODO: отдельный метод
                 listViewForExpenses.IsEnabled = true;
                 ButtonViewClassificationExpenses.Content = "Показать расходы по";
                 StackPanelControlTemplateExpense.IsEnabled = true;
@@ -312,19 +328,19 @@ namespace MoneyHustler.AuxiliaryWindows
                 ComboBoxClassExpenses.IsEnabled = false;
                 ComboBoxOfClassificationExpenses.SelectedItem = null;
                 ComboBoxClassExpenses.SelectedItem = null;
-                UpdateIncomesView();
+                UpdateIncomesViewAndClearAddEditArea();
             }
         }
 
         private void ComboBoxOfClassificationExpenses_Selected(object sender, RoutedEventArgs e)
         {
-            
+
             if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[0])
             {
                 ComboBoxClassExpenses.DisplayMemberPath = "Name";
                 ComboBoxClassExpenses.ItemsSource = Storage.Vaults;
                 ComboBoxClassExpenses.SelectedItem = Storage.Vaults[0];
-                
+
             }
 
             else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[1])
@@ -332,7 +348,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 ComboBoxClassExpenses.DisplayMemberPath = "Name";
                 ComboBoxClassExpenses.ItemsSource = Storage.ExpenseTypes;
                 ComboBoxClassExpenses.SelectedItem = Storage.ExpenseTypes[0];
-                
+
             }
 
             else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[2])
@@ -340,7 +356,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 ComboBoxClassExpenses.DisplayMemberPath = "Name";
                 ComboBoxClassExpenses.ItemsSource = Storage.Persons;
                 ComboBoxClassExpenses.SelectedItem = Storage.Persons[0];
-                
+
             }
             else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[3])
             {
