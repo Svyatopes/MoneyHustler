@@ -52,6 +52,13 @@ namespace MoneyHustler
             windowMyFamily.ShowDialog();
         }
 
+        private void ButtonMoneyVaults_Click(object sender, RoutedEventArgs e)
+        {
+            WindowMoneyVaults moneyVaults = new();
+            moneyVaults.ShowDialog();
+        }
+
+
         private void ButtonAnalytics_Click(object sender, RoutedEventArgs e)
         {
             WindowAnalytics windowAnalytics = new();
