@@ -1,0 +1,9 @@
+﻿<TabItem x:Class="MoneyHustler.Tabs.TabItemExpenses"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            Header="Расходы" Background="#FFC3B9A0" BorderBrush="{x:Null}"
+            >
+    <Grid>
+        <TextBlock Text="Tab Data My expenses" />
+    </Grid>
+</TabItem>

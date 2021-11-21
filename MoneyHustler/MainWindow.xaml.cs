@@ -1,5 +1,6 @@
 ﻿using MoneyHustler.AuxiliaryWindows;
 using MoneyHustler.Models;
+using MoneyHustler.Tabs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,50 +27,31 @@ namespace MoneyHustler
         {
             InitializeComponent();
             Storage.Load();
+
         }
 
-        
-
-        private void ButtonIncomes_Click(object sender, RoutedEventArgs e)
+        protected override void OnRenderSizeChanged(System.Windows.SizeChangedInfo sizeInfo)
         {
-            WindowIncomes windowIncomes = new();
-            windowIncomes.ShowDialog();
-        }
+            double mainTabItemWidth;
+            double financeTabControlWidth;
 
-        private void ButtonExpenses_Click(object sender, RoutedEventArgs e)
-        {
-            WindowExpenses windowExpences = new();
-            windowExpences.ShowDialog();
-        }
+            int deltaForMainTab = 3;
+            int deltaForFinanceTab = 13;
+            foreach (TabItem item in MainTabControl.Items)
+            {
+                mainTabItemWidth = (this.ActualWidth / MainTabControl.Items.Count) - deltaForMainTab;
+                if (mainTabItemWidth < 0) mainTabItemWidth = 0;
 
-        private void ButtonCategories_Click(object sender, RoutedEventArgs e)
-        {
-            WindowCategories windowCategories = new();
-            windowCategories.ShowDialog();
-        }
+                item.Width = mainTabItemWidth;
+            }
 
-        private void ButtonMyFamily_Click(object sender, RoutedEventArgs e)
-        {
-            WindowMyFamily windowMyFamily = new();
-            windowMyFamily.ShowDialog();
-        }
+            foreach (TabItem item in FinanceTabControl.Items)
+            {
+                financeTabControlWidth = (this.ActualWidth / FinanceTabControl.Items.Count) - deltaForFinanceTab;
+                if (financeTabControlWidth < 0) financeTabControlWidth = 0;
 
-        private void ButtonMoneyVaults_Click(object sender, RoutedEventArgs e)
-        {
-            WindowMoneyVaults moneyVaults = new();
-            moneyVaults.ShowDialog();
-        }
-
-
-        private void ButtonAnalytics_Click(object sender, RoutedEventArgs e)
-        {
-            WindowAnalytics windowAnalytics = new();
-            windowAnalytics.ShowDialog();
-        }
-        private void ButtonCredit_Click(object sender, RoutedEventArgs e)
-        {
-            WindowCredits windowCredits = new();
-            windowCredits.ShowDialog();
-        }
+                item.Width = financeTabControlWidth;
+            }
+        }   
     }
 }
