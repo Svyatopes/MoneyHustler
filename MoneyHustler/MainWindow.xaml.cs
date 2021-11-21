@@ -34,7 +34,7 @@ namespace MoneyHustler
         {
             foreach (TabItem item in MainTabControl.Items)
             {
-                double newW = (this.ActualWidth / MainTabControl.Items.Count) - 1;
+                double newW = (this.ActualWidth / MainTabControl.Items.Count) - 3;
                 if (newW < 0) newW = 0;
 
                 item.Width = newW;
