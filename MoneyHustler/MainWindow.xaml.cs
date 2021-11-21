@@ -28,6 +28,8 @@ namespace MoneyHustler
             Storage.Load();
         }
 
+        
+
         private void ButtonIncomes_Click(object sender, RoutedEventArgs e)
         {
             WindowIncomes windowIncomes = new();
