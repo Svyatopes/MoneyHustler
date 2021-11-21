@@ -12,6 +12,7 @@ namespace MoneyHustler.Models
         public List<MoneyVault> Vaults { get; set; }
         public List<IncomeType> IncomeTypes { get; set; }
         public List<ExpenseType> ExpenseTypes { get; set; }
+        public List<Credit> Credits { get; set; }
 
 
         public StorageInstance()
@@ -27,6 +28,7 @@ namespace MoneyHustler.Models
                 this.Vaults = Storage.Vaults;
                 this.IncomeTypes = Storage.IncomeTypes;
                 this.ExpenseTypes = Storage.ExpenseTypes;
+                this.Credits = Storage.Credits;
             }
             else
             {
@@ -34,6 +36,7 @@ namespace MoneyHustler.Models
                 Vaults = new List<MoneyVault>();
                 IncomeTypes = new List<IncomeType>();
                 ExpenseTypes = new List<ExpenseType>();
+                Credits = new List<Credit>();
             }
 
         }

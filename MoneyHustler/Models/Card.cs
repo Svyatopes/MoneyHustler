@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoneyHustler.Models
 {
-    class Card : MoneyVault
+    public class Card: MoneyVault
     {
         public decimal CashBack { get; set; } //Вводиться в ввиде процента
 

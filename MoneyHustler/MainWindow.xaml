@@ -36,5 +36,6 @@
         <Button x:Name="ButtonMyFamily" Content="Моя семья" Grid.Column="1" Grid.Row="7" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonMyFamily_Click" />
         <Button x:Name="ButtonMoneyVaults" Content="Счета/вклады" Grid.Column="1" Grid.Row="9" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonMoneyVaults_Click" />
         <Button x:Name="ButtonAnalytics" Content="Аналитика" Grid.Column="1" Grid.Row="11" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonAnalytics_Click" />
+        <Button x:Name="ButtonCredit" Content="Кредиты" Grid.Column="3" Grid.Row="9" Background="#FFC3B9A0" Margin="50,0,50,0"  Click="ButtonCredit_Click" />
     </Grid>
 </Window>
