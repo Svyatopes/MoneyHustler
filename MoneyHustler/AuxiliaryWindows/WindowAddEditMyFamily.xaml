@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <TextBox x:Name="TextBoxChangesInput" Grid.Row="0" Width="200" Height="20" IsReadOnly="False"  Margin="10" TextAlignment="Center" />
-        <Button Content="Сохранить"  Grid.Row="1" Width="100" Height="30" Click="ButtonSaveClick"  />
+        <Button Content="Сохранить"  Grid.Row="1" Width="100" Height="30"   />
             
 
     </Grid>

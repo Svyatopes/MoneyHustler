@@ -25,7 +25,7 @@ namespace MoneyHustler.AuxiliaryWindows
         private Person _personToRename;
         public WindowMyFamily()
         {
-            
+
             InitializeComponent();
             _persons = new ObservableCollection<Person>(Storage.Persons);
             ListViewPersonsDisplay.ItemsSource = _persons;
@@ -43,27 +43,7 @@ namespace MoneyHustler.AuxiliaryWindows
             _persons.Remove(person);
             Storage.Save();
         }
-        private void SetPersonsNameLabelsForEditing(string name) 
-        {
-            LabelAddFamilyMembers.Content = $"Переименовать: {name}";
-            LabelEnterPersonsName.Content = "Введите новое имя";
-
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, true);
-            SetButtonEnabledAndVisibility(ButtonAddNewMember, false);
-
-            TextBoxEnterMemberName.Text = string.Empty;
-
-
-        }
-        private void SetPersonsNameLabelsForAdding()
-        {
-            LabelAddFamilyMembers.Content = "Добавить участника: ";
-            LabelEnterPersonsName.Content = "Введите новое имя";
-
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, false);
-            SetButtonEnabledAndVisibility(ButtonAddNewMember, true);
-            TextBoxEnterMemberName.Text = string.Empty;
-        }
+       
         private void SetButtonEnabledAndVisibility(Button button, bool enabled)
         {
             if (enabled)
@@ -81,12 +61,18 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             var button = (Button)sender;
             var person = (Person)button.DataContext;
+            ListViewPersonsDisplay.IsEnabled = false;
+            TextBoxEnterMemberName.Text = person.Name;
+            SetButtonEnabledAndVisibility(ButtonAddNewMember, false);
+            SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, true);
 
-            SetPersonsNameLabelsForEditing(person.Name);
+
+           
             _personToRename = person;
         }
-        private void ButtonRenameFinallyExistingMemberClick(object sender, RoutedEventArgs e) //хуйня какая то, проверить с Антоном
+        private void ButtonRenameFinallyExistingMemberClick(object sender, RoutedEventArgs e) 
         {
+            ListViewPersonsDisplay.IsEnabled = true;
             string enteredPerson = TextBoxEnterMemberName.Text.Trim();
 
             if (TextBoxEnterMemberName.Text == String.Empty)
@@ -113,12 +99,16 @@ namespace MoneyHustler.AuxiliaryWindows
             {
                 _personToRename.Name = enteredPerson;
             }
-
-            this.Close(); //надо как то эту строчку поменять
+            TextBoxEnterMemberName.Text = String.Empty;
+            SetButtonEnabledAndVisibility(ButtonAddNewMember, true);
+            SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, false);
+            UpdatePersonsView();
             Storage.Save();
+
+
         }
 
-        private void ButtonAddNewMemberClick(object sender, RoutedEventArgs e) // надо сделать по красоте
+        private void ButtonAddNewMemberClick(object sender, RoutedEventArgs e) 
         {
 
             string enteredPerson = TextBoxEnterMemberName.Text.Trim();
@@ -136,31 +126,15 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
-
-            if (_personToRename == null)
-            {
-                _personToRename = new Person { Name = enteredPerson };
-                Storage.Persons.Add(_personToRename);
-
-            }
-            else
-            {
-                _personToRename.Name = enteredPerson;
-            }
-
-            this.Close();
+            Storage.Persons.Add(new Person { Name = enteredPerson });
             UpdatePersonsView();
             Storage.Save();
 
         }
 
-        
-        
-
-
-
         private void UpdatePersonsView()
         {
+            TextBoxEnterMemberName.Text = String.Empty;
             _persons.Clear();
             var allPersons = Storage.Persons;
             foreach (var income in allPersons)
@@ -174,6 +148,6 @@ namespace MoneyHustler.AuxiliaryWindows
             DialogResult = true;
         }
 
-        
+
     }
 }

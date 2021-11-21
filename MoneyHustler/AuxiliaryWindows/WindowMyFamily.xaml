@@ -6,37 +6,7 @@
         xmlns:local="clr-namespace:MoneyHustler.AuxiliaryWindows"
         mc:Ignorable="d"
         Title="WindowMyFamily" Height="450" Width="800" Background="#FF1F1F1F">
-    <!--<Grid x:Name="MainFamilyWindow" Height="434" VerticalAlignment="Bottom"  >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="80*"/>
-            <RowDefinition Height="20*"/>
-
-        </Grid.RowDefinitions>
-        <Button Content="Добавить участника" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Click="ButtonAddPersonClick" />
-        <ListView x:Name="ListViewPersonsDisplay" Margin="20,10">
-            <ListView.View>
-                
-                <GridView>
-                    <GridViewColumn Width="450" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
-                    <GridViewColumn Width="150" >
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="Изменить" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonEditClick"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>    
-                    <GridViewColumn Width="250" >
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="Удалить" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonDeleteClick" />
-                            </DataTemplate>
-
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>    
-                </GridView>
-            </ListView.View>
-        </ListView>
-    </Grid>-->
+    
     <Grid Background="#FF1F1F1F" >
         <Grid.RowDefinitions>
             <RowDefinition Height="87*"/>
@@ -63,8 +33,8 @@
         <Label x:Name="LabelEnterPersonsName" Content="Введите имя:"  FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" FontFamily="Calibri Light" Grid.Column="3" Margin="36,87,0,9" Grid.ColumnSpan="6" Grid.RowSpan="2" />
         <Rectangle Grid.ColumnSpan="6" Grid.Column="2" Grid.RowSpan="7" Opacity="0.5" Fill="#FF565555" Panel.ZIndex="-1" Margin="56,0,0,0"/>
         <TextBox x:Name="TextBoxEnterMemberName" Grid.Column="3" Margin="36,1,34,0" Grid.Row="2" TextWrapping="Wrap" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="5" />
-        <Button x:Name="ButtonAddNewMember" Content="Add" Grid.Column="4" Margin="75,39,0,0" Grid.Row="4" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="2" Click="ButtonAddNewMemberClick" Grid.RowSpan="2"/>
-        <Button x:Name="ButtonRenameFinallyExistingMember" Content="Переименовать" Grid.Column="4" Grid.Row="4" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="2" Click="ButtonRenameFinallyExistingMemberClick" Margin="75,39,0,0" Grid.RowSpan="2"/>
+        <Button x:Name="ButtonAddNewMember" Content="Добавить" Grid.Column="4" Margin="75,39,0,0" Grid.Row="4" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="2" Click="ButtonAddNewMemberClick" Grid.RowSpan="2"/>
+        <Button x:Name="ButtonRenameFinallyExistingMember" Content="Сохранить" Grid.Column="4" Grid.Row="4" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="2" Click="ButtonRenameFinallyExistingMemberClick" Margin="75,39,0,0" Grid.RowSpan="2" IsEnabled="False" Visibility="Hidden"/>
         <Button x:Name="ButtonToMainScreen" Content="На главную" Grid.Column="7" Grid.Row="6" Background="#FFC3B9A0" FontFamily="Calibri Light" FontSize="16" Grid.ColumnSpan="2" Margin="0, 0, 10, 10" Grid.RowSpan="2" Click="ButtonToMainScreenClick"/>
         <ListView x:Name="ListViewPersonsDisplay" Grid.ColumnSpan="2" Margin="0,87,56,0" Grid.RowSpan="6" Grid.Column="1" Background="#FFC3B9A0" Foreground="Black">
             <ListView.View>
@@ -74,7 +44,7 @@
                     <GridViewColumn Header="Переименовать" Width="auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="переименовать" Margin="0"  VerticalAlignment="Center" Click="ButtonRenameIncomeCategoryClick" />
+                                <Button  Content="переименовать" Margin="0"  VerticalAlignment="Center" Click="ButtonRenameExistingMemberClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -82,7 +52,7 @@
                     <GridViewColumn Header="Удалить" Width="auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="удалить" Margin="0"  VerticalAlignment="Center" Click="ButtonRemoveIncomeCategoryClick" />
+                                <Button  Content="удалить" Margin="0"  VerticalAlignment="Center" Click="ButtonDeleteClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
