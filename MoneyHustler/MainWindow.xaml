@@ -19,6 +19,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="65*"/>
@@ -32,6 +34,7 @@
         <Button x:Name="ButtonExpenses" Content="Расходы" Grid.Column="1" Grid.Row="3" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonExpenses_Click" />
         <Button x:Name="ButtonCategories" Content="Категории" Grid.Column="1" Grid.Row="5" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonCategories_Click" />
         <Button x:Name="ButtonMyFamily" Content="Моя семья" Grid.Column="1" Grid.Row="7" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonMyFamily_Click" />
-        <Button x:Name="ButtonAnalytics" Content="Аналитика" Grid.Column="1" Grid.Row="9" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonAnalytics_Click" />
+        <Button x:Name="ButtonMoneyVaults" Content="Счета/вклады" Grid.Column="1" Grid.Row="9" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonMoneyVaults_Click" />
+        <Button x:Name="ButtonAnalytics" Content="Аналитика" Grid.Column="1" Grid.Row="11" Background="#FFC3B9A0" Margin="0,0,0,0" Click="ButtonAnalytics_Click" />
     </Grid>
 </Window>
