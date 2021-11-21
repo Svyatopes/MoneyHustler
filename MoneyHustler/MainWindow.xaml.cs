@@ -25,8 +25,8 @@ namespace MoneyHustler
     {
         public MainWindow()
         {
-            InitializeComponent();
             Storage.Load();
+            InitializeComponent();
 
         }
 
