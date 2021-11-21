@@ -179,15 +179,6 @@ namespace MoneyHustler.AuxiliaryWindows
 
             if (_vaultToEdit == null)
             {
-                decimal initalAmount;
-                var parsedInitialAmount = decimal.TryParse(TextBoxInitialAmount.Text, out initalAmount);
-
-                if (!parsedInitialAmount)
-                {
-                    MessageBox.Show("Вы должны вести число в начальный баланс");
-                    return;
-                }
-
                 var enteredName = TextBoxVaultName.Text.Trim();
                 if (Storage.Vaults.Any(item => item.Name == enteredName))
                 {
@@ -203,18 +194,35 @@ namespace MoneyHustler.AuxiliaryWindows
                     _ => throw new NotSupportedException()
                 };
 
+
+                if (!string.IsNullOrWhiteSpace(TextBoxInitialAmount.Text))
+                {
+                    decimal initalAmount;
+                    var parsedInitialAmount = decimal.TryParse(TextBoxInitialAmount.Text, out initalAmount);
+                    if (!parsedInitialAmount)
+                    {
+                        MessageBox.Show("Вы должны вести число в начальный баланс");
+                        return;
+                    }
+
+                    if (initalAmount > 0)
+                    {
+                        var incomeType = Storage.IncomeTypes.FirstOrDefault(item => item.Name == "Прочее");
+                        if (incomeType == null)
+                        {
+                            incomeType = new IncomeType() { Name = "Прочеe" };
+                            Storage.Save();
+                        }
+
+                        //TODO: default person
+                        vaultToAdd.IncreaseBalance(new Income(initalAmount, (DateTime)DatePickerDayOfOpenDeposit.SelectedDate, null, "Начальный ввод баланса", incomeType));
+                    }
+
+                }
+
                 vaultToAdd.Name = enteredName;
 
 
-                var incomeType = Storage.IncomeTypes.FirstOrDefault(item => item.Name == "Прочее");
-                if (incomeType == null)
-                {
-                    incomeType = new IncomeType() { Name = "Прочеe" };
-                    Storage.Save();
-                }
-
-                //TODO: default person
-                vaultToAdd.IncreaseBalance(new Income(initalAmount, (DateTime)DatePickerDayOfOpenDeposit.SelectedDate, null, "Начальный ввод баланса", incomeType));
 
                 switch (vaultToAdd)
                 {
