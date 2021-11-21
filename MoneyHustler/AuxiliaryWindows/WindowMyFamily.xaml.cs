@@ -21,13 +21,15 @@ namespace MoneyHustler.AuxiliaryWindows
     /// </summary> 
     public partial class WindowMyFamily : Window
     {
+        private Storage _storageInstance = Storage.GetInstance();
+
         private ObservableCollection<Person> _persons;
         private Person _personToRename;
         public WindowMyFamily()
         {
 
             InitializeComponent();
-            _persons = new ObservableCollection<Person>(Storage.Persons);
+            _persons = new ObservableCollection<Person>(_storageInstance.Persons);
             ListViewPersonsDisplay.ItemsSource = _persons;
         }
         private void ButtonDeleteClick(object sender, RoutedEventArgs e)
@@ -39,7 +41,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 MessageBox.Show("You can't remove this person, cause this name is already used in incomes/expenses");
                 return;
             }
-            Storage.Persons.Remove(person);
+            _storageInstance.Persons.Remove(person);
             _persons.Remove(person);
             Storage.Save();
         }
@@ -85,7 +87,7 @@ namespace MoneyHustler.AuxiliaryWindows
             }
 
 
-            if (Storage.Persons.Any(item => item.Name == enteredPerson))
+            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
             {
                 MessageBox.Show("Такое имя уже существует");
                 return;
@@ -95,7 +97,7 @@ namespace MoneyHustler.AuxiliaryWindows
             if (_personToRename == null)
             {
                 _personToRename = new Person { Name = enteredPerson };
-                Storage.Persons.Add(_personToRename);
+                _storageInstance.Persons.Add(_personToRename);
 
             }
             else
@@ -126,13 +128,13 @@ namespace MoneyHustler.AuxiliaryWindows
             }
 
 
-            if (Storage.Persons.Any(item => item.Name == enteredPerson))
+            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
             {
                 MessageBox.Show("Такое имя уже существует");
                 return;
             }
 
-            Storage.Persons.Add(new Person { Name = enteredPerson });
+            _storageInstance.Persons.Add(new Person { Name = enteredPerson });
             UpdatePersonsView();
             Storage.Save();
 
@@ -142,7 +144,7 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             TextBoxEnterMemberName.Text = String.Empty;
             _persons.Clear();
-            var allPersons = Storage.Persons;
+            var allPersons = _storageInstance.Persons;
             foreach (var income in allPersons)
             {
                 _persons.Add(income);

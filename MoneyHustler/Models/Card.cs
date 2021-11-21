@@ -8,6 +8,7 @@ namespace MoneyHustler.Models
 {
     public class Card: MoneyVault
     {
+        private Storage _storageInstance = Storage.GetInstance();
         public decimal CashBack { get; set; } //Вводиться в ввиде процента
 
         public Card()
@@ -37,11 +38,11 @@ namespace MoneyHustler.Models
         private void EarnCashBack(Expense expense)
         {
             //Создание нового Income для начисления кэшбэка с категорией дохода "CashBack"
-            var incomeTypeCashBack = Storage.IncomeTypes.FirstOrDefault(item => item.Name == "CashBack");
+            var incomeTypeCashBack = _storageInstance.IncomeTypes.FirstOrDefault(item => item.Name == "CashBack");
             if (incomeTypeCashBack == null)
             {
                 incomeTypeCashBack = new IncomeType { Name = "CashBack" };
-                Storage.IncomeTypes.Add(incomeTypeCashBack);
+                _storageInstance.IncomeTypes.Add(incomeTypeCashBack);
             }
 
             //Информация по категории "CashBack", зависит от расхода по this Card 

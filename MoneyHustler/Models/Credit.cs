@@ -8,6 +8,7 @@ namespace MoneyHustler.Models
 {
     public class Credit
     {
+        private Storage _storageInstance = Storage.GetInstance();
         public decimal? Value { get; set; }
 
         public decimal ValuewithoutPercent { get; set; }
@@ -80,7 +81,7 @@ namespace MoneyHustler.Models
 
         public void PayMonthlyPayment()
         {
-            var expenseType = Storage.ExpenseTypes.FirstOrDefault(item => item.Name == "Кредит");
+            var expenseType = _storageInstance.ExpenseTypes.FirstOrDefault(item => item.Name == "Кредит");
             if (expenseType == null)
             {
                 expenseType = new ExpenseType() { Name = "Кредит" };
@@ -93,7 +94,7 @@ namespace MoneyHustler.Models
 
         public void PayOneTimePayment(decimal payValue)
         {
-            var expenseType = Storage.ExpenseTypes.FirstOrDefault(item => item.Name == "Кредит");
+            var expenseType = _storageInstance.ExpenseTypes.FirstOrDefault(item => item.Name == "Кредит");
             if (expenseType == null)
             {
                 expenseType = new ExpenseType() { Name = "Кредит" };

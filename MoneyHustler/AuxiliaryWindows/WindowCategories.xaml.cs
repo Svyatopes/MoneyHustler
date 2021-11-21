@@ -21,6 +21,8 @@ namespace MoneyHustler.AuxiliaryWindows
     /// </summary>
     public partial class WindowCategories : Window
     {
+        private Storage _storageInstance = Storage.GetInstance();
+
         private ObservableCollection<IncomeType> _incomeTypes;
 
         private ObservableCollection<ExpenseType> _expenseTypes;
@@ -32,8 +34,8 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             InitializeComponent();
 
-            _incomeTypes = new ObservableCollection<IncomeType>(Storage.IncomeTypes);
-            _expenseTypes = new ObservableCollection<ExpenseType>(Storage.ExpenseTypes);
+            _incomeTypes = new ObservableCollection<IncomeType>(_storageInstance.IncomeTypes);
+            _expenseTypes = new ObservableCollection<ExpenseType>(_storageInstance.ExpenseTypes);
 
             ListViewIncomes.ItemsSource = _incomeTypes;
             ListViewExpenses.ItemsSource = _expenseTypes;
@@ -53,7 +55,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }    
 
-            Storage.IncomeTypes.Remove(incomeType);
+            _storageInstance.IncomeTypes.Remove(incomeType);
             _incomeTypes.Remove(incomeType);
 
             Storage.Save();
@@ -70,7 +72,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
-            Storage.ExpenseTypes.Remove(expenseType);
+            _storageInstance.ExpenseTypes.Remove(expenseType);
             _expenseTypes.Remove(expenseType);
 
             Storage.Save();
@@ -164,7 +166,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
             var enteredIncomeTypeName = TextBoxEnterIncomeCategory.Text.Trim();
 
-            if (Storage.IncomeTypes.Any(item => item.Name == enteredIncomeTypeName))
+            if (_storageInstance.IncomeTypes.Any(item => item.Name == enteredIncomeTypeName))
             {
                 MessageBox.Show("Категория с таким именем уже существует!");
                 return;
@@ -173,7 +175,7 @@ namespace MoneyHustler.AuxiliaryWindows
             _incomeTypeToRename.Name = enteredIncomeTypeName;
 
             _incomeTypes.Clear();
-            foreach (IncomeType type in Storage.IncomeTypes)
+            foreach (IncomeType type in _storageInstance.IncomeTypes)
             {
                 _incomeTypes.Add(type);
             }
@@ -194,7 +196,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
             var enteredExpenseTypeName = TextBoxEnterExpenseCategory.Text.Trim();
 
-            if (Storage.ExpenseTypes.Any(item => item.Name == enteredExpenseTypeName))
+            if (_storageInstance.ExpenseTypes.Any(item => item.Name == enteredExpenseTypeName))
             {
                 MessageBox.Show("Категория с таким именем уже существует!");
                 return;
@@ -203,7 +205,7 @@ namespace MoneyHustler.AuxiliaryWindows
             _expenseTypeToRename.Name = enteredExpenseTypeName;
 
             _expenseTypes.Clear();
-            foreach (ExpenseType type in Storage.ExpenseTypes)
+            foreach (ExpenseType type in _storageInstance.ExpenseTypes)
             {
                 _expenseTypes.Add(type);
             }
@@ -221,14 +223,14 @@ namespace MoneyHustler.AuxiliaryWindows
 
             var enteredIncomeTypeName = TextBoxEnterIncomeCategory.Text.Trim();
 
-            if (Storage.IncomeTypes.Any(item => item.Name == enteredIncomeTypeName))
+            if (_storageInstance.IncomeTypes.Any(item => item.Name == enteredIncomeTypeName))
             {
                 MessageBox.Show("Такая категория уже существует!");
                 return;
             }
             var incomeType = new IncomeType() { Name = enteredIncomeTypeName };
 
-            Storage.IncomeTypes.Add(incomeType);
+            _storageInstance.IncomeTypes.Add(incomeType);
            _incomeTypes.Add(incomeType);
 
             TextBoxEnterIncomeCategory.Text = string.Empty;
@@ -242,14 +244,14 @@ namespace MoneyHustler.AuxiliaryWindows
 
             var enteredExpenseTypeName = TextBoxEnterExpenseCategory.Text.Trim();
 
-            if (Storage.IncomeTypes.Any(item => item.Name == enteredExpenseTypeName))
+            if (_storageInstance.IncomeTypes.Any(item => item.Name == enteredExpenseTypeName))
             {
                 MessageBox.Show("Такая категория уже существует!");
                 return;
             }
 
             var expenseType = new ExpenseType() { Name = enteredExpenseTypeName };
-            Storage.ExpenseTypes.Add(expenseType);
+            _storageInstance.ExpenseTypes.Add(expenseType);
             _expenseTypes.Add(expenseType);
 
             TextBoxEnterExpenseCategory.Text = string.Empty;

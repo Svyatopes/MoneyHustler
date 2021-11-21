@@ -20,15 +20,17 @@ namespace MoneyHustler.AuxiliaryWindows
     /// </summary>
     public partial class WindowAddEditIncome : Window
     {
+        private Storage _storageInstance = Storage.GetInstance();
+
         private Income _income;
         public WindowAddEditIncome()
         {
             InitializeComponent();
 
-            ComboBoxIncomeTypes.ItemsSource = Storage.IncomeTypes;
-            ComboBoxVaults.ItemsSource = Storage.Vaults;
+            ComboBoxIncomeTypes.ItemsSource = _storageInstance.IncomeTypes;
+            ComboBoxVaults.ItemsSource = _storageInstance.Vaults;
             DatePickerIncomeDate.SelectedDate = DateTime.Now;
-            ComboBoxPersons.ItemsSource = Storage.Persons;
+            ComboBoxPersons.ItemsSource = _storageInstance.Persons;
         }
 
         public WindowAddEditIncome(Income income)
@@ -39,15 +41,15 @@ namespace MoneyHustler.AuxiliaryWindows
 
             TextBoxAmount.Text = _income.Amount.ToString();
 
-            ComboBoxIncomeTypes.ItemsSource = Storage.IncomeTypes;
+            ComboBoxIncomeTypes.ItemsSource = _storageInstance.IncomeTypes;
             ComboBoxIncomeTypes.SelectedItem = _income.Type;
 
-            ComboBoxVaults.ItemsSource = Storage.Vaults;
+            ComboBoxVaults.ItemsSource = _storageInstance.Vaults;
             ComboBoxVaults.SelectedItem = _income.Vault;
 
             DatePickerIncomeDate.SelectedDate = _income.Date;
 
-            ComboBoxPersons.ItemsSource = Storage.Persons;
+            ComboBoxPersons.ItemsSource = _storageInstance.Persons;
             ComboBoxPersons.SelectedItem = _income.Person;
 
             TextBoxComment.Text = _income.Comment;

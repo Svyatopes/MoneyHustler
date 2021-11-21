@@ -6,24 +6,37 @@ using Newtonsoft.Json;
 
 namespace MoneyHustler.Models
 {
-    public static class Storage
+    public sealed class Storage
     {
 
         //Класс используется как хранилище всех данных в программе.
+        private static Storage _instance;
 
-        public static List<Person> Persons = new List<Person>();
-        public static List<MoneyVault> Vaults = new List<MoneyVault>();
-        public static List<IncomeType> IncomeTypes = new List<IncomeType>();
-        public static List<ExpenseType> ExpenseTypes = new List<ExpenseType>();
-        public static List<Credit> Credits;
+        public List<Credit> Credits = new List<Credit>();
+        public List<Person> Persons = new List<Person>();
+        public List<MoneyVault> Vaults = new List<MoneyVault>();
+        public List<IncomeType> IncomeTypes = new List<IncomeType>();
+        public List<ExpenseType> ExpenseTypes = new List<ExpenseType>();
 
         private const string _path = "./storage.json";
+
+        private Storage() { }
+
+        public static Storage GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new Storage();
+            }
+            return _instance;
+        }
 
         public static List<Income> GetAllIncomes()
         {
             List<Income> allIncomes = new List<Income>();
 
-            foreach (MoneyVault moneyVault in Vaults)
+            Storage instance = GetInstance();
+            foreach (MoneyVault moneyVault in instance.Vaults)
             {
                 allIncomes.AddRange(moneyVault.Incomes);
             }
@@ -35,7 +48,8 @@ namespace MoneyHustler.Models
         {
             List<Expense> allExpences = new List<Expense>();
 
-            foreach (MoneyVault moneyVault in Vaults)
+            Storage instance = GetInstance();
+            foreach (MoneyVault moneyVault in instance.Vaults)
             {
                 allExpences.AddRange(moneyVault.Expenses);
             }
@@ -45,7 +59,7 @@ namespace MoneyHustler.Models
 
         public static void Save()
         {
-            var storageInstance = new StorageInstance(true);
+            var storageInstance = GetInstance();
 
             var _jsonSettings = new JsonSerializerSettings()
             {
@@ -76,13 +90,7 @@ namespace MoneyHustler.Models
                 ObjectCreationHandling = ObjectCreationHandling.Auto
             };
 
-            var storageInstance = JsonConvert.DeserializeObject<StorageInstance>(jsonString, _jsonSettings);
-
-            Storage.Vaults = storageInstance.Vaults;
-            Storage.Persons = storageInstance.Persons;
-            Storage.ExpenseTypes = storageInstance.ExpenseTypes;
-            Storage.IncomeTypes = storageInstance.IncomeTypes;
-            Storage.Credits = storageInstance.Credits;
+            _instance = JsonConvert.DeserializeObject<Storage>(jsonString, _jsonSettings);
         }
     }
 }

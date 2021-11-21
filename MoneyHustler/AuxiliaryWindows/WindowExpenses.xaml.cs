@@ -24,6 +24,7 @@ namespace MoneyHustler.AuxiliaryWindows
     /// </summary>
     public partial class WindowExpenses : Window
     {
+        private Storage _storageInstance = Storage.GetInstance();
 
         private Expense _expense;
         private DateTime _dateStartForView;
@@ -64,9 +65,9 @@ namespace MoneyHustler.AuxiliaryWindows
             _dateStartForView = DateTime.Now.AddYears(-20);
             _dateEndForView = DateTime.Now;
             //TODO:ГОТОВО перевести на SetItemSourceAndSelectedIndexToZero 
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, Storage.Persons);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, Storage.Vaults);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, Storage.ExpenseTypes);
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
 
             DatePickerExpenseDate.SelectedDate = DateTime.Now;
             SortExpenses("Date", _lastDirection);
@@ -400,9 +401,9 @@ namespace MoneyHustler.AuxiliaryWindows
                 ButtonViewClassificationExpenses.Content = "Показать расходы по";
                 SetIsEnabledForItemsOnStackPanel(false);
                 //StackPanelControlTemplateExpense.IsEnabled = true;//
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, Storage.Persons);
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, Storage.Vaults);
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, Storage.ExpenseTypes);
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
                 //ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
                 //ComboBoxExpenseVault.SelectedItem = Storage.Vaults[0];
                 //ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
@@ -420,22 +421,22 @@ namespace MoneyHustler.AuxiliaryWindows
 
             if (ComboBoxOfClassificationExpenses.SelectedIndex == 0)
             {
-                ComboBoxClassExpenses.ItemsSource = Storage.Vaults;
-                ComboBoxClassExpenses.SelectedItem = Storage.Vaults[0];
+                ComboBoxClassExpenses.ItemsSource = _storageInstance.Vaults;
+                ComboBoxClassExpenses.SelectedItem = _storageInstance.Vaults[0];
 
             }
 
             else if (ComboBoxOfClassificationExpenses.SelectedIndex == 1)
             {
-                ComboBoxClassExpenses.ItemsSource = Storage.ExpenseTypes;
-                ComboBoxClassExpenses.SelectedItem = Storage.ExpenseTypes[0];
+                ComboBoxClassExpenses.ItemsSource = _storageInstance.ExpenseTypes;
+                ComboBoxClassExpenses.SelectedItem = _storageInstance.ExpenseTypes[0];
 
             }
 
             else if (ComboBoxOfClassificationExpenses.SelectedIndex == 2)
             {
-                ComboBoxClassExpenses.ItemsSource = Storage.Persons;
-                ComboBoxClassExpenses.SelectedItem = Storage.Persons[0];
+                ComboBoxClassExpenses.ItemsSource = _storageInstance.Persons;
+                ComboBoxClassExpenses.SelectedItem = _storageInstance.Persons[0];
             }
             
             else
@@ -457,47 +458,22 @@ namespace MoneyHustler.AuxiliaryWindows
             }
 
             if (ComboBoxSelectPeriod.SelectedIndex == 0)
-            {
-                //TODO: Отдельный метод типа void ChangePeriodOnDisplay( DateTime inputDate)
+            {               
                 ChangePeriodOnDisplay(4000);
-                //StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
-                //StackPanelSelectDateOnDisplay.IsEnabled = false;
-                //_dateStartForView = DateTime.Now.AddYears(-20);
-                //_dateEndForView = DateTime.Now;
-                //UpdateIncomesViewAndClearAddEditArea();
-
             }
 
             else if (ComboBoxSelectPeriod.SelectedIndex == 1)
             {
-                ChangePeriodOnDisplay(0);
-                //StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
-                //StackPanelSelectDateOnDisplay.IsEnabled = false;
-                //_dateStartForView = DateTime.Today.AddDays(-1);
-                //_dateEndForView = DateTime.Now;
-                //UpdateIncomesViewAndClearAddEditArea();
-                
+                ChangePeriodOnDisplay(0);               
             }
 
             else if (ComboBoxSelectPeriod.SelectedIndex == 2)
             {
                 ChangePeriodOnDisplay(7);
-                //StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
-                //StackPanelSelectDateOnDisplay.IsEnabled = false;
-                //_dateStartForView = DateTime.Today.AddDays(-7);
-                //_dateEndForView = DateTime.Now;
-                //UpdateIncomesViewAndClearAddEditArea();
-
             }
             else if (ComboBoxSelectPeriod.SelectedIndex == 3)
             {
                 ChangePeriodOnDisplay(30);
-                //StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
-                //StackPanelSelectDateOnDisplay.IsEnabled = false;
-                //_dateStartForView = DateTime.Today.AddMonths(-1);
-                //_dateEndForView = DateTime.Now;
-                //UpdateIncomesViewAndClearAddEditArea();
-
             }
 
             else if (ComboBoxSelectPeriod.SelectedIndex == 4)
@@ -506,9 +482,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 StackPanelSelectDateOnDisplay.IsEnabled = true;
                 DatePickerSelectStartPeriodOrDayExpenses.IsEnabled = true;
 
-            }
-
-            
+            }         
         }
 
         private void DatePickerSelectEndPeriodExpenses_SelectedDateChanged(object sender, SelectionChangedEventArgs e)

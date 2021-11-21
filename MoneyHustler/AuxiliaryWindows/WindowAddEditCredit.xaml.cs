@@ -19,12 +19,14 @@ namespace MoneyHustler.AuxiliaryWindows
     /// </summary>
     public partial class WindowAddEditCredit : Window
     {
+        private Storage _storageInstance = Storage.GetInstance();
+
         private Credit _credit;
         public WindowAddEditCredit()
         {
             InitializeComponent();
-            ComboBoxCards.ItemsSource = Storage.Vaults;
-            ComboBoxPerson.ItemsSource = Storage.Persons;
+            ComboBoxCards.ItemsSource = _storageInstance.Vaults;
+            ComboBoxPerson.ItemsSource = _storageInstance.Persons;
         }
 
         public WindowAddEditCredit(Credit credit)
@@ -58,10 +60,10 @@ namespace MoneyHustler.AuxiliaryWindows
             TextBoxPercent.Text = Convert.ToString(_credit.Percent);
 
 
-            ComboBoxCards.ItemsSource = Storage.Vaults;
+            ComboBoxCards.ItemsSource = _storageInstance.Vaults;
             ComboBoxCards.SelectedItem = _credit.BindedCard;
 
-            ComboBoxPerson.ItemsSource = Storage.Persons;
+            ComboBoxPerson.ItemsSource = _storageInstance.Persons;
             ComboBoxPerson.SelectedItem = _credit.Person;
 
 
@@ -128,7 +130,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
                 _credit = new Credit(TextBoxName.Text, Convert.ToDouble(TextBoxPercent.Text), null, enteredValue, (Person)ComboBoxPerson.SelectedItem, (Card)ComboBoxCards.SelectedItem, (
                     DateTime)DatePickerDayClose.SelectedDate, (DateTime)DatePickerDayOpen.SelectedDate);
-                Storage.Credits.Add(_credit);
+                _storageInstance.Credits.Add(_credit);
 
             }
             else
