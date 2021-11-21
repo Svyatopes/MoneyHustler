@@ -15,6 +15,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -23,17 +25,21 @@
         <Label HorizontalAlignment="Center" VerticalAlignment="Center">Название</Label>
         <TextBox x:Name="TextBoxName" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Сумма</Label>
-        <TextBox x:Name="TextBoxValue" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
-        <Label Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">Дата открытия</Label>
-        <DatePicker x:Name="DatePickerDayOpen" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
-        <Label Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center">Дата закрытия</Label>
-        <DatePicker x:Name="DatePickerDayClose" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
-        <Label Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">Процент</Label>
-        <TextBox x:Name="TextBoxPercent" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
-        <Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">К какому счету относится</Label>
-        <ComboBox x:Name="ComboBoxCards" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"
-                  DisplayMemberPath="Name"></ComboBox>
-        <Button Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSaveClick">Сохранить</Button>
+        <TextBox x:Name="TextBoxValueWithoutPercent" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
+        <Label Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">Сумма с процентами</Label>
+        <Label x:Name="LabelValue" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></Label>
+        <Label Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center">Дата открытия</Label>
+        <DatePicker x:Name="DatePickerDayOpen" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
+        <Label Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center">Дата закрытия</Label>
+        <DatePicker x:Name="DatePickerDayClose" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
+        <Label Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center">Процент</Label>
+        <TextBox x:Name="TextBoxPercent" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
+        <Label Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center">К какому счету относится</Label>
+        <ComboBox x:Name="ComboBoxCards" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100" DisplayMemberPath="Name"></ComboBox>
+        <Label Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center">Владелец</Label>
+        <ComboBox x:Name="ComboBoxPerson" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100" DisplayMemberPath="Name"></ComboBox>
+
+        <Button Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSaveClick">Сохранить</Button>
 
     </Grid>
 </Window>

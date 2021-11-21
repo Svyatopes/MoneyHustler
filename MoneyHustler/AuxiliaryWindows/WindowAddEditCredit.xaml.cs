@@ -24,6 +24,7 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             InitializeComponent();
             ComboBoxCards.ItemsSource = Storage.Vaults;
+            ComboBoxPerson.ItemsSource = Storage.Persons;
         }
 
         public WindowAddEditCredit(Credit credit)
@@ -34,7 +35,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
             TextBoxName.Text = _credit.Name;
 
-            TextBoxValue.Text = Convert.ToString(_credit.Value);
+            LabelValue.Content = Convert.ToString(_credit.Value);
 
             DatePickerDayOpen.SelectedDate = _credit.DayOpen;
             DatePickerDayClose.SelectedDate = _credit.DayClose;
@@ -45,18 +46,22 @@ namespace MoneyHustler.AuxiliaryWindows
             ComboBoxCards.ItemsSource = Storage.Vaults;
             ComboBoxCards.SelectedItem = _credit.BindedCard;
 
+            ComboBoxPerson.ItemsSource = Storage.Persons;
+            ComboBoxPerson.SelectedItem = _credit.Person;
+
+
         }
 
         private void ButtonSaveClick(object sender, RoutedEventArgs e)
         {
-            if (TextBoxValue.Text == String.Empty)
+            if (TextBoxValueWithoutPercent.Text == String.Empty)
             {
                 MessageBox.Show("You need to enter the value!");
                 return;
             }
 
             decimal enteredValue = 0;
-            if (!decimal.TryParse(TextBoxValue.Text, out enteredValue))
+            if (!decimal.TryParse(TextBoxValueWithoutPercent.Text, out enteredValue))
             {
                 MessageBox.Show("You entered some invalid string to amount field!");
                 return;
@@ -74,14 +79,14 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
-            if (DatePickerDayClose.SelectedDate > DatePickerDayOpen.SelectedDate)
+            if (DatePickerDayClose.SelectedDate < DatePickerDayOpen.SelectedDate)
             {
                 MessageBox.Show("The closing date cannot be earlier than the opening date!");
                 return;
             }
 
             decimal enteredPercent = 0;
-            if (!decimal.TryParse(TextBoxValue.Text, out enteredPercent))
+            if (!decimal.TryParse(TextBoxPercent.Text, out enteredPercent))
             {
                 MessageBox.Show("You entered some invalid string to percent field!");
                 return;
@@ -100,7 +105,7 @@ namespace MoneyHustler.AuxiliaryWindows
             {
                
 
-                _credit = new Credit(TextBoxName.Text, Convert.ToDouble(TextBoxPercent.Text), enteredValue, (Card)ComboBoxCards.SelectedItem, (
+                _credit = new Credit(TextBoxName.Text, Convert.ToDouble(TextBoxPercent.Text), null, enteredValue, (Person)ComboBoxPerson.SelectedItem, (Card)ComboBoxCards.SelectedItem, (
                     DateTime)DatePickerDayClose.SelectedDate, (DateTime)DatePickerDayOpen.SelectedDate);
                 Storage.Credits.Add(_credit);
 
@@ -109,14 +114,15 @@ namespace MoneyHustler.AuxiliaryWindows
             {
                 _credit.Name = TextBoxName.Text;
                 _credit.Percent = Convert.ToDouble(TextBoxPercent.Text);
-                _credit.Value = enteredValue;
+                _credit.ValuewithoutPercent = enteredValue;
+                _credit.Value = (decimal?)LabelValue.Content;
                 _credit.BindedCard = (Card)ComboBoxCards.SelectedItem;
                 _credit.DayOpen = (DateTime)DatePickerDayOpen.SelectedDate;
                 _credit.DayClose = (DateTime)DatePickerDayClose.SelectedDate;
-
+                _credit.Person = (Person)ComboBoxPerson.SelectedItem;
             }
 
-            Storage.Save();
+            Storage.Save(); 
             this.Close();
         }
     }

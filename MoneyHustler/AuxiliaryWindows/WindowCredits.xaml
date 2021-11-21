@@ -37,12 +37,20 @@
             <ListView.View>
                 <GridView>
 
-                    <GridViewColumn Header="Название" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Сумма" Width="Auto" DisplayMemberBinding="{Binding Value}"/>
+                    <GridViewColumn Header="Название"  Width="Auto" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Сумма" Width="Auto"  DisplayMemberBinding="{Binding Value, StringFormat=0.00}"/>
                     <GridViewColumn Header="Дата открытия" Width="Auto" DisplayMemberBinding="{Binding DayOpen, StringFormat=d, ConverterCulture=ru-RU}"/>
                     <GridViewColumn Header="Дата закрытия" Width="Auto" DisplayMemberBinding="{Binding DayClose, StringFormat=d, ConverterCulture=ru-RU}"/>
                     <GridViewColumn Header="Процент" Width="Auto" DisplayMemberBinding="{Binding Percent}"/>
                     <GridViewColumn Header="Счет" Width="Auto" DisplayMemberBinding="{Binding BindedCard.Name}"/>
+                    <GridViewColumn Header="Cумма платежа" Width="Auto" DisplayMemberBinding="{Binding AnnuentPayValue, StringFormat=0}"/>
+                    <GridViewColumn Header="Ежемесячный платеж" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  x:Name="ButtonPayment" Content="Оплатить" Margin="0"  VerticalAlignment="Center"  Click="ButtonPayItemClick" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Изменить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -57,6 +65,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+                    
 
                 </GridView>
             </ListView.View>

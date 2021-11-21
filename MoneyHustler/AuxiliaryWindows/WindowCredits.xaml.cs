@@ -31,10 +31,10 @@ namespace MoneyHustler.AuxiliaryWindows
             {
                 Storage.Credits = new List<Credit> { };
             }
-            
             InitializeComponent();
             listOfCreditsView = new ObservableCollection<Credit>(Storage.Credits);
             listViewForCredits.ItemsSource = listOfCreditsView;
+
         }
 
         private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
@@ -86,7 +86,7 @@ namespace MoneyHustler.AuxiliaryWindows
                       Resources["HeaderTemplateArrowDown"] as DataTemplate;
                 }
 
-                
+
                 if (_lastHeaderClicked != null && _lastHeaderClicked != headerClicked)
                 {
                     _lastHeaderClicked.Column.HeaderTemplate = null;
@@ -112,7 +112,6 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             AuxiliaryWindows.WindowAddEditCredit windowIncomes = new();
             windowIncomes.ShowDialog();
-
             UpdateCreditsView();
         }
 
@@ -124,6 +123,7 @@ namespace MoneyHustler.AuxiliaryWindows
             AuxiliaryWindows.WindowAddEditCredit windowCredits = new(credit);
             windowCredits.ShowDialog();
             UpdateCreditsView();
+            Storage.Save();
 
         }
 
@@ -137,13 +137,6 @@ namespace MoneyHustler.AuxiliaryWindows
             }
         }
 
-        private void InitTestCredits()
-        {
-            Storage.Credits.Add(new Credit("Test1", 10, 1000, new Card("test", 10000, 10), DateTime.Today, DateTime.Today));
-            Storage.Credits.Add(new Credit("Test2", 12, 1020, new Card("test2", 10000, 10), DateTime.Today, DateTime.Today));
-            
-        }
-
         private void ButtonRemoveCreditItemClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
@@ -153,6 +146,14 @@ namespace MoneyHustler.AuxiliaryWindows
             Storage.Save();
         }
 
+        private void ButtonPayItemClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var credit = (Credit)button.DataContext;
 
+            credit.PayMonthlyPayment();
+            UpdateCreditsView();
+            Storage.Save();
+        }
     }
 }
