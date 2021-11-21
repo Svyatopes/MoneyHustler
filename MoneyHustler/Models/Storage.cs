@@ -12,6 +12,7 @@ namespace MoneyHustler.Models
         //Класс используется как хранилище всех данных в программе.
         private static Storage _instance;
 
+        public List<Credit> Credits;
         public List<Person> Persons = new List<Person>();
         public List<MoneyVault> Vaults = new List<MoneyVault>();
         public List<IncomeType> IncomeTypes = new List<IncomeType>();
