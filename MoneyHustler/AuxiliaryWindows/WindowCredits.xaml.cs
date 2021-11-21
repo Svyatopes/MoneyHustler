@@ -22,19 +22,19 @@ namespace MoneyHustler.AuxiliaryWindows
     /// </summary>
     public partial class WindowCredits : Window
     {
-        private Storage _instance = Storage.GetInstance();
+        private Storage _storageInstance = Storage.GetInstance();
 
         private ObservableCollection<Credit> listOfCreditsView;
         private GridViewColumnHeader _lastHeaderClicked = null;
         private ListSortDirection _lastDirection = ListSortDirection.Ascending;
         public WindowCredits()
         {
-            if (_instance.Credits == null)
+            if (_storageInstance.Credits == null)
             {
-                _instance.Credits = new List<Credit> { };
+                _storageInstance.Credits = new List<Credit> { };
             }
             InitializeComponent();
-            listOfCreditsView = new ObservableCollection<Credit>(_instance.Credits);
+            listOfCreditsView = new ObservableCollection<Credit>(_storageInstance.Credits);
             listViewForCredits.ItemsSource = listOfCreditsView;
 
         }
@@ -132,7 +132,7 @@ namespace MoneyHustler.AuxiliaryWindows
         private void UpdateCreditsView()
         {
             listOfCreditsView.Clear();
-            var allCredits = _instance.Credits;
+            var allCredits = _storageInstance.Credits;
             foreach (var income in allCredits)
             {
                 listOfCreditsView.Add(income);
@@ -144,7 +144,7 @@ namespace MoneyHustler.AuxiliaryWindows
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
             listOfCreditsView.Remove(credit);
-            _instance.Credits.Remove(credit);
+            _storageInstance.Credits.Remove(credit);
             Storage.Save();
         }
 

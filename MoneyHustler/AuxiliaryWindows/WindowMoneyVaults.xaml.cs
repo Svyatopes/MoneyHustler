@@ -24,13 +24,13 @@ namespace MoneyHustler.AuxiliaryWindows
     {
         public class MoneyVaultForView
         {
-            private Storage _instance = Storage.GetInstance();
+            private Storage _storageInstance = Storage.GetInstance();
             public string Name { get; set; }
             public decimal Balance { get; set; }
             public string TypeName { get; set; }
             public MoneyVault Vault { get; set; }
         }
-        private Storage _instance = Storage.GetInstance();
+        private Storage _storageInstance = Storage.GetInstance();
         private ObservableCollection<MoneyVaultForView> _listMoneyVaults;
         private ObservableCollection<string> _moneyVaulTypes;
         private MoneyVault _vaultToEdit;
@@ -58,7 +58,7 @@ namespace MoneyHustler.AuxiliaryWindows
         private void UpdateListOfVaults()
         {
             _listMoneyVaults.Clear();
-            foreach (var vault in _instance.Vaults)
+            foreach (var vault in _storageInstance.Vaults)
             {
                 MoneyVaultForView vaultView = new MoneyVaultForView() { Name = vault.Name, Balance = vault.GetBalance(), Vault = vault };
 
@@ -167,7 +167,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
-            _instance.Vaults.Remove(moneyVaultForView.Vault);
+            _storageInstance.Vaults.Remove(moneyVaultForView.Vault);
             _listMoneyVaults.Remove(moneyVaultForView);
 
             Storage.Save();
@@ -181,7 +181,7 @@ namespace MoneyHustler.AuxiliaryWindows
             if (_vaultToEdit == null)
             {
                 var enteredName = TextBoxVaultName.Text.Trim();
-                if (_instance.Vaults.Any(item => item.Name == enteredName))
+                if (_storageInstance.Vaults.Any(item => item.Name == enteredName))
                 {
                     MessageBox.Show("Такое имя уже используется.");
                     return;
@@ -208,7 +208,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
                     if (initalAmount > 0)
                     {
-                        var incomeType = _instance.IncomeTypes.FirstOrDefault(item => item.Name == "Прочее");
+                        var incomeType = _storageInstance.IncomeTypes.FirstOrDefault(item => item.Name == "Прочее");
                         if (incomeType == null)
                         {
                             incomeType = new IncomeType() { Name = "Прочеe" };
@@ -270,12 +270,12 @@ namespace MoneyHustler.AuxiliaryWindows
                     ((OnlyTopDeposit)vaultToAdd).DayOfCloseDeposit = dayOfClose;
                 }
 
-                _instance.Vaults.Add(vaultToAdd);
+                _storageInstance.Vaults.Add(vaultToAdd);
             }
             else
             {
                 var enteredName = TextBoxVaultName.Text.Trim();
-                if (_vaultToEdit.Name != enteredName && _instance.Vaults.Any(item => item.Name == enteredName))
+                if (_vaultToEdit.Name != enteredName && _storageInstance.Vaults.Any(item => item.Name == enteredName))
                 {
                     MessageBox.Show("Такое имя уже существует!");
                     return;
