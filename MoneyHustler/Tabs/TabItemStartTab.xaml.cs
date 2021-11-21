@@ -18,7 +18,7 @@ namespace MoneyHustler.Tabs
     /// <summary>
     /// Interaction logic for TabItemStartTab.xaml
     /// </summary>
-    public partial class TabItemStartTab : UserControl
+    public partial class TabItemStartTab : TabItem
     {
         public TabItemStartTab()
         {

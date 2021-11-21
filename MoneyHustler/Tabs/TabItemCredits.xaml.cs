@@ -18,7 +18,7 @@ namespace MoneyHustler.Tabs
     /// <summary>
     /// Interaction logic for TabItemCredits.xaml
     /// </summary>
-    public partial class TabItemCredits : UserControl
+    public partial class TabItemCredits : TabItem
     {
         public TabItemCredits()
         {

@@ -18,7 +18,7 @@ namespace MoneyHustler.Tabs
     /// <summary>
     /// Interaction logic for TabItemAnalytics.xaml
     /// </summary>
-    public partial class TabItemAnalytics : UserControl
+    public partial class TabItemAnalytics : TabItem
     {
         public TabItemAnalytics()
         {
