@@ -1,5 +1,6 @@
 ﻿using MoneyHustler.AuxiliaryWindows;
 using MoneyHustler.Models;
+using MoneyHustler.Tabs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,50 +27,18 @@ namespace MoneyHustler
         {
             InitializeComponent();
             Storage.Load();
+
         }
 
-        
-
-        private void ButtonIncomes_Click(object sender, RoutedEventArgs e)
+        protected override void OnRenderSizeChanged(System.Windows.SizeChangedInfo sizeInfo)
         {
-            WindowIncomes windowIncomes = new();
-            windowIncomes.ShowDialog();
-        }
+            foreach (TabItem item in MainTabControl.Items)
+            {
+                double newW = (this.ActualWidth / MainTabControl.Items.Count) - 1;
+                if (newW < 0) newW = 0;
 
-        private void ButtonExpenses_Click(object sender, RoutedEventArgs e)
-        {
-            WindowExpenses windowExpences = new();
-            windowExpences.ShowDialog();
-        }
-
-        private void ButtonCategories_Click(object sender, RoutedEventArgs e)
-        {
-            WindowCategories windowCategories = new();
-            windowCategories.ShowDialog();
-        }
-
-        private void ButtonMyFamily_Click(object sender, RoutedEventArgs e)
-        {
-            WindowMyFamily windowMyFamily = new();
-            windowMyFamily.ShowDialog();
-        }
-
-        private void ButtonMoneyVaults_Click(object sender, RoutedEventArgs e)
-        {
-            WindowMoneyVaults moneyVaults = new();
-            moneyVaults.ShowDialog();
-        }
-
-
-        private void ButtonAnalytics_Click(object sender, RoutedEventArgs e)
-        {
-            WindowAnalytics windowAnalytics = new();
-            windowAnalytics.ShowDialog();
-        }
-        private void ButtonCredit_Click(object sender, RoutedEventArgs e)
-        {
-            WindowCredits windowCredits = new();
-            windowCredits.ShowDialog();
-        }
+                item.Width = newW;
+            }
+        }   
     }
 }
