@@ -25,10 +25,9 @@ namespace MoneyHustler.Models
 
         //нужно сделать конструктор для мани волт,
         //чтобы в конструкторе депозита использовать параметры, такие как имя и баланс 
-        public Deposit(string name, decimal balance, decimal percent, DateTime openDate)
+        public Deposit(string name, decimal percent, DateTime openDate)
         {
             Name = name;
-            _balance = balance;
             Percent = percent;
             OpenDate = openDate;
             PaymentDay = openDate.Day; //день зачисления процентов

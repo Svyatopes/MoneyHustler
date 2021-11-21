@@ -16,7 +16,7 @@ namespace MoneyHustler.Models
 
         }
 
-        public OnlyTopDeposit(string name, decimal balance, decimal percent, DateTime openDate, DateTime dayOfCloseDeposit): base(name, balance, percent, openDate)
+        public OnlyTopDeposit(string name, decimal percent, DateTime openDate, DateTime dayOfCloseDeposit): base(name, percent, openDate)
         {
             DayOfCloseDeposit = dayOfCloseDeposit;
         }

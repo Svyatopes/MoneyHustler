@@ -11,14 +11,12 @@
             <ColumnDefinition Width="1*" />
             <ColumnDefinition x:Name="GridColumnAddEditMoneyVault" Width="0" />
         </Grid.ColumnDefinitions>
-        <Grid>
+        <Grid x:Name="GridListOfVaults">
             <Grid.RowDefinitions>
                 <RowDefinition Height="80*"/>
                 <RowDefinition Height="20*"/>
             </Grid.RowDefinitions>
             <ListView x:Name="listViewForVaults" HorizontalContentAlignment="Stretch" >
-
-
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -55,6 +53,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
                 <RowDefinition Height="3*" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
@@ -64,9 +63,11 @@
             </Grid.ColumnDefinitions>
             <Label Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">Тип</Label>
             <ComboBox x:Name="ComboBoxTypeOfMoneyVault" Grid.Column="1" Margin="10" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center" SelectionChanged="ComboBoxTypeOfMoneyVault_SelectionChanged"></ComboBox>
-            <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Начальный баланс</Label>
-            <TextBox x:Name="TextBoxInitialAmount" Grid.Row="1" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
-            <Grid x:Name="GridCard" Grid.Row="2" Grid.ColumnSpan="2"  Visibility="Hidden">
+            <Label  Grid.Row="1" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">Наименование</Label>
+            <TextBox x:Name="TextBoxVaultName" Grid.Row="1" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+            <Label Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">Начальный баланс</Label>
+            <TextBox x:Name="TextBoxInitialAmount" Grid.Row="2" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+            <Grid x:Name="GridCard" Grid.Row="3" Grid.ColumnSpan="2"  Visibility="Hidden">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="1*" />
@@ -79,18 +80,18 @@
                 <Label Grid.RowSpan="3"  HorizontalAlignment="Center" VerticalAlignment="Center">Процент кэшбека</Label>
                 <TextBox x:Name="TextBoxPercentCashback" Grid.RowSpan="3" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
             </Grid>
-            <Grid x:Name="GridDeposit" Grid.Row="2" Grid.ColumnSpan="2">
+            <Grid x:Name="GridDeposit" Grid.Row="3" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="1*" />
-                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="2*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <Label  HorizontalAlignment="Center" VerticalAlignment="Center">День открытия</Label>
-                <DatePicker  Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center"></DatePicker>
+                <DatePicker x:Name="DatePickerDayOfOpenDeposit" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center"></DatePicker>
                 <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Процент</Label>
                 <TextBox x:Name="TextBoxPercent" Grid.Row="1" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
                 <StackPanel x:Name="StackPanelHowLong" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Vertical">
@@ -99,8 +100,8 @@
                     <Label x:Name="LabelHowLong" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center"></Label>
                 </StackPanel>
             </Grid>
-
-            <Button x:Name="ButtonSave" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSaveVault_Click">Сохранить</Button>
+            <Button x:Name="ButtonSaveVault"  Grid.Row="5" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSaveVault_Click">Сохранить</Button>
+            <Button x:Name="ButtonBackToListVaults" Grid.Row="5" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonBackToListVaults_Click">Назад</Button>
         </Grid>
     </Grid>
 </Window>

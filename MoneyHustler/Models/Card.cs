@@ -18,7 +18,7 @@ namespace MoneyHustler.Models
         public Card(string name, decimal balance, decimal cashback)
         {
             Name = name;
-            _balance = balance;
+            IncreaseBalance(new Income(balance, DateTime.Now, null, "Ввод начального баланса", null));
             CashBack = cashback;
         }
 

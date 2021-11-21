@@ -30,17 +30,36 @@ namespace MoneyHustler.AuxiliaryWindows
             public MoneyVault Vault { get; set; }
         }
 
-        private ObservableCollection<MoneyVaultForView> listMoneyVaults;
-        private ObservableCollection<string> moneyVaulTypes;
-
+        private ObservableCollection<MoneyVaultForView> _listMoneyVaults;
+        private ObservableCollection<string> _moneyVaulTypes;
+        private MoneyVault _vaultToEdit;
         public WindowMoneyVaults()
         {
             InitializeComponent();
 
-            listMoneyVaults = new ObservableCollection<MoneyVaultForView>();
+            _listMoneyVaults = new ObservableCollection<MoneyVaultForView>();
+            listViewForVaults.ItemsSource = _listMoneyVaults;
+            UpdateListOfVaults();
+
+
+            _moneyVaulTypes = new ObservableCollection<string>();
+            ComboBoxTypeOfMoneyVault.ItemsSource = _moneyVaulTypes;
+
+            _moneyVaulTypes.Add("Счет");
+            _moneyVaulTypes.Add("Вклад");
+            _moneyVaulTypes.Add("Вклад без снятия");
+
+            ComboBoxTypeOfMoneyVault.SelectedIndex = 0;
+            Slider_ValueChanged(null, null);
+
+        }
+
+        private void UpdateListOfVaults()
+        {
+            _listMoneyVaults.Clear();
             foreach (var vault in Storage.Vaults)
             {
-                MoneyVaultForView vaultView = new MoneyVaultForView() { Name = vault.Name, Balance = vault.GetBalance(), Vault = vault};
+                MoneyVaultForView vaultView = new MoneyVaultForView() { Name = vault.Name, Balance = vault.GetBalance(), Vault = vault };
 
                 vaultView.TypeName = vault switch
                 {
@@ -50,33 +69,90 @@ namespace MoneyHustler.AuxiliaryWindows
                     _ => string.Empty,
                 };
 
-                listMoneyVaults.Add(vaultView);
+                _listMoneyVaults.Add(vaultView);
             }
-            listViewForVaults.ItemsSource = listMoneyVaults;
-
-            moneyVaulTypes = new ObservableCollection<string>();
-            moneyVaulTypes.Add("Счет");
-            moneyVaulTypes.Add("Вклад");
-            moneyVaulTypes.Add("Вклад без снятия");
-            ComboBoxTypeOfMoneyVault.ItemsSource = moneyVaulTypes;
-            ComboBoxTypeOfMoneyVault.SelectedIndex = 0;
-            Slider_ValueChanged(null, null);
-
         }
+
+        private void ChangeVisibilityOfGridAddEditVault(bool visible)
+        {
+            if (visible)
+            {
+                GridColumnAddEditMoneyVault.Width = new GridLength(1, GridUnitType.Star);
+                GridListOfVaults.IsEnabled = false;
+            }
+            else
+            {
+                GridColumnAddEditMoneyVault.Width = new GridLength(0, GridUnitType.Pixel);
+                GridListOfVaults.IsEnabled = true;
+            }
+        }
+
+        private void ChangeAddEditVaultGridStateIsAdd(bool IsAdd)
+        {
+            if (IsAdd)
+            {
+                ComboBoxTypeOfMoneyVault.IsEnabled = true;
+                StackPanelHowLong.Visibility = Visibility.Visible;
+                DatePickerDayOfOpenDeposit.IsEnabled = true;
+                TextBoxInitialAmount.IsEnabled = true;
+            }
+            else
+            {
+                ComboBoxTypeOfMoneyVault.IsEnabled = false;
+                StackPanelHowLong.Visibility = Visibility.Hidden;
+                DatePickerDayOfOpenDeposit.IsEnabled = false;
+                TextBoxInitialAmount.IsEnabled = false;
+            }
+        }
+
+        private void ClearAddEditVaultData()
+        {
+            _vaultToEdit = null;
+            ComboBoxTypeOfMoneyVault.SelectedIndex = 0;
+            TextBoxPercentCashback.Text = string.Empty;
+            DatePickerDayOfOpenDeposit.SelectedDate = DateTime.Now;
+            TextBoxVaultName.Text = string.Empty;
+            TextBoxPercent.Text = string.Empty;
+            TextBoxInitialAmount.Text = string.Empty;
+            SliderHowLong.Value = 3;
+        }
+
 
         #region Buttons
 
         private void ButtonAddMoneyVault_Click(object sender, RoutedEventArgs e)
         {
-            //WindowAddEditMoneyVault windowAddEditMoneyVault = new WindowAddEditMoneyVault();
-            //windowAddEditMoneyVault.ShowDialog();
-
-            GridColumnAddEditMoneyVault.Width = new GridLength(1, GridUnitType.Star);
+            ClearAddEditVaultData();
+            ChangeAddEditVaultGridStateIsAdd(true);
+            ChangeVisibilityOfGridAddEditVault(true);
         }
 
         private void ButtonEditVault_Click(object sender, RoutedEventArgs e)
         {
+            var button = (Button)sender;
+            var moneyVaultForView = (MoneyVaultForView)button.DataContext;
 
+            _vaultToEdit = moneyVaultForView.Vault;
+            TextBoxVaultName.Text = _vaultToEdit.Name;
+
+            switch (_vaultToEdit)
+            {
+                case Card:
+                    ComboBoxTypeOfMoneyVault.SelectedIndex = 0;
+                    TextBoxPercentCashback.Text = ((Card)_vaultToEdit).CashBack.ToString();
+                    break;
+                case OnlyTopDeposit:
+                    ComboBoxTypeOfMoneyVault.SelectedIndex = 2;
+                    TextBoxPercent.Text = ((OnlyTopDeposit)_vaultToEdit).Percent.ToString();
+                    break;
+                case Deposit:
+                    ComboBoxTypeOfMoneyVault.SelectedIndex = 1;
+                    TextBoxPercent.Text = ((Deposit)_vaultToEdit).Percent.ToString();
+                    break;
+            }
+
+            ChangeAddEditVaultGridStateIsAdd(false);
+            ChangeVisibilityOfGridAddEditVault(true);
         }
 
         private void ButtonRemoveVault_Click(object sender, RoutedEventArgs e)
@@ -84,14 +160,14 @@ namespace MoneyHustler.AuxiliaryWindows
             var button = (Button)sender;
             var moneyVaultForView = (MoneyVaultForView)button.DataContext;
 
-            if(moneyVaultForView.Vault.Incomes.Any() || moneyVaultForView.Vault.Expenses.Any())
+            if (moneyVaultForView.Vault.Incomes.Any() || moneyVaultForView.Vault.Expenses.Any())
             {
                 MessageBox.Show("This vault have some incomes or expenses, so you can't remove it.");
                 return;
             }
 
             Storage.Vaults.Remove(moneyVaultForView.Vault);
-            listMoneyVaults.Remove(moneyVaultForView);
+            _listMoneyVaults.Remove(moneyVaultForView);
 
             Storage.Save();
 
@@ -99,10 +175,154 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonSaveVault_Click(object sender, RoutedEventArgs e)
         {
-            GridColumnAddEditMoneyVault.Width = new GridLength(0, GridUnitType.Pixel);
 
+
+            if (_vaultToEdit == null)
+            {
+                decimal initalAmount;
+                var parsedInitialAmount = decimal.TryParse(TextBoxInitialAmount.Text, out initalAmount);
+
+                if (!parsedInitialAmount)
+                {
+                    MessageBox.Show("Вы должны вести число в начальный баланс");
+                    return;
+                }
+
+                var enteredName = TextBoxVaultName.Text.Trim();
+                if (Storage.Vaults.Any(item => item.Name == enteredName))
+                {
+                    MessageBox.Show("Такое имя уже используется.");
+                    return;
+                }
+
+                MoneyVault vaultToAdd = ComboBoxTypeOfMoneyVault.SelectedItem switch
+                {
+                    "Счет" => new Card(),
+                    "Вклад" => new Deposit(),
+                    "Вклад без снятия" => new OnlyTopDeposit(),
+                    _ => throw new NotSupportedException()
+                };
+
+                vaultToAdd.Name = enteredName;
+
+
+                var incomeType = Storage.IncomeTypes.FirstOrDefault(item => item.Name == "Прочее");
+                if (incomeType == null)
+                {
+                    incomeType = new IncomeType() { Name = "Прочеe" };
+                    Storage.Save();
+                }
+
+                //TODO: default person
+                vaultToAdd.IncreaseBalance(new Income(initalAmount, (DateTime)DatePickerDayOfOpenDeposit.SelectedDate, null, "Начальный ввод баланса", incomeType));
+
+                switch (vaultToAdd)
+                {
+                    case Card:
+
+                        decimal cashback;
+                        var parsedCashback = decimal.TryParse(TextBoxInitialAmount.Text, out cashback);
+
+                        if (!parsedCashback)
+                        {
+                            MessageBox.Show("Вы должны вести число в кэшбек");
+                            return;
+                        }
+
+                        ((Card)vaultToAdd).CashBack = cashback;
+
+                        break;
+                    case Deposit:
+
+                        decimal vaultPercentDeposit;
+                        var parsedVaultPercentDeposit = decimal.TryParse(TextBoxPercent.Text, out vaultPercentDeposit);
+                        if (!parsedVaultPercentDeposit)
+                        {
+                            MessageBox.Show("Вы должны вести число в процент");
+                            return;
+                        }
+                        ((Deposit)vaultToAdd).Percent = vaultPercentDeposit;
+
+
+                        var DateOfOpenDeposit = (DateTime)DatePickerDayOfOpenDeposit.DisplayDate;
+                        ((Deposit)vaultToAdd).OpenDate = DateOfOpenDeposit;
+                        ((Deposit)vaultToAdd).PaymentDay = DateOfOpenDeposit.Day;
+
+                        break;
+
+                    default:
+                        throw new NotSupportedException();
+                        break;
+                }
+
+                if (vaultToAdd.GetType() == typeof(OnlyTopDeposit))
+                {
+                    var dayOfClose = ((OnlyTopDeposit)vaultToAdd).OpenDate.AddMonths((int)SliderHowLong.Value);
+                    ((OnlyTopDeposit)vaultToAdd).DayOfCloseDeposit = dayOfClose;
+                }
+
+                Storage.Vaults.Add(vaultToAdd);
+            }
+            else
+            {
+                var enteredName = TextBoxVaultName.Text.Trim();
+                if (_vaultToEdit.Name != enteredName && Storage.Vaults.Any(item => item.Name == enteredName))
+                {
+                    MessageBox.Show("Такое имя уже существует!");
+                    return;
+                }
+
+                switch (_vaultToEdit)
+                {
+                    case Card:
+
+                        decimal percentCashback;
+                        var parsedPercentCashback = decimal.TryParse(TextBoxPercentCashback.Text, out percentCashback);
+                        if (!parsedPercentCashback)
+                        {
+                            MessageBox.Show("Вы должны вести число в кэшбек");
+                            return;
+                        }
+                        ((Card)_vaultToEdit).CashBack = percentCashback;
+
+                        break;
+
+                    case Deposit:
+
+                        decimal percent;
+                        var parsedPercent = decimal.TryParse(TextBoxPercent.Text, out percent);
+                        if (!parsedPercent)
+                        {
+                            MessageBox.Show("Вы должны вести число в процент");
+                            return;
+                        }
+                        ((Deposit)_vaultToEdit).Percent = percent;
+
+                        break;
+
+                    default:
+                        throw new NotSupportedException();
+                        break;
+                }
+
+                _vaultToEdit.Name = enteredName;
+
+            }
+
+
+            Storage.Save();
+            ChangeVisibilityOfGridAddEditVault(false);
+            UpdateListOfVaults();
         }
+
+        private void ButtonBackToListVaults_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeVisibilityOfGridAddEditVault(false);
+        }
+
         #endregion
+
+
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -173,6 +393,7 @@ namespace MoneyHustler.AuxiliaryWindows
             LabelHowLong.Content = resultString;
 
         }
+
         #region Events
         private void ComboBoxTypeOfMoneyVault_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -196,6 +417,9 @@ namespace MoneyHustler.AuxiliaryWindows
                     break;
             }
         }
+
         #endregion
+
+
     }
 }
