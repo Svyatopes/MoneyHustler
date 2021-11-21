@@ -151,9 +151,19 @@ namespace MoneyHustler.AuxiliaryWindows
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
 
+            if (credit.Value == 0)
+            {
+                MessageBox.Show("Пошел нахуй дибил блядь");
+                return;
+            }
+
             credit.PayMonthlyPayment();
             UpdateCreditsView();
+           
+
             Storage.Save();
+           
+            
         }
     }
 }

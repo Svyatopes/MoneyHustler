@@ -88,10 +88,7 @@ namespace MoneyHustler.Models
             Expense expense = new Expense(AnnuentPayValue, DateTime.Today, Person, "Ежемесячная оплата по кредиту", expenseType);
             BindedCard.DecreaseBalance(expense);
             DecreaseValue(expense);
-            if (Value == 0)
-            {
-                Storage.Credits.Remove(this);
-            }
+
         }
 
         public void PayOneTimePayment(decimal payValue)
@@ -104,11 +101,9 @@ namespace MoneyHustler.Models
             Expense expense = new Expense(payValue, DateTime.Today, Person, "Единовременный платеж по кредиту", expenseType);
             BindedCard.DecreaseBalance(expense);
             DecreaseValue(expense);
+            ValuewithoutPercent -= payValue;
             SetMonthlyPayment();
-            if (Value == 0)
-            {
-                Storage.Credits.Remove(this);
-            }
+
         }
 
 
