@@ -94,9 +94,9 @@ namespace MoneyHustler
             myCard.IncreaseBalance(new Income(750, DateTime.Now.AddDays(-8), iam, "from cat", incomeTypePet));
 
             visa.DecreaseBalance(new Expense(3000, DateTime.Now, iam, "объебусь", expenseDrugs));
-            visa.DecreaseBalance(new Expense(10000, DateTime.Now.AddDays(1), iam, "поебусь", expenseWhores));
-            visa.DecreaseBalance(new Expense(50000, DateTime.Now.AddDays(2), iam, "застрелюсь", expenseGuns));
-            visa2.DecreaseBalance(new Expense(3000, DateTime.Now.AddDays(2), father, "сходил в этот ваш", expenseHairStyle));
+            visa.DecreaseBalance(new Expense(10000, DateTime.Now.AddDays(-1), iam, "поебусь", expenseWhores));
+            visa.DecreaseBalance(new Expense(50000, DateTime.Now.AddDays(-2), iam, "застрелюсь", expenseGuns));
+            visa2.DecreaseBalance(new Expense(3000, DateTime.Now.AddDays(-2), father, "сходил в этот ваш", expenseHairStyle));
         }
 
         private void ButtonIncomes_Click(object sender, RoutedEventArgs e)

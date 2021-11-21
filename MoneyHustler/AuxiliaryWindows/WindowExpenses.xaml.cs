@@ -133,6 +133,7 @@ namespace MoneyHustler.AuxiliaryWindows
                 MoneyVault newVault = (MoneyVault)ComboBoxExpenseVault.SelectedItem;
                 //записываем кошель для проверки баланса по датам и сумме расхода
 
+                //TODO: проверять isEnable текстбокса, куда вводили сумму
                 decimal balanceOnSelectDay = newVault.GetBalanceOnDate((DateTime)DatePickerExpenseDate.SelectedDate);
                 //расчитываем баланс на выбранный в календаре день
 
@@ -400,8 +401,8 @@ namespace MoneyHustler.AuxiliaryWindows
                 SetIsEnabledForItemsOnStackPanel(false);
                 //StackPanelControlTemplateExpense.IsEnabled = true;//
                 SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, Storage.Persons);
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, Storage.Persons);
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, Storage.Persons);
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, Storage.Vaults);
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, Storage.ExpenseTypes);
                 //ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
                 //ComboBoxExpenseVault.SelectedItem = Storage.Vaults[0];
                 //ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
@@ -469,7 +470,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
             else if (ComboBoxSelectPeriod.SelectedIndex == 1)
             {
-                ChangePeriodOnDisplay(1);
+                ChangePeriodOnDisplay(0);
                 //StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
                 //StackPanelSelectDateOnDisplay.IsEnabled = false;
                 //_dateStartForView = DateTime.Today.AddDays(-1);
