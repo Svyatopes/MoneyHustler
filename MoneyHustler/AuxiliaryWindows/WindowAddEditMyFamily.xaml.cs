@@ -13,58 +13,58 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace MoneyHustler.AuxiliaryWindows
-{
-    /// <summary> 
-    /// Interaction logic for WindowAddEditMyFamily.xaml 
-    /// </summary> 
-    public partial class WindowAddEditMyFamily : Window
-    {
-        private Person _person;
+//namespace MoneyHustler.AuxiliaryWindows
+////{
+////    /// <summary> 
+////    /// Interaction logic for WindowAddEditMyFamily.xaml 
+////    /// </summary> 
+////    //public partial class WindowAddEditMyFamily : Window
+////    //{
+////    //    private Person _person;
 
-        public WindowAddEditMyFamily()
-        {
-            InitializeComponent();
-        }
+////    //    public WindowAddEditMyFamily()
+////    //    {
+////    //        InitializeComponent();
+////    //    }
 
-        public WindowAddEditMyFamily(Person person)
-        {
-            InitializeComponent();
+////    //    public WindowAddEditMyFamily(Person person)
+////    //    {
+////    //        InitializeComponent();
 
-            _person = person;
-            TextBoxChangesInput.Text = _person.Name;
-        }
+////    //        _person = person;
+////    //        TextBoxChangesInput.Text = _person.Name;
+////    //    }
 
-        private void ButtonSaveClick(object sender, RoutedEventArgs e)
-        {
-            string enteredPerson = TextBoxChangesInput.Text.Trim();
+////    //    private void ButtonSaveClick(object sender, RoutedEventArgs e)
+////    //    {
+////    //        string enteredPerson = TextBoxChangesInput.Text.Trim();
 
-            if (TextBoxChangesInput.Text == String.Empty)
-            {
-                MessageBox.Show("Введите имя пользователя!");
-                return;
-            }
-
-
-            if (Storage.Persons.Any(item => item.Name == enteredPerson))
-            {
-                MessageBox.Show("Такое имя уже существует");
-                return;
-            }
+////    //        if (TextBoxChangesInput.Text == String.Empty)
+////    //        {
+////    //            MessageBox.Show("Введите имя пользователя!");
+////    //            return;
+////    //        }
 
 
-            if (_person == null)
-            {
-                _person = new Person { Name = enteredPerson };
-                Storage.Persons.Add(_person);
+////    //        if (Storage.Persons.Any(item => item.Name == enteredPerson))
+////    //        {
+////    //            MessageBox.Show("Такое имя уже существует");
+////    //            return;
+////    //        }
 
-            }
-            else
-            {
-                _person.Name = enteredPerson;
-            }
 
-            this.Close();
-        }
-    }
-}
+////    //        if (_person == null)
+////    //        {
+////    //            _person = new Person { Name = enteredPerson };
+////    //            Storage.Persons.Add(_person);
+
+////    //        }
+////    //        else
+////    //        {
+////    //            _person.Name = enteredPerson;
+////    //        }
+
+////    //        this.Close();
+////    //    }
+////    }
+////}

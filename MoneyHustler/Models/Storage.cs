@@ -15,6 +15,7 @@ namespace MoneyHustler.Models
         public static List<MoneyVault> Vaults = new List<MoneyVault>();
         public static List<IncomeType> IncomeTypes = new List<IncomeType>();
         public static List<ExpenseType> ExpenseTypes = new List<ExpenseType>();
+        public static List<Credit> Credits;
 
         private const string _path = "./storage.json";
 
@@ -81,6 +82,7 @@ namespace MoneyHustler.Models
             Storage.Persons = storageInstance.Persons;
             Storage.ExpenseTypes = storageInstance.ExpenseTypes;
             Storage.IncomeTypes = storageInstance.IncomeTypes;
+            Storage.Credits = storageInstance.Credits;
         }
     }
 }
