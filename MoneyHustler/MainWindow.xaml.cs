@@ -32,12 +32,25 @@ namespace MoneyHustler
 
         protected override void OnRenderSizeChanged(System.Windows.SizeChangedInfo sizeInfo)
         {
+            double mainTabItemWidth;
+            double financeTabControlWidth;
+
+            int deltaForMainTab = 3;
+            int deltaForFinanceTab = 13;
             foreach (TabItem item in MainTabControl.Items)
             {
-                double newW = (this.ActualWidth / MainTabControl.Items.Count) - 3;
-                if (newW < 0) newW = 0;
+                mainTabItemWidth = (this.ActualWidth / MainTabControl.Items.Count) - deltaForMainTab;
+                if (mainTabItemWidth < 0) mainTabItemWidth = 0;
 
-                item.Width = newW;
+                item.Width = mainTabItemWidth;
+            }
+
+            foreach (TabItem item in FinanceTabControl.Items)
+            {
+                financeTabControlWidth = (this.ActualWidth / FinanceTabControl.Items.Count) - deltaForFinanceTab;
+                if (financeTabControlWidth < 0) financeTabControlWidth = 0;
+
+                item.Width = financeTabControlWidth;
             }
         }   
     }

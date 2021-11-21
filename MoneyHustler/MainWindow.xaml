@@ -12,8 +12,12 @@
         <tabData:TabItemCategories></tabData:TabItemCategories>
         <tabData:TabItemMyFamily></tabData:TabItemMyFamily>
         <tabData:TabItemMoneyVaults></tabData:TabItemMoneyVaults>
-        <tabData:TabItemIncomes></tabData:TabItemIncomes>
-        <tabData:TabItemExpenses></tabData:TabItemExpenses>
+        <TabItem Header="Мои финансы" Background="#FFC3B9A0" BorderBrush="{x:Null}">
+            <TabControl x:Name="FinanceTabControl" Background="#FF1F1F1F" BorderBrush="#FF1F1F1F" Foreground="#FF1F1F1F" FontFamily="Calibri Light" FontSize="14">
+                <tabData:TabItemIncomes></tabData:TabItemIncomes>
+                <tabData:TabItemExpenses></tabData:TabItemExpenses>
+            </TabControl>
+        </TabItem>
         <tabData:TabItemCredits></tabData:TabItemCredits>
         <tabData:TabItemAnalytics></tabData:TabItemAnalytics>
     </TabControl>
