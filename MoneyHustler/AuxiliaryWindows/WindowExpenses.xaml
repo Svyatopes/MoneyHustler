@@ -53,17 +53,19 @@
     </Window.Resources>
     <Grid Background="#FF1F1F1F">
         <Grid.RowDefinitions>
-            <RowDefinition Height="51*"/>
-            <RowDefinition Height="11*"/>
+            <RowDefinition Height="49*"/>
+            <RowDefinition Height="39*"/>
+            <RowDefinition Height="281*"/>
+            <RowDefinition Height="65*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="321*"/>
             <ColumnDefinition Width="79*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="ButtonAddEditExpense" Grid.Row="1" Content="Добавить" Margin="250,20,184,20" Click="ButtonAddEditExpense_Click" />
+        <Button x:Name="ButtonAddEditExpense" Grid.Row="3" Content="Добавить" Margin="254,10,184,10" Click="ButtonAddEditExpense_Click" />
 
-        <StackPanel x:Name="StackPanelControlTemplateExpense" Grid.Row="0" Grid.Column="1" 
-                    Orientation="Vertical" Height="184" VerticalAlignment="Top" Margin="0,19,0,0" HorizontalAlignment="Center" Width="128">
+        <StackPanel x:Name="StackPanelControlTemplateExpense" Grid.Row="2" Grid.Column="1" 
+                    Orientation="Vertical" Height="207" VerticalAlignment="Top" Margin="0,8,0,0" HorizontalAlignment="Center" Width="128">
             <DatePicker Background="#FFC3B9A0" x:Name="DatePickerExpenseDate" SelectedDateFormat="Short" Margin="0,0,0,5" ToolTip="Когда?"/>
             <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseAmount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" TextChanged="Amount_TextChanged" ToolTip="Сколько?" Height="20"/>
             <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpensePerson" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Кто?" Height="20"/>
@@ -73,28 +75,26 @@
             <ComboBox  Background="#FFC3B9A0" x:Name="ComboBoxExpenseType" MinWidth="100" DisplayMemberPath="Name" Margin="0,5,0,1" ToolTip="На что?" Height="20" />
         </StackPanel>
 
-        <StackPanel x:Name="StackPanelOnlyExpense" Grid.Row="0" Grid.Column="1" 
-                    Orientation="Vertical" Height="125" VerticalAlignment="Top" Margin="0,208,0,0" HorizontalAlignment="Center" Width="128">
-            <Button x:Name="ButtonViewClassificationExpenses" Height="26" Content="Показать расходы по" Margin="0,0,0,20" Click="ButtonViewClassificationExpenses_Click" />
-            <ComboBox x:Name="ComboBoxOfClassificationExpenses" Margin="0,0,0,20" SelectionChanged="ComboBoxOfClassificationExpenses_Selected" IsEnabled="False">
+        <StackPanel x:Name="StackPanelOnlyExpense" Grid.Row="0" 
+                    Orientation="Horizontal" Height="22" VerticalAlignment="Top" Margin="0,18,0,0" HorizontalAlignment="Center" Width="414">
+            <Button x:Name="ButtonViewClassificationExpenses" Height="21" Content="Показать расходы по" Margin="0,0,20,0" Click="ButtonViewClassificationExpenses_Click" Width="137" VerticalAlignment="Center" ToolTip="НАЖМИ" />
+            <ComboBox x:Name="ComboBoxOfClassificationExpenses" Margin="0,0,20,0" SelectionChanged="ComboBoxOfClassificationExpenses_Selected" IsEnabled="False" Width="108" VerticalAlignment="Stretch" Height="20" ToolTip="Что интересует, а?">
                 <ComboBoxItem>
-                    По счетам
+                    С счёта
                 </ComboBoxItem>
                 <ComboBoxItem>
-                    По категориям
+                    По категории
                 </ComboBoxItem>
                 <ComboBoxItem>
-                    По членам
-                </ComboBoxItem>
-                <ComboBoxItem>
-                    По дате
+                    Члена
                 </ComboBoxItem>
             </ComboBox>
-            <ComboBox x:Name="ComboBoxClassExpenses" Margin="0,0,0,20" DisplayMemberPath="Name" IsEnabled="False" SelectionChanged="ComboBoxClassExpenses_SelectionChanged"/>
+            <ComboBox x:Name="ComboBoxClassExpenses" Margin="0,0,20,0" DisplayMemberPath="Name" IsEnabled="False" SelectionChanged="ComboBoxClassExpenses_SelectionChanged" VerticalAlignment="Stretch" Height="20" Width="118"
+                      ToolTip="Что в списке этого типа"/>
         </StackPanel>
 
 
-        <ListView x:Name="listViewForExpenses" Margin="23,10,23,10" Background="#FFC3B9A0" GridViewColumnHeader.Click="GridViewColumnHeaderExpenses_ClickedOnHeader">
+        <ListView x:Name="listViewForExpenses" Margin="23,8,23,10" Background="#FFC3B9A0" GridViewColumnHeader.Click="GridViewColumnHeaderExpenses_ClickedOnHeader" Grid.Row="2">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -127,6 +127,34 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        
+            <ComboBox x:Name="ComboBoxSelectPeriod" Width="115"  SelectedIndex="0" SelectionChanged="ComboBoxSelectPeriod_SelectionChanged" Grid.Row="1" HorizontalAlignment="Left" Margin="38,0,0,0" VerticalAlignment="Center">
+                <ComboBoxItem>
+                    Всё время
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    Сегодня
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    Прошедшую неделю
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    Прошедший месяц
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    Выбрать самостоятельно
+                </ComboBoxItem>
+            </ComboBox>
+        <StackPanel x:Name="StackPanelSelectDateOnDisplay" Orientation="Horizontal" HorizontalAlignment="Left" Height="28" Margin="163,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="459" Visibility="Hidden">
+            <Label Content="С " Background="#FFC6C6C6" Margin="7,0,0,0" VerticalAlignment="Center" Height="23"/>
+            <DatePicker x:Name="DatePickerSelectStartPeriodOrDayExpenses" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectStartPeriodOrDayExpenses_SelectedDateChanged"/>
+            <Label Content="До " Background="#FFC6C6C6" VerticalAlignment="Center" Height="25"/>
+            <DatePicker x:Name="DatePickerSelectEndPeriodExpenses" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectEndPeriodExpenses_SelectedDateChanged">
+                <DatePicker.BlackoutDates>
+                    
+                </DatePicker.BlackoutDates>
+            </DatePicker>
+        </StackPanel>
 
     </Grid>
 

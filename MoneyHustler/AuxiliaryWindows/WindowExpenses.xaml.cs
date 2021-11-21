@@ -26,46 +26,61 @@ namespace MoneyHustler.AuxiliaryWindows
     {
 
         private Expense _expense;
+        private DateTime _dateStartForView;
+        private DateTime _dateEndForView;
 
         private ObservableCollection<Expense> listOfExpensesView;
-        private List<ComboBoxItem> itemsForComboBoxOfExpesesPeriod;
         private GridViewColumnHeader _lastHeaderClicked = null;
         private ListSortDirection _lastDirection = ListSortDirection.Descending;
-
-
+        
+        SoundPlayer spZdarova = new SoundPlayer();
+        SoundPlayer spMaloDeneg = new();
+        SoundPlayer spAuf = new();
+        SoundPlayer spOnView = new SoundPlayer();
+        
         //TODO: сделать более понятные названия x:Name
+
+        private void LoadAudio() //метод загрузки звукового сопровождения
+        {
+            spZdarova.SoundLocation = "Audio/zdarova.wav";
+            spZdarova.LoadAsync();
+            spMaloDeneg.SoundLocation = "Audio/kavo.wav";
+            spMaloDeneg.Load();
+            spAuf.SoundLocation = "Audio/auf.wav";
+            spAuf.Load();
+            spOnView.SoundLocation = "Audio/onView.wav";
+            spOnView.LoadAsync();
+        }
 
         public WindowExpenses()
         {
             InitializeComponent();
-            itemsForComboBoxOfExpesesPeriod = new();
-            itemsForComboBoxOfExpesesPeriod.Add(new ComboBoxItem { Content = "сегодня" });
-            itemsForComboBoxOfExpesesPeriod.Add(new ComboBoxItem { Content = "прошедшая неделя" });
-            itemsForComboBoxOfExpesesPeriod.Add(new ComboBoxItem { Content = "прошедший месяц" });
-            itemsForComboBoxOfExpesesPeriod.Add(new ComboBoxItem { Content = "прошедший год" });
-            SoundPlayer spZdarova = new SoundPlayer();
-            spZdarova.SoundLocation = "Audio/zdarova.wav";
-            spZdarova.LoadAsync();
+            LoadAudio();
+            
             spZdarova.Play();
 
             listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
             listViewForExpenses.ItemsSource = listOfExpensesView;
-
-            //TODO: перевести на SetItemSourceAndSelectedIndexToZero
-            SetItemSourceAndSelectedIndexToZero(ComboBoxExpensePerson, Storage.Persons);
-            ComboBoxExpenseVault.ItemsSource = Storage.Vaults;
-            ComboBoxExpenseVault.SelectedItem = Storage.Vaults[0];
-            ComboBoxExpenseType.ItemsSource = Storage.ExpenseTypes;
-            ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
+            _dateStartForView = DateTime.Now.AddYears(-20);
+            _dateEndForView = DateTime.Now;
+            //TODO:ГОТОВО перевести на SetItemSourceAndSelectedIndexToZero 
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, Storage.Persons);
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, Storage.Vaults);
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, Storage.ExpenseTypes);
 
             DatePickerExpenseDate.SelectedDate = DateTime.Now;
             SortExpenses("Date", _lastDirection);
         }
 
-        private void SetItemSourceAndSelectedIndexToZero(ComboBox comboBox, IEnumerable source)
+        private void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source) //
         {
-            ComboBoxExpensePerson.ItemsSource = source;
-            ComboBoxExpensePerson.SelectedIndex = 0;
+            if (source is null)
+            {
+                comboBox.SelectedItem = null;
+                return;
+            }
+            comboBox.ItemsSource = source;
+            comboBox.SelectedIndex = 0;
         }
 
         private void ButtonDeleteExpense_Click(object sender, RoutedEventArgs e)
@@ -94,6 +109,8 @@ namespace MoneyHustler.AuxiliaryWindows
             //TODO: попробовать вынести в отдельный метод все изменения View
             ButtonAddEditExpense.Content = "Сохраните";
             listViewForExpenses.IsEnabled = false;
+            StackPanelOnlyExpense.IsEnabled = false;
+            StackPanelSelectDateOnDisplay.IsEnabled = false;
             ComboBoxExpensePerson.SelectedItem = expense.Person;
             ComboBoxExpenseVault.SelectedItem = expense.Vault;
             ComboBoxExpenseType.SelectedItem = expense.Type;
@@ -109,53 +126,51 @@ namespace MoneyHustler.AuxiliaryWindows
             if ((string)ButtonAddEditExpense.Content == "Сохраните")
             {
                 listViewForExpenses.IsEnabled = true;
+                StackPanelOnlyExpense.IsEnabled = true;
+                StackPanelSelectDateOnDisplay.IsEnabled = true;
                 ButtonAddEditExpense.Content = "Добавить";
 
-                try
-                {
-                    //TODO: проверка достаточно ли средств на данную дату чтобы сделать расход
-                    //(учитывая изменение суммы:
-                    // 1) если сумма выросла, может не хватить средств
-                    // 2) мы должны учитывать что баланс на ту дату изменится когда мы поменяем этот расход
-                    // 2.1) если мы получаем баланс на дату 5000, а нужно 5500 расход сделать не факт, что мы не можем, потому что
-                    // при переносе расхода вперед по датам баланс увеличится
-                    _expense.Amount = Convert.ToDecimal(TextBoxExpenseAmount.Text);
-                    _expense.Comment = TextBoxExpenseComment.Text;
-                    _expense.Date = (DateTime)DatePickerExpenseDate.SelectedDate;
-                    _expense.Person = (Person)ComboBoxExpensePerson.SelectedItem;
-                    _expense.Type = (ExpenseType)ComboBoxExpenseType.SelectedItem;
+                MoneyVault newVault = (MoneyVault)ComboBoxExpenseVault.SelectedItem;
+                //записываем кошель для проверки баланса по датам и сумме расхода
 
-                    if (_expense.Vault != (MoneyVault)ComboBoxExpenseVault.SelectedItem)
-                    {
-                        _expense.Vault.Remove(_expense);
-                        _expense.Vault = (MoneyVault)ComboBoxExpenseVault.SelectedItem;
-                        _expense.Vault.DecreaseBalance(
-                            new Expense
-                            (
-                          Convert.ToDecimal(TextBoxExpenseAmount.Text),
-                          (DateTime)DatePickerExpenseDate.SelectedDate,
-                          (Person)ComboBoxExpensePerson.SelectedItem,
-                          TextBoxExpenseComment.Text,
-                          (ExpenseType)ComboBoxExpenseType.SelectedItem
-                            )
-                        );
-                    }
-                    UpdateIncomesViewAndClearAddEditArea();
-                    MessageBox.Show("ок");
-                }
-                catch (ArgumentException)
+                decimal balanceOnSelectDay = newVault.GetBalanceOnDate((DateTime)DatePickerExpenseDate.SelectedDate);
+                //расчитываем баланс на выбранный в календаре день
+
+                if (_expense.Date > (DateTime)DatePickerExpenseDate.SelectedDate //если дата до изменения старше даты после
+                && Convert.ToDecimal(TextBoxExpenseAmount.Text) > balanceOnSelectDay //и введённая сумма больше суммы на тот день
+                || (_expense.Date < (DateTime)DatePickerExpenseDate.SelectedDate && //если изменяемая дата раньше новой и
+                   (_expense.Amount + balanceOnSelectDay) < Convert.ToDecimal(TextBoxExpenseAmount.Text))) //сумма на будущий день + изменяемая меньше введённой
                 {
                     TextBoxExpenseAmount.Text = string.Empty;
                     TextBoxExpenseComment.Text = string.Empty;
                     DatePickerExpenseDate.SelectedDate = DateTime.Today;
-
-                    SoundPlayer spMaloDeneg = new();
-                    spMaloDeneg.SoundLocation = "Audio/kavo.wav";
-                    spMaloDeneg.Load();
+                    
+                    
                     spMaloDeneg.Play();
 
-                    MessageBox.Show("На выбранном счёте не достаточно средств", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("На этом счету недостаточно средств на выбранную дату", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
                 }
+                //TODO: проверка достаточно ли средств на данную дату чтобы сделать расход
+                //(учитывая изменение суммы:
+                // 1) если сумма выросла, может не хватить средств
+                // 2) мы должны учитывать что баланс на ту дату изменится когда мы поменяем этот расход
+                // 2.1) если мы получаем баланс на дату 5000, а нужно 5500 расход сделать не факт, что мы не можем, потому что
+                // при переносе расхода вперед по датам баланс увеличится
+                _expense.Amount = Convert.ToDecimal(TextBoxExpenseAmount.Text);
+                _expense.Comment = TextBoxExpenseComment.Text;
+                _expense.Date = (DateTime)DatePickerExpenseDate.SelectedDate;
+                _expense.Person = (Person)ComboBoxExpensePerson.SelectedItem;
+                _expense.Type = (ExpenseType)ComboBoxExpenseType.SelectedItem;
+                _expense.Vault = (MoneyVault)ComboBoxExpenseVault.SelectedItem;
+
+                TextBoxExpenseAmount.Text = string.Empty;
+                TextBoxExpenseComment.Text = string.Empty;
+                DatePickerExpenseDate.SelectedDate = DateTime.Today;
+
+                UpdateIncomesViewAndClearAddEditArea();
+                MessageBox.Show("ок");
+   
             }
 
             else if ((string)ButtonAddEditExpense.Content == "Добавить")
@@ -168,12 +183,24 @@ namespace MoneyHustler.AuxiliaryWindows
                    TextBoxExpenseComment.Text,
                    (ExpenseType)ComboBoxExpenseType.SelectedItem
                 );
+                decimal balanceOnSelectDay = ((MoneyVault)ComboBoxExpenseVault.SelectedItem).
+                    GetBalanceOnDate((DateTime)DatePickerExpenseDate.SelectedDate);
+                //расчитываем баланс на выбранный в календаре день
+                if (newExpense.Amount > balanceOnSelectDay)
+                {
+                    TextBoxExpenseAmount.Text = string.Empty;
+                    TextBoxExpenseComment.Text = string.Empty;
+                    DatePickerExpenseDate.SelectedDate = DateTime.Today;
+
+                    spMaloDeneg.Play();
+                    MessageBox.Show("На выбранном счёте не достаточно средств на выбранную дату", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 try
                 {
                     ((MoneyVault)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
-                    SoundPlayer spAuf = new();
-                    spAuf.SoundLocation = "Audio/auf.wav";
-                    spAuf.Load();
+                    
+                    
                     spAuf.Play();
                     MessageBox.Show("потратил");
                     UpdateIncomesViewAndClearAddEditArea();
@@ -217,13 +244,64 @@ namespace MoneyHustler.AuxiliaryWindows
             TextBoxExpenseComment.Text = string.Empty;
             DatePickerExpenseDate.SelectedDate = DateTime.Today;
             listOfExpensesView.Clear();
-            var allExpenses = Storage.GetAllExpences();
-            foreach (var item in allExpenses)
-            {
-                listOfExpensesView.Add(item);
-            }
-        }
 
+            if (0 == ComboBoxOfClassificationExpenses.SelectedIndex)
+            {
+                //TODO: void UpdateExpenseViewList( можно ли вставить )
+                var allExpenses = Storage.GetAllExpences();
+                foreach (Expense item in allExpenses)
+                {
+                    if (item.Date >= _dateStartForView && item.Date <= _dateEndForView
+                        && item.Vault == ComboBoxClassExpenses.SelectedItem)
+                    {
+                        listOfExpensesView.Add(item);
+                    }
+
+                }
+            }
+            else if (1 == ComboBoxOfClassificationExpenses.SelectedIndex)
+            {
+                var allExpenses = Storage.GetAllExpences();
+                foreach (Expense item in allExpenses)
+                {
+                    if (item.Date >= _dateStartForView && item.Date <= _dateEndForView
+                        && item.Type == ComboBoxClassExpenses.SelectedItem)
+                    {
+                        listOfExpensesView.Add(item);
+                    }
+
+                }
+            }
+            else if (2 == ComboBoxOfClassificationExpenses.SelectedIndex)
+            {
+                var allExpenses = Storage.GetAllExpences();
+                foreach (Expense item in allExpenses)
+                {
+                    if (item.Date >= _dateStartForView && item.Date <= _dateEndForView
+                        && item.Person == ComboBoxClassExpenses.SelectedItem)
+                    {
+                        listOfExpensesView.Add(item);
+                    }
+
+                }
+            }
+            else 
+            {
+                var allExpenses = Storage.GetAllExpences();
+                foreach (Expense item in allExpenses)
+                {
+                    if (item.Date >= _dateStartForView && item.Date <= _dateEndForView)
+                    {
+                        listOfExpensesView.Add(item);
+                    }
+
+                }
+
+            }
+            SortExpenses("Date", _lastDirection);
+
+        }
+        #region RegionForSort
         private void GridViewColumnHeaderExpenses_ClickedOnHeader(object sender, RoutedEventArgs e)
         {
             var headerClicked = e.OriginalSource as GridViewColumnHeader;
@@ -293,39 +371,43 @@ namespace MoneyHustler.AuxiliaryWindows
             dataView.SortDescriptions.Add(sd);
             dataView.Refresh();
         }
-
+        #endregion
         private void ButtonViewClassificationExpenses_Click(object sender, RoutedEventArgs e)
         {
             if ((string)ButtonViewClassificationExpenses.Content == "Показать расходы по")
             {
-                listViewForExpenses.IsEnabled = false;
-                SoundPlayer spOnView = new SoundPlayer();
-                spOnView.SoundLocation = "Audio/onView.wav";
-                spOnView.LoadAsync();
+               
                 spOnView.Play();
                 //TODO: отдельный метод
                 ButtonViewClassificationExpenses.Content = "К общему списку";
-                StackPanelControlTemplateExpense.IsEnabled = false;
-                ComboBoxExpensePerson.SelectedItem = null;
-                ComboBoxExpenseVault.SelectedItem = null;
-                ComboBoxExpenseType.SelectedItem = null;
+                SetIsEnabledForItemsOnStackPanel(true);
+                //StackPanelControlTemplateExpense.IsEnabled = false;//
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, null);
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, null);
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, null);
+                //ComboBoxExpensePerson.SelectedItem = null;
+                //ComboBoxExpenseVault.SelectedItem = null;
+                //ComboBoxExpenseType.SelectedItem = null;
                 DatePickerExpenseDate.SelectedDate = null;
-                ComboBoxOfClassificationExpenses.IsEnabled = true;
-                ComboBoxClassExpenses.IsEnabled = true;
+                //ComboBoxOfClassificationExpenses.IsEnabled = true;//
+                //ComboBoxClassExpenses.IsEnabled = true;//
 
             }
             else if ((string)ButtonViewClassificationExpenses.Content == "К общему списку")
             {
                 //TODO: отдельный метод
-                listViewForExpenses.IsEnabled = true;
                 ButtonViewClassificationExpenses.Content = "Показать расходы по";
-                StackPanelControlTemplateExpense.IsEnabled = true;
-                ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
-                ComboBoxExpenseVault.SelectedItem = Storage.Vaults[0];
-                ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
+                SetIsEnabledForItemsOnStackPanel(false);
+                //StackPanelControlTemplateExpense.IsEnabled = true;//
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, Storage.Persons);
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, Storage.Persons);
+                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, Storage.Persons);
+                //ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
+                //ComboBoxExpenseVault.SelectedItem = Storage.Vaults[0];
+                //ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
                 DatePickerExpenseDate.SelectedDate = DateTime.Now;
-                ComboBoxOfClassificationExpenses.IsEnabled = false;
-                ComboBoxClassExpenses.IsEnabled = false;
+                //ComboBoxOfClassificationExpenses.IsEnabled = false;//
+                //ComboBoxClassExpenses.IsEnabled = false;//
                 ComboBoxOfClassificationExpenses.SelectedItem = null;
                 ComboBoxClassExpenses.SelectedItem = null;
                 UpdateIncomesViewAndClearAddEditArea();
@@ -335,39 +417,26 @@ namespace MoneyHustler.AuxiliaryWindows
         private void ComboBoxOfClassificationExpenses_Selected(object sender, RoutedEventArgs e)
         {
 
-            if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[0])
+            if (ComboBoxOfClassificationExpenses.SelectedIndex == 0)
             {
-                ComboBoxClassExpenses.DisplayMemberPath = "Name";
                 ComboBoxClassExpenses.ItemsSource = Storage.Vaults;
                 ComboBoxClassExpenses.SelectedItem = Storage.Vaults[0];
 
             }
 
-            else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[1])
+            else if (ComboBoxOfClassificationExpenses.SelectedIndex == 1)
             {
-                ComboBoxClassExpenses.DisplayMemberPath = "Name";
                 ComboBoxClassExpenses.ItemsSource = Storage.ExpenseTypes;
                 ComboBoxClassExpenses.SelectedItem = Storage.ExpenseTypes[0];
 
             }
 
-            else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[2])
+            else if (ComboBoxOfClassificationExpenses.SelectedIndex == 2)
             {
-                ComboBoxClassExpenses.DisplayMemberPath = "Name";
                 ComboBoxClassExpenses.ItemsSource = Storage.Persons;
                 ComboBoxClassExpenses.SelectedItem = Storage.Persons[0];
-
             }
-            else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[3])
-            {
-                ComboBoxClassExpenses.DisplayMemberPath = null;
-                ComboBoxClassExpenses.ItemsSource = itemsForComboBoxOfExpesesPeriod;
-                //ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "сегодня" });
-                //ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедшая неделя" });
-                //ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедший месяц" });
-                //ComboBoxClassExpenses.Items.Add(new ComboBoxItem { Content = "прошедший год" });
-                ComboBoxClassExpenses.SelectedItem = ComboBoxClassExpenses.Items[0];
-            }
+            
             else
             {
                 return;
@@ -376,72 +445,99 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ComboBoxClassExpenses_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ComboBoxClassExpenses.ItemsSource == Storage.Persons)
-            {
-                listOfExpensesView.Clear();
-                var allExpenses = Storage.GetAllExpences();
-                foreach (var item in allExpenses)
-                {
-                    if (item.Person == ComboBoxClassExpenses.SelectedItem)
-                    {
-                        listOfExpensesView.Add(item);
-                    }
-                }
-            }
-            else if (ComboBoxClassExpenses.ItemsSource == Storage.Vaults)
-            {
-                listOfExpensesView.Clear();
-                var allExpenses = Storage.GetAllExpences();
-                foreach (var item in allExpenses)
-                {
-                    if (item.Vault == ComboBoxClassExpenses.SelectedItem)
-                    {
-                        listOfExpensesView.Add(item);
-                    }
-                }
-            }
-            else if (ComboBoxClassExpenses.ItemsSource == Storage.ExpenseTypes)
-            {
-                listOfExpensesView.Clear();
-                var allExpenses = Storage.GetAllExpences();
-                foreach (var item in allExpenses)
-                {
-                    if (item.Type == ComboBoxClassExpenses.SelectedItem)
-                    {
-                        listOfExpensesView.Add(item);
-                    }
-                }
-            }
-            else if (ComboBoxOfClassificationExpenses.SelectedItem == ComboBoxOfClassificationExpenses.Items[3])
-            {
-                listOfExpensesView.Clear();
-                var allExpenses = Storage.GetAllExpences();
+            UpdateIncomesViewAndClearAddEditArea();
+        }
 
-                foreach (var item in allExpenses)
-                {
-                    if (ComboBoxClassExpenses.SelectedItem == ComboBoxClassExpenses.Items[0])
-                    {
-                        if (DateTime.Today <= item.Date)
-                            listOfExpensesView.Add(item);
-
-                    }
-                    else if (ComboBoxClassExpenses.SelectedItem == ComboBoxClassExpenses.Items[1])
-                    {
-                        if (DateTime.Today.AddDays(-7) < item.Date)
-                            listOfExpensesView.Add(item);
-                    }
-                    else if (ComboBoxClassExpenses.SelectedItem == ComboBoxClassExpenses.Items[2])
-                    {
-                        if (DateTime.Today.AddMonths(-1) < item.Date)
-                            listOfExpensesView.Add(item);
-                    }
-                    else if (ComboBoxClassExpenses.SelectedItem == ComboBoxClassExpenses.Items[3])
-                    {
-                        if (DateTime.Today.AddYears(-1) < item.Date)
-                            listOfExpensesView.Add(item);
-                    }
-                }
+        private void ComboBoxSelectPeriod_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (listOfExpensesView == null)
+            {
+                return;
             }
+
+            if (ComboBoxSelectPeriod.SelectedIndex == 0)
+            {
+                //TODO: Отдельный метод типа void ChangePeriodOnDisplay( DateTime inputDate)
+                ChangePeriodOnDisplay(4000);
+                //StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
+                //StackPanelSelectDateOnDisplay.IsEnabled = false;
+                //_dateStartForView = DateTime.Now.AddYears(-20);
+                //_dateEndForView = DateTime.Now;
+                //UpdateIncomesViewAndClearAddEditArea();
+
+            }
+
+            else if (ComboBoxSelectPeriod.SelectedIndex == 1)
+            {
+                ChangePeriodOnDisplay(1);
+                //StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
+                //StackPanelSelectDateOnDisplay.IsEnabled = false;
+                //_dateStartForView = DateTime.Today.AddDays(-1);
+                //_dateEndForView = DateTime.Now;
+                //UpdateIncomesViewAndClearAddEditArea();
+                
+            }
+
+            else if (ComboBoxSelectPeriod.SelectedIndex == 2)
+            {
+                ChangePeriodOnDisplay(7);
+                //StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
+                //StackPanelSelectDateOnDisplay.IsEnabled = false;
+                //_dateStartForView = DateTime.Today.AddDays(-7);
+                //_dateEndForView = DateTime.Now;
+                //UpdateIncomesViewAndClearAddEditArea();
+
+            }
+            else if (ComboBoxSelectPeriod.SelectedIndex == 3)
+            {
+                ChangePeriodOnDisplay(30);
+                //StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
+                //StackPanelSelectDateOnDisplay.IsEnabled = false;
+                //_dateStartForView = DateTime.Today.AddMonths(-1);
+                //_dateEndForView = DateTime.Now;
+                //UpdateIncomesViewAndClearAddEditArea();
+
+            }
+
+            else if (ComboBoxSelectPeriod.SelectedIndex == 4)
+            {
+                StackPanelSelectDateOnDisplay.Visibility = Visibility.Visible;
+                StackPanelSelectDateOnDisplay.IsEnabled = true;
+                DatePickerSelectStartPeriodOrDayExpenses.IsEnabled = true;
+
+            }
+
+            
+        }
+
+        private void DatePickerSelectEndPeriodExpenses_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _dateEndForView = (DateTime)DatePickerSelectEndPeriodExpenses.SelectedDate;
+            UpdateIncomesViewAndClearAddEditArea();
+        }
+
+        private void DatePickerSelectStartPeriodOrDayExpenses_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _dateStartForView = (DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate;
+            DatePickerSelectEndPeriodExpenses.IsEnabled = true;
+            DatePickerSelectEndPeriodExpenses.BlackoutDates.Add(new CalendarDateRange(DateTime.Today.AddYears(-10), _dateStartForView));
+            UpdateIncomesViewAndClearAddEditArea();
+        }
+
+        private void ChangePeriodOnDisplay(int inputDays)
+        {
+            StackPanelSelectDateOnDisplay.Visibility = Visibility.Hidden;
+            StackPanelSelectDateOnDisplay.IsEnabled = false;
+            _dateStartForView = DateTime.Today.AddDays(-inputDays);
+            _dateEndForView = DateTime.Now;
+            UpdateIncomesViewAndClearAddEditArea();
+        }
+
+        private void SetIsEnabledForItemsOnStackPanel(bool isEnable)
+        {
+            StackPanelControlTemplateExpense.IsEnabled = !isEnable;
+            ComboBoxOfClassificationExpenses.IsEnabled = isEnable;
+            ComboBoxClassExpenses.IsEnabled = isEnable;
         }
     }
 }
