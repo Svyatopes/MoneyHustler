@@ -65,6 +65,9 @@ namespace MoneyHustler.AuxiliaryWindows
             TextBoxEnterMemberName.Text = person.Name;
             SetButtonEnabledAndVisibility(ButtonAddNewMember, false);
             SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, true);
+            LabelAddFamilyMembers.Visibility = Visibility.Hidden;
+            LabelEditFamilyMembers.Visibility = Visibility.Visible;
+            LabelEditFamilyMembers.Content = "Переименовать участника: \n" + person.Name;
 
 
            
@@ -72,7 +75,7 @@ namespace MoneyHustler.AuxiliaryWindows
         }
         private void ButtonRenameFinallyExistingMemberClick(object sender, RoutedEventArgs e) 
         {
-            ListViewPersonsDisplay.IsEnabled = true;
+            
             string enteredPerson = TextBoxEnterMemberName.Text.Trim();
 
             if (TextBoxEnterMemberName.Text == String.Empty)
@@ -103,6 +106,9 @@ namespace MoneyHustler.AuxiliaryWindows
             SetButtonEnabledAndVisibility(ButtonAddNewMember, true);
             SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, false);
             UpdatePersonsView();
+            ListViewPersonsDisplay.IsEnabled = true;
+            LabelAddFamilyMembers.Visibility = Visibility.Visible;
+            LabelEditFamilyMembers.Visibility = Visibility.Hidden;
             Storage.Save();
 
 
