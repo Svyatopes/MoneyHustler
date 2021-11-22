@@ -50,7 +50,7 @@ namespace MoneyHustler.Tabs
             var button = (Button)sender;
             _credit = null;
             ChangeVisibilityOfGridAddEditVault(true);
-            
+
 
             TextBoxValueWithoutPercent.IsEnabled = true;
             DatePickerDayOpen.IsEnabled = true;
@@ -122,11 +122,15 @@ namespace MoneyHustler.Tabs
 
         private void ButtonRemoveCreditItemClick(object sender, RoutedEventArgs e)
         {
-            var button = (Button)sender;
-            var credit = (Credit)button.DataContext;
-            listOfCreditsView.Remove(credit);
-            _storageInstance.Credits.Remove(credit);
-            Storage.Save();
+            var userAnswer = MessageBox.Show("Точно удалить?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (userAnswer == MessageBoxResult.Yes)
+            {
+                var button = (Button)sender;
+                var credit = (Credit)button.DataContext;
+                listOfCreditsView.Remove(credit);
+                _storageInstance.Credits.Remove(credit);
+                Storage.Save();
+            }
         }
 
         private void ButtonPayItemClick(object sender, RoutedEventArgs e)
