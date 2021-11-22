@@ -3,7 +3,156 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             Header="Расходы" Background="#FFC3B9A0" BorderBrush="{x:Null}"
             >
-    <Grid>
-        <TextBlock Text="Tab Data My expenses" />
+    <TabItem.Resources>
+        <Style x:Key="placeHolder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <TextBox Text="{Binding Path=Text,
+                                                RelativeSource={RelativeSource TemplatedParent}, 
+                                                Mode=TwoWay,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 x:Name="textSource" 
+                                 Background="Transparent" 
+                                 Panel.ZIndex="2" />
+                            <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="Foreground" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
+                                                <Setter Property="Foreground" Value="#FF807463"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="HeaderTemplateArrowUp">
+            <DockPanel LastChildFill="True" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}">
+                <Path x:Name="arrowUp" StrokeThickness="1" Fill="Gray" Data="M 5,10 L 15,10 L 10,5 L 5,10" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
+                <TextBlock Text="{Binding }" />
+            </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="HeaderTemplateArrowDown">
+            <DockPanel LastChildFill="True" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}">
+                <Path x:Name="arrowDown" StrokeThickness="1" Fill="Gray"  Data="M 5,5 L 10,10 L 15,5 L 5,5" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
+                <TextBlock Text="{Binding }" />
+            </DockPanel>
+        </DataTemplate>
+    </TabItem.Resources>
+    <Grid Background="#FF1F1F1F">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="49*"/>
+            <RowDefinition Height="39*"/>
+            <RowDefinition Height="281*"/>
+            <RowDefinition Height="65*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="321*"/>
+            <ColumnDefinition Width="79*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="ButtonAddEditExpense" Grid.Row="3" Content="Добавить" Margin="254,10,184,10" Click="ButtonAddEditExpense_Click" />
+        <Button x:Name="ButtonReload" Content="Reload" Grid.Row="3"  Margin="30,10,184,10" Width="56" HorizontalAlignment="Left"  Click="ButtonReload_Click"/>
+        <StackPanel x:Name="StackPanelControlTemplateExpense" Grid.Row="2" Grid.Column="1" 
+                    Orientation="Vertical" Height="207" VerticalAlignment="Top" Margin="0,8,0,0" HorizontalAlignment="Center" Width="128">
+            <DatePicker Background="#FFC3B9A0" x:Name="DatePickerExpenseDate" SelectedDateFormat="Short" Margin="0,0,0,5" ToolTip="Когда?"/>
+            <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseAmount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" TextChanged="Amount_TextChanged" ToolTip="Сколько?" Height="20"/>
+            <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpensePerson" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Кто?" Height="20"/>
+            <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpenseVault"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Откуда?" Height="20"/>
+            <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseComment" Style="{StaticResource placeHolder}" MinWidth="100" Tag="Комментарий"  HorizontalAlignment="Stretch" Margin="0,5,0,5" Padding="20,0" ToolTip="Поясните" 
+                    Height="20" TextWrapping="Wrap" MaxLength="100" IsUndoEnabled="False" TextAlignment="Justify" MinLines="2"/>
+            <ComboBox  Background="#FFC3B9A0" x:Name="ComboBoxExpenseType" MinWidth="100" DisplayMemberPath="Name" Margin="0,5,0,1" ToolTip="На что?" Height="20" />
+        </StackPanel>
+
+        <StackPanel x:Name="StackPanelOnlyExpense" Grid.Row="0" 
+                    Orientation="Horizontal" Height="22" VerticalAlignment="Top" Margin="0,18,0,0" HorizontalAlignment="Center" Width="414">
+            <Button x:Name="ButtonViewClassificationExpenses" Height="21" Content="Показать расходы по" Margin="0,0,20,0" Click="ButtonViewClassificationExpenses_Click" Width="137" VerticalAlignment="Center" ToolTip="НАЖМИ" />
+            <ComboBox x:Name="ComboBoxOfClassificationExpenses" Margin="0,0,20,0" SelectionChanged="ComboBoxOfClassificationExpenses_Selected" IsEnabled="False" Width="108" VerticalAlignment="Stretch" Height="20" ToolTip="Что интересует, а?">
+                <ComboBoxItem>
+                    С счёта
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    По категории
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    Члена
+                </ComboBoxItem>
+            </ComboBox>
+            <ComboBox x:Name="ComboBoxClassExpenses" Margin="0,0,20,0" DisplayMemberPath="Name" IsEnabled="False" SelectionChanged="ComboBoxClassExpenses_SelectionChanged" VerticalAlignment="Stretch" Height="20" Width="118"
+                      ToolTip="Что в списке этого типа"/>
+        </StackPanel>
+
+
+        <ListView x:Name="listViewForExpenses" Margin="23,8,23,10" Background="#FFC3B9A0" GridViewColumnHeader.Click="GridViewColumnHeaderExpenses_ClickedOnHeader" Grid.Row="2">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+
+                    <GridViewColumn Header="Дата" Width="Auto" DisplayMemberBinding="{Binding Date, StringFormat=d, ConverterCulture=ru-RU}"/>
+                    <GridViewColumn Header="Сумма" Width="Auto" DisplayMemberBinding="{Binding Amount}"/>
+                    <GridViewColumn Header="Категория" Width="Auto" DisplayMemberBinding="{Binding Type.Name}"/>
+                    <GridViewColumn Header="Счет" Width="Auto" DisplayMemberBinding="{Binding Vault.Name}"/>
+                    <GridViewColumn Header="Человек" Width="Auto" DisplayMemberBinding="{Binding Person.Name}"/>
+                    <GridViewColumn Header="Комментарий" Width="Auto" DisplayMemberBinding="{Binding Comment}"/>
+                    <GridViewColumn Header="Изменить" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="Изменить" Margin="0"  VerticalAlignment="Center" Click="ButtonEditExpense_Click"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Удалить" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  Content="Удалить" Margin="0"  VerticalAlignment="Center" Click="ButtonDeleteExpense_Click" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <ComboBox x:Name="ComboBoxSelectPeriod" Width="115"  SelectedIndex="0" SelectionChanged="ComboBoxSelectPeriod_SelectionChanged" Grid.Row="1" HorizontalAlignment="Left" Margin="38,0,0,0" VerticalAlignment="Center">
+            <ComboBoxItem>
+                Всё время
+            </ComboBoxItem>
+            <ComboBoxItem>
+                Сегодня
+            </ComboBoxItem>
+            <ComboBoxItem>
+                Прошедшую неделю
+            </ComboBoxItem>
+            <ComboBoxItem>
+                Прошедший месяц
+            </ComboBoxItem>
+            <ComboBoxItem>
+                Выбрать самостоятельно
+            </ComboBoxItem>
+        </ComboBox>
+        <StackPanel x:Name="StackPanelSelectDateOnDisplay" Orientation="Horizontal" HorizontalAlignment="Left" Height="28" Margin="163,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="459" Visibility="Hidden">
+            <Label Content="С " Background="#FFC6C6C6" Margin="7,0,0,0" VerticalAlignment="Center" Height="23"/>
+            <DatePicker x:Name="DatePickerSelectStartPeriodOrDayExpenses" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectStartPeriodOrDayExpenses_SelectedDateChanged"/>
+            <Label Content="До " Background="#FFC6C6C6" VerticalAlignment="Center" Height="25"/>
+            <DatePicker x:Name="DatePickerSelectEndPeriodExpenses" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectEndPeriodExpenses_SelectedDateChanged">
+                <DatePicker.BlackoutDates>
+
+                </DatePicker.BlackoutDates>
+            </DatePicker>
+        </StackPanel>
+
     </Grid>
+
+
 </TabItem>
