@@ -47,9 +47,33 @@ namespace MoneyHustler.Tabs
 
         private void ButtonAddCreditClick(object sender, RoutedEventArgs e)
         {
-
+            var button = (Button)sender;
+            _credit = null;
             ChangeVisibilityOfGridAddEditVault(true);
-            UpdateCreditsView();
+            
+
+            TextBoxValueWithoutPercent.IsEnabled = true;
+            DatePickerDayOpen.IsEnabled = true;
+            DatePickerDayClose.IsEnabled = true;
+            TextBoxPercent.IsEnabled = true;
+
+            TextBoxName.Text = null;
+
+            TextBoxValueWithoutPercent.Text = null;
+
+            DatePickerDayOpen.SelectedDate = null;
+            DatePickerDayClose.SelectedDate = null;
+
+            TextBoxPercent.Text = null;
+
+
+            ComboBoxCards.ItemsSource = _storageInstance.Vaults;
+            ComboBoxCards.SelectedItem = null;
+
+            ComboBoxPerson.ItemsSource = _storageInstance.Persons;
+            ComboBoxPerson.SelectedItem = null;
+
+
         }
 
         private void ButtonEditCreditClick(object sender, RoutedEventArgs e)
@@ -59,20 +83,12 @@ namespace MoneyHustler.Tabs
             ChangeVisibilityOfGridAddEditVault(true);
             _credit = credit;
 
-            if (_credit != null)
-            {
-                TextBoxValueWithoutPercent.IsEnabled = false;
-                DatePickerDayOpen.IsEnabled = false;
-                DatePickerDayClose.IsEnabled = false;
-                TextBoxPercent.IsEnabled = false;
-            }
-            else
-            {
-                TextBoxValueWithoutPercent.IsEnabled = true;
-                DatePickerDayOpen.IsEnabled = true;
-                DatePickerDayClose.IsEnabled = true;
-                TextBoxPercent.IsEnabled = true;
-            }
+
+            TextBoxValueWithoutPercent.IsEnabled = false;
+            DatePickerDayOpen.IsEnabled = false;
+            DatePickerDayClose.IsEnabled = false;
+            TextBoxPercent.IsEnabled = false;
+
 
             TextBoxName.Text = _credit.Name;
 
@@ -139,7 +155,7 @@ namespace MoneyHustler.Tabs
 
             ChangeVisibilityOfGridAddEditVault(false);
             UpdateCreditsView();
-            
+
         }
 
         private void ButtonSaveClick(object sender, RoutedEventArgs e)
@@ -180,6 +196,12 @@ namespace MoneyHustler.Tabs
                     return;
                 }
 
+                if (DatePickerDayClose.SelectedDate.Value.Month == DatePickerDayOpen.SelectedDate.Value.Month)
+                {
+                    MessageBox.Show("You cannot take a loan and pay it off in the same month");
+                    return;
+                }
+
 
                 if (!decimal.TryParse(TextBoxPercent.Text, out enteredPercent))
                 {
@@ -216,7 +238,7 @@ namespace MoneyHustler.Tabs
             }
 
             Storage.Save();
-            
+
             ChangeVisibilityOfGridAddEditVault(false);
             UpdateCreditsView();
         }
@@ -229,12 +251,13 @@ namespace MoneyHustler.Tabs
             {
                 ColumnLabels.Width = new GridLength(20, GridUnitType.Star);
                 ColumnTextBox.Width = new GridLength(20, GridUnitType.Star);
-                
+                ButtonAdd.IsEnabled = false;
             }
             else
             {
                 ColumnLabels.Width = new GridLength(0, GridUnitType.Star);
                 ColumnTextBox.Width = new GridLength(0, GridUnitType.Star);
+                ButtonAdd.IsEnabled = true;
             }
         }
     }
