@@ -37,6 +37,9 @@ namespace MoneyHustler.Tabs
             listOfCreditsView = new ObservableCollection<Credit>(_storageInstance.Credits);
             listViewForCredits.ItemsSource = listOfCreditsView;
 
+            ComboBoxCards.ItemsSource = _storageInstance.Vaults;
+            ComboBoxPerson.ItemsSource = _storageInstance.Persons;
+
         }
 
         private void Sort(string sortBy, ListSortDirection direction)
@@ -107,5 +110,23 @@ namespace MoneyHustler.Tabs
 
         }
 
+        private void SelectItem(object sender, MouseButtonEventArgs e)
+        {
+
+            var selecetdCredit = (Credit)listViewForCredits.SelectedItem;
+            TextBoxName.Text = selecetdCredit.Name;
+            TextBoxValueWithoutPercent.Text = Convert.ToString(selecetdCredit.ValuewithoutPercent);
+            DatePickerDayOpen.SelectedDate = selecetdCredit.DayOpen;
+            DatePickerDayClose.SelectedDate = selecetdCredit.DayClose;
+            TextBoxPercent.Text = Convert.ToString(selecetdCredit.Percent);
+            ComboBoxCards.SelectedItem = selecetdCredit.BindedCard;
+            ComboBoxPerson.SelectedItem = selecetdCredit.Person;
+            ButtonAddEdit.Content = "Изменить";
+
+            TextBoxName.IsEnabled = false;
+            TextBoxValueWithoutPercent.IsEnabled = false;
+
+
+        }
     }
 }

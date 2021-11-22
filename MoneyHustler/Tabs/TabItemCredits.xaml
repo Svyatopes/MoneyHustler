@@ -21,7 +21,7 @@
             <ColumnDefinition Width="20*"/>
             <ColumnDefinition Width="20*"/>
         </Grid.ColumnDefinitions>
-        <ListView x:Name="listViewForCredits"   HorizontalContentAlignment="Center"   Background="#FFC3B9A0" Foreground="Black" Grid.Row="1" Grid.RowSpan="7" Grid.Column="1" Grid.ColumnSpan="1">
+        <ListView x:Name="listViewForCredits"   HorizontalContentAlignment="Center"   Background="#FFC3B9A0" Foreground="Black" Grid.Row="1" Grid.RowSpan="7" Grid.Column="1" Grid.ColumnSpan="1" MouseDoubleClick="SelectItem">
 
 
             <ListView.ItemContainerStyle>
@@ -32,7 +32,7 @@
             <ListView.View >
                 <GridView>
 
-                    <GridViewColumn Header="Название"  Width="auto"  DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Название"  Width="auto"   DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Сумма" Width="Auto"  DisplayMemberBinding="{Binding Value, StringFormat=0.00}"/>
                     <GridViewColumn Header="Cумма платежа" Width="Auto"  DisplayMemberBinding="{Binding AnnuentPayValue, StringFormat=0}"/>
                     <GridViewColumn Header="Ежемесячный платеж" Width="Auto" >
@@ -70,6 +70,6 @@
         <Label Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Владелец</Label>
         <ComboBox x:Name="ComboBoxPerson" Grid.Row="7" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100" DisplayMemberPath="Name"></ComboBox>
 
-        <Button Grid.Row="8" Grid.Column="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить" Click="ButtonAddCreditClick"/>
+        <Button x:Name="ButtonAddEdit" Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить" Click="ButtonAddCreditClick"/>
     </Grid>
 </TabItem>
