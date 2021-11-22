@@ -492,7 +492,7 @@ namespace MoneyHustler.Tabs
             if ((DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate
                 < _dateEndForView)
             {
-                _dateStartForView = ((DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate).AddDays(-1);
+                _dateStartForView = (DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate;
             }
             else
             {
