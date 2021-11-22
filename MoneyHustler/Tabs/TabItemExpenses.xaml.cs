@@ -179,7 +179,7 @@ namespace MoneyHustler.Tabs
             else if ((string)ButtonAddEditExpense.Content == "Добавить")
             {
                 
-                decimal balanceOnSelectDay = ((Card)ComboBoxExpenseVault.SelectedItem).
+                decimal balanceOnSelectDay = ((MoneyVault)ComboBoxExpenseVault.SelectedItem).
                     GetBalanceOnDate((DateTime)DatePickerExpenseDate.SelectedDate);
                 //расчитываем баланс на выбранный в календаре день
                 if (Convert.ToDecimal(TextBoxExpenseAmount.Text) > balanceOnSelectDay)
@@ -202,9 +202,28 @@ namespace MoneyHustler.Tabs
                    TextBoxExpenseComment.Text,
                    (ExpenseType)ComboBoxExpenseType.SelectedItem
                 );
-                ((Card)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
 
-                spAuf.Play();
+                if (ComboBoxExpenseVault.SelectedItem is Card)
+                {
+                    ((Card)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
+                }
+                else if (ComboBoxExpenseVault.SelectedItem is OnlyTopDeposit)
+                {
+                    try
+                    {
+                        ((OnlyTopDeposit)ComboBoxExpenseVault.SelectedItem).EarnIncome();
+                        ((OnlyTopDeposit)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
+                    }
+                    catch (ArgumentException)
+                    {
+                        MessageBox.Show($"Вы не можете снять сумму выше, чем {((OnlyTopDeposit)ComboBoxExpenseVault.SelectedItem).MoneyBox}",
+                            "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
+
+
+                    spAuf.Play();
                 Storage.Save();
                 MessageBox.Show("потратил");
                 UpdateIncomesViewAndClearAddEditArea();
@@ -296,6 +315,9 @@ namespace MoneyHustler.Tabs
                 }
 
             }
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
             SortExpenses("Date", _lastDirection);
 
         }
@@ -490,18 +512,19 @@ namespace MoneyHustler.Tabs
         private void DatePickerSelectStartPeriodOrDayExpenses_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if ((DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate
-                < _dateEndForView)
+                > _dateEndForView)
             {
-                _dateStartForView = (DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate;
+                _dateEndForView = ((DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate).AddDays(1);
+                DatePickerSelectEndPeriodExpenses.SelectedDate = _dateEndForView;
             }
-            else
-            {
-                DatePickerSelectStartPeriodOrDayExpenses.SelectedDate = _dateStartForView;
-                MessageBox.Show("Написано же, где выбрать старт периода, а где конец. "+
-                    "Нафига пытаться подъебать систему??? МАЛО ЕБАЛИ В ДЕТСТВЕ?" +
-                    "Короче ладно. Подвинь сначала дату из поля после слова ДО.");
-                return;
-            }
+            //else
+            //{
+            //    DatePickerSelectStartPeriodOrDayExpenses.SelectedDate = _dateStartForView;
+            //    MessageBox.Show("Написано же, где выбрать старт периода, а где конец. "+
+            //        "Нафига пытаться подъебать систему??? МАЛО ЕБАЛИ В ДЕТСТВЕ?" +
+            //        "Короче ладно. Подвинь сначала дату из поля после слова ДО.");
+            //    return;
+            //}
             
             DatePickerSelectEndPeriodExpenses.IsEnabled = true;
             DatePickerSelectEndPeriodExpenses.BlackoutDates.Clear();

@@ -43,7 +43,7 @@
         <DataTemplate x:Key="HeaderTemplateArrowDown">
             <DockPanel LastChildFill="True" Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}">
                 <Path x:Name="arrowDown" StrokeThickness="1" Fill="Gray"  Data="M 5,5 L 10,10 L 15,5 L 5,5" DockPanel.Dock="Right" Width="20" HorizontalAlignment="Right" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
-                <TextBlock Text="{Binding }" />
+                <TextBlock Text="{Binding }" FontFamily="Calibri Light" />
             </DockPanel>
         </DataTemplate>
     </TabItem.Resources>
@@ -127,7 +127,7 @@
         </ListView>
 
         <ComboBox x:Name="ComboBoxSelectPeriodIncomes" Width="115"  SelectedIndex="0"  SelectionChanged="ComboBoxSelectPeriodIncomes_SelectionChanged"
-                  Grid.Row="1" HorizontalAlignment="Left" Margin="38,0,0,0" VerticalAlignment="Center">
+                  Grid.Row="1" HorizontalAlignment="Left" Margin="38,0,0,0" VerticalAlignment="Center" FontFamily="Calibri Light">
             <ComboBoxItem>
                 Всё время
             </ComboBoxItem>
@@ -145,9 +145,9 @@
             </ComboBoxItem>
         </ComboBox>
         <StackPanel x:Name="StackPanelSelectDateIncomesOnDisplay" Orientation="Horizontal" HorizontalAlignment="Left" Height="28" Margin="163,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="459" Visibility="Hidden">
-            <Label Content="С " Background="#FFC6C6C6" Margin="7,0,0,0" VerticalAlignment="Center" Height="23"/>
+            <Label Foreground="#FFC3B9A0" Content="С " Background="#FF1F1F1F" Margin="7,0,0,0" VerticalAlignment="Center" Height="23" FontWeight="Bold"/>
             <DatePicker x:Name="DatePickerSelectStartPeriodOrDayIncomes" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectStartPeriodOrDayIncomes_SelectedDateChanged"/>
-            <Label Content="До " Background="#FFC6C6C6" VerticalAlignment="Center" Height="25"/>
+            <Label Foreground="#FFC3B9A0" Content="До " Background="#FF1F1F1F" VerticalAlignment="Center" Height="25" FontWeight="Bold" FontFamily="Calibri Light"/>
             <DatePicker x:Name="DatePickerSelectEndPeriodIncomes" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectEndPeriodIncomes_SelectedDateChanged">
                 <DatePicker.BlackoutDates>
 

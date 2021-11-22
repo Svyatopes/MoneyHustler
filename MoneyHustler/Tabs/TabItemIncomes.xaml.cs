@@ -291,6 +291,9 @@ namespace MoneyHustler.Tabs
                 }
 
             }
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
+            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
             Sort("Date", _lastDirection);
         }
 
@@ -429,19 +432,20 @@ namespace MoneyHustler.Tabs
         private void DatePickerSelectStartPeriodOrDayIncomes_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if ((DateTime)DatePickerSelectStartPeriodOrDayIncomes.SelectedDate
-                < _dateEndForView)
+                > _dateEndForView)
             {
-                _dateStartForView = (DateTime)(DatePickerSelectStartPeriodOrDayIncomes.SelectedDate);
+                _dateEndForView = ((DateTime)DatePickerSelectStartPeriodOrDayIncomes.SelectedDate).AddDays(1);
+                DatePickerSelectEndPeriodIncomes.SelectedDate = _dateEndForView;
             }
-            else
-            {
-                DatePickerSelectStartPeriodOrDayIncomes.SelectedDate = _dateStartForView;
-                MessageBox.Show("Написано же, где выбрать старт периода, а где конец. " +
-                    "Нафига пытаться подъебать систему??? МАЛО ЕБАЛИ В ДЕТСТВЕ?" +
-                    "Короче ладно. Подвинь сначала дату из поля после слова ДО.");
-                return;
-            }
-
+            //else
+            //{
+            //    DatePickerSelectStartPeriodOrDayIncomes.SelectedDate = _dateStartForView;
+            //    MessageBox.Show("Написано же, где выбрать старт периода, а где конец. " +
+            //        "Нафига пытаться подъебать систему??? МАЛО ЕБАЛИ В ДЕТСТВЕ?" +
+            //        "Короче ладно. Подвинь сначала дату из поля после слова ДО.");
+            //    return;
+            //}
+            _dateStartForView = (DateTime)(DatePickerSelectStartPeriodOrDayIncomes.SelectedDate);
             DatePickerSelectEndPeriodIncomes.IsEnabled = true;
             DatePickerSelectEndPeriodIncomes.BlackoutDates.Clear();
             DatePickerSelectEndPeriodIncomes.BlackoutDates.Add(new CalendarDateRange(DateTime.Today.AddYears(-10), _dateStartForView));

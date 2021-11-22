@@ -142,9 +142,9 @@
             </ComboBoxItem>
         </ComboBox>
         <StackPanel x:Name="StackPanelSelectDateOnDisplay" Orientation="Horizontal" HorizontalAlignment="Left" Height="28" Margin="163,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="459" Visibility="Hidden">
-            <Label Content="С " Background="#FFC6C6C6" Margin="7,0,0,0" VerticalAlignment="Center" Height="23"/>
+            <Label Foreground="#FFC3B9A0" Content="С " Background="#FF1F1F1F" Margin="7,0,0,0" VerticalAlignment="Center" Height="23" FontWeight="Bold"/>
             <DatePicker x:Name="DatePickerSelectStartPeriodOrDayExpenses" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectStartPeriodOrDayExpenses_SelectedDateChanged"/>
-            <Label Content="До " Background="#FFC6C6C6" VerticalAlignment="Center" Height="25"/>
+            <Label Foreground="#FFC3B9A0" Content="До " Background="#FF1F1F1F" VerticalAlignment="Center" Height="25" FontWeight="Bold"/>
             <DatePicker x:Name="DatePickerSelectEndPeriodExpenses" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectEndPeriodExpenses_SelectedDateChanged">
                 <DatePicker.BlackoutDates>
 
