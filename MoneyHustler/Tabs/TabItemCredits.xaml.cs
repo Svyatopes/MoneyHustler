@@ -136,7 +136,7 @@ namespace MoneyHustler.Tabs
 
             if (credit.Value == 0)
             {
-                MessageBox.Show("Пошел нахуй дибил блядь");
+                MessageBox.Show("Кредит уже оплачен, молодец!*Звуки салюта*");
                 return;
             }
 
