@@ -85,6 +85,7 @@ namespace MoneyHustler.Models
             if (expenseType == null)
             {
                 expenseType = new ExpenseType() { Name = "Кредит" };
+                _storageInstance.ExpenseTypes.Add(expenseType);
             }
             Expense expense = new Expense(AnnuentPayValue, DateTime.Today, Person, "Ежемесячная оплата по кредиту", expenseType);
             BindedCard.DecreaseBalance(expense);
