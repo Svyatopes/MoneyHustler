@@ -9,7 +9,21 @@ namespace MoneyHustler.Models
 {
     public abstract class MoneyTraffic //абстрактный класс с информацией о финансовом обороте
     {
-        public virtual decimal Amount { get; set; }//сумма
+        private decimal _amount;
+        public decimal Amount
+        {
+            get { return _amount; }
+            set
+            {
+                if (Vault != null)
+                {
+                    Vault.ChangedAmountInIncomeOrExpense(this, value);
+                }
+
+                _amount = value;
+            }
+        }
+
         public DateTime Date { get; set; } //дата
         public string Comment { get; set; } //комментарий
         public Person Person { get; set; } //кто совершил
