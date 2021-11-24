@@ -13,14 +13,19 @@
     </UniformGrid>
     <TabControl x:Name="MainTabControl" Background="#FF1F1F1F" BorderBrush="#FF1F1F1F" Foreground="#FF1F1F1F" FontFamily="Calibri Light" FontSize="14">
         <tabData:TabItemStartTab Width="{Binding ElementName=c1, Path=(FrameworkElement.ActualWidth)}"></tabData:TabItemStartTab>
-        <tabData:TabItemCategories x:Name="TabItemCategoriesName" Width="{Binding ElementName=c1, Path=(FrameworkElement.ActualWidth)}"></tabData:TabItemCategories>
+        <tabData:TabItemCategories Width="{Binding ElementName=c1, Path=(FrameworkElement.ActualWidth)}"></tabData:TabItemCategories>
         <tabData:TabItemMyFamily Width="{Binding ElementName=c1, Path=(FrameworkElement.ActualWidth)}"></tabData:TabItemMyFamily>
         <tabData:TabItemMoneyVaults Width="{Binding ElementName=c1, Path=(FrameworkElement.ActualWidth)}"></tabData:TabItemMoneyVaults>
         <TabItem Header="Мои финансы" Background="#FFC3B9A0" BorderBrush="{x:Null}" Width="{Binding ElementName=c1, Path=(FrameworkElement.ActualWidth)}">
-            <TabControl x:Name="FinanceTabControl" Background="#FF1F1F1F" BorderBrush="#FF1F1F1F" Foreground="#FF1F1F1F" FontFamily="Calibri Light" FontSize="14">
-                <tabData:TabItemIncomes></tabData:TabItemIncomes>
-                <tabData:TabItemExpenses></tabData:TabItemExpenses>
-            </TabControl>
+                <Grid Margin="0, 0, 0, 0">
+                    <UniformGrid Columns="2" Margin="3, 0, 3, 0">
+                        <FrameworkElement x:Name="c2"/>
+                    </UniformGrid>
+                    <TabControl x:Name="FinanceTabControl" Background="#FF1F1F1F" BorderBrush="#FF1F1F1F" Foreground="#FF1F1F1F" FontFamily="Calibri Light" FontSize="14">
+                        <tabData:TabItemIncomes Width="{Binding ElementName=c2, Path=(FrameworkElement.ActualWidth)}"></tabData:TabItemIncomes>
+                        <tabData:TabItemExpenses Width="{Binding ElementName=c2, Path=(FrameworkElement.ActualWidth)}"></tabData:TabItemExpenses>
+                    </TabControl>
+                </Grid>
         </TabItem>
         <tabData:TabItemCredits Width="{Binding ElementName=c1, Path=(FrameworkElement.ActualWidth)}"></tabData:TabItemCredits>
         <tabData:TabItemAnalytics Width="{Binding ElementName=c1, Path=(FrameworkElement.ActualWidth)}"></tabData:TabItemAnalytics>
