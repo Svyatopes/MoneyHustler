@@ -30,7 +30,6 @@ namespace MoneyHustler.Tabs
         private DateTime _dateStartForView;
         private DateTime _dateEndForView;
 
-        private IncomeType _cashback;
         private Income _income;
         private GridViewColumnHeader _lastHeaderClicked = null;
         private ListSortDirection _lastDirection = ListSortDirection.Descending;
@@ -41,21 +40,7 @@ namespace MoneyHustler.Tabs
             listViewForIncomes.ItemsSource = listOfIncomesView;
             _dateStartForView = DateTime.Now.AddYears(-20);
             _dateEndForView = DateTime.Now;
-            //foreach (Income item in Storage.GetAllIncomes())
-            //{
-            //    if (item.Type.Name == "CashBack")
-            //    {
-            //        _storageInstance.IncomeTypes.Add (item.Type);
-            //        break;
-            //    }
-            //};
-
-            //foreach (IncomeType item in _storageInstance.IncomeTypes)
-            //{
-            //    typesIncome.Add(item);
-            //}
-
-            //_storageInstance.IncomeTypes.Add(new IncomeType { Name = "CashBack" });
+            
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
@@ -75,6 +60,7 @@ namespace MoneyHustler.Tabs
             comboBox.SelectedIndex = 0;
         }
 
+        #region Sort
         private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
             var headerClicked = e.OriginalSource as GridViewColumnHeader;
@@ -145,16 +131,10 @@ namespace MoneyHustler.Tabs
             dataView.SortDescriptions.Add(sd);
             dataView.Refresh();
         }
-
+        #endregion
 
         private void ButtonEditIncome_Click(object sender, RoutedEventArgs e)
         {
-            //var button = (Button)sender;
-            //var income = (Income)button.DataContext;
-
-            //AuxiliaryWindows.WindowAddEditIncome windowIncomes = new(income);
-            //windowIncomes.ShowDialog();
-            //UpdateIncomesView();
             var button = (Button)sender;
             if (button == null)
             {
@@ -183,6 +163,14 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             var income = (Income)button.DataContext;
+            
+            if (income.Amount > income.Vault.GetBalance())
+            {
+                MessageBox.Show("Вы не можете удалить этот доход, так как не могли бы совершить некоторые покупки");
+                return;
+            }
+            
+
             listOfIncomesView.Remove(income);
             income.Vault.Remove(income);
             Storage.Save();
@@ -210,7 +198,7 @@ namespace MoneyHustler.Tabs
                     _income.Vault.Remove(_income);
                     newVault.IncreaseBalance(_income);
                 }
-                Storage.Save();
+                
             }
             else if ((string)ButtonAddEditIncome.Content == "Добавить")
             {
@@ -224,6 +212,7 @@ namespace MoneyHustler.Tabs
                 );
 
                 ((MoneyVault)ComboBoxIncomeVault.SelectedItem).IncreaseBalance(newIncome);
+                Storage.Save();
 
                 MessageBox.Show("поднял");
                 UpdateIncomesViewAndClearAddEditArea();
@@ -300,16 +289,13 @@ namespace MoneyHustler.Tabs
         private void Amount_TextChanged(object sender, TextChangedEventArgs e)
         {
             decimal n = 0;
-            if (!Decimal.TryParse(TextBoxIncomeAmount.Text, out n))
+            if (!Decimal.TryParse(TextBoxIncomeAmount.Text, out n) && n >= 0)
             {
                 ButtonAddEditIncome.IsEnabled = false;
-                //TextBoxExpenseAmount.Background = Brushes.HotPink;
-
             }
             else
             {
                 ButtonAddEditIncome.IsEnabled = true;
-                //TextBoxExpenseAmount.Background = Brushes.Yellow;
             }
         }
 
@@ -320,16 +306,8 @@ namespace MoneyHustler.Tabs
                 //TODO: отдельный метод
                 ButtonViewClassificationIncomes.Content = "К общему списку";
                 SetIsEnabledForItemsOnStackPanel(true);
-                //StackPanelControlTemplateExpense.IsEnabled = false;//
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, null);
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, null);
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, null);
-                //ComboBoxExpensePerson.SelectedItem = null;
-                //ComboBoxExpenseVault.SelectedItem = null;
-                //ComboBoxExpenseType.SelectedItem = null;
                 DatePickerIncomeDate.SelectedDate = null;
-                //ComboBoxOfClassificationExpenses.IsEnabled = true;//
-                //ComboBoxClassExpenses.IsEnabled = true;//
+
 
             }
             else if ((string)ButtonViewClassificationIncomes.Content == "К общему списку")
@@ -337,16 +315,7 @@ namespace MoneyHustler.Tabs
                 //TODO: отдельный метод
                 ButtonViewClassificationIncomes.Content = "Показать доходы по";
                 SetIsEnabledForItemsOnStackPanel(false);
-                //StackPanelControlTemplateExpense.IsEnabled = true;//
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
-                SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
-                //ComboBoxExpensePerson.SelectedItem = Storage.Persons[0];
-                //ComboBoxExpenseVault.SelectedItem = Storage.Vaults[0];
-                //ComboBoxExpenseType.SelectedItem = Storage.ExpenseTypes[0];
                 DatePickerIncomeDate.SelectedDate = DateTime.Now;
-                //ComboBoxOfClassificationExpenses.IsEnabled = false;//
-                //ComboBoxClassExpenses.IsEnabled = false;//
                 ComboBoxOfClassificationIncomes.SelectedItem = null;
                 ComboBoxClassIncomes.SelectedItem = null;
                 UpdateIncomesViewAndClearAddEditArea();
@@ -437,14 +406,7 @@ namespace MoneyHustler.Tabs
                 _dateEndForView = ((DateTime)DatePickerSelectStartPeriodOrDayIncomes.SelectedDate).AddDays(1);
                 DatePickerSelectEndPeriodIncomes.SelectedDate = _dateEndForView;
             }
-            //else
-            //{
-            //    DatePickerSelectStartPeriodOrDayIncomes.SelectedDate = _dateStartForView;
-            //    MessageBox.Show("Написано же, где выбрать старт периода, а где конец. " +
-            //        "Нафига пытаться подъебать систему??? МАЛО ЕБАЛИ В ДЕТСТВЕ?" +
-            //        "Короче ладно. Подвинь сначала дату из поля после слова ДО.");
-            //    return;
-            //}
+
             _dateStartForView = (DateTime)(DatePickerSelectStartPeriodOrDayIncomes.SelectedDate);
             DatePickerSelectEndPeriodIncomes.IsEnabled = true;
             DatePickerSelectEndPeriodIncomes.BlackoutDates.Clear();
@@ -463,13 +425,21 @@ namespace MoneyHustler.Tabs
 
         private void SetIsEnabledForItemsOnStackPanel(bool isEnable)
         {
-            StackPanelControlTemplateIncome.IsEnabled = !isEnable;
             ComboBoxOfClassificationIncomes.IsEnabled = isEnable;
             ComboBoxClassIncomes.IsEnabled = isEnable;
         }
 
         private void ButtonReload_Click(object sender, RoutedEventArgs e)
         {
+            UpdateIncomesViewAndClearAddEditArea();
+        }
+
+        private void TabItemIncome_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (true)
+            {
+
+            }
             UpdateIncomesViewAndClearAddEditArea();
         }
     }

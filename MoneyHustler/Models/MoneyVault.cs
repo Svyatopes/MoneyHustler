@@ -97,24 +97,28 @@ namespace MoneyHustler.Models
 
         public decimal GetBalanceOnDate(DateTime day)//ready
         {
-            decimal balanceOnSelectedDay = this._balance;
+            decimal balanceOnSelectedDay;
+
+            balanceOnSelectedDay = this._balance;
             foreach (Expense item in this.Expenses)
             {
-                if (item.Date > day)
+                if (item.Date >= day)
                 {
                     balanceOnSelectedDay += item.Amount;
                 }
             }
             foreach (Income item in this.Incomes)
             {
-                if (item.Date.Date > day)
+                if (item.Date >= day)
                 {
                     balanceOnSelectedDay -= item.Amount;
                 }
             }
+            
 
             return balanceOnSelectedDay;
         }
+
 
     }
 }
