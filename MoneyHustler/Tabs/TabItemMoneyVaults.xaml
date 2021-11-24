@@ -3,7 +3,7 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             Header="Кошельки" Background="#FFC3B9A0" BorderBrush="{x:Null}"
             >
-    <Grid Background="#FFC3B9A0">
+    <Grid Background="#FF1F1F1F">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition x:Name="GridColumnAddEditMoneyVault" Width="0" />
@@ -13,7 +13,7 @@
                 <RowDefinition Height="80*"/>
                 <RowDefinition Height="20*"/>
             </Grid.RowDefinitions>
-            <ListView x:Name="listViewForVaults" HorizontalContentAlignment="Stretch" >
+            <ListView x:Name="listViewForVaults" HorizontalContentAlignment="Stretch" Background="#FFC3B9A0" Margin="10, 10, 10, 10">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -44,8 +44,9 @@
                 </ListView.View>
 
             </ListView>
-            <Button Grid.Row="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить" Click="ButtonAddMoneyVault_Click"/>
+            <Button Grid.Row="1" MinHeight="50" MinWidth="150" Background="#FFC3B9A0" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить" Click="ButtonAddMoneyVault_Click"/>
         </Grid>
+        <Rectangle Grid.Column="1" Fill="#7FC3B9A0" Margin="20, 0, 20, 0"/> 
         <Grid x:Name="GridAddEditVault" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
@@ -97,8 +98,8 @@
                     <Label x:Name="LabelHowLong" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center"></Label>
                 </StackPanel>
             </Grid>
-            <Button x:Name="ButtonSaveVault"  Grid.Row="5" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSaveVault_Click">Сохранить</Button>
-            <Button x:Name="ButtonBackToListVaults" Grid.Row="5" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonBackToListVaults_Click">Назад</Button>
+            <Button x:Name="ButtonSaveVault"  Background="#FFC3B9A0" Grid.Row="5" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSaveVault_Click">Сохранить</Button>
+            <Button x:Name="ButtonBackToListVaults" Background="#FFC3B9A0" Grid.Row="5" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonBackToListVaults_Click">Назад</Button>
         </Grid>
     </Grid>
 </TabItem>
