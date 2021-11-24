@@ -74,7 +74,7 @@
         <StackPanel x:Name="StackPanelOnlyExpense" Grid.Row="0" 
                     Orientation="Horizontal" Height="22" VerticalAlignment="Top" Margin="0,18,0,0" HorizontalAlignment="Center" Width="414">
             <Button x:Name="ButtonViewClassificationExpenses" Height="21" Content="Показать расходы по" Margin="0,0,20,0" Click="ButtonViewClassificationExpenses_Click" Width="137" VerticalAlignment="Center" ToolTip="НАЖМИ" />
-            <ComboBox x:Name="ComboBoxOfClassificationExpenses" Margin="0,0,20,0" SelectionChanged="ComboBoxOfClassificationExpenses_Selected" IsEnabled="False" Width="108" VerticalAlignment="Stretch" Height="20" ToolTip="Что интересует, а?">
+            <ComboBox x:Name="ComboBoxFilterList" Margin="0,0,20,0" SelectionChanged="ComboBoxOfClassificationExpenses_Selected" IsEnabled="False" Width="108" VerticalAlignment="Stretch" Height="20" ToolTip="Что интересует, а?">
                 <ComboBoxItem>
                     С счёта
                 </ComboBoxItem>
@@ -85,7 +85,7 @@
                     Члена
                 </ComboBoxItem>
             </ComboBox>
-            <ComboBox x:Name="ComboBoxClassExpenses" Margin="0,0,20,0" DisplayMemberPath="Name" IsEnabled="False" SelectionChanged="ComboBoxClassExpenses_SelectionChanged" VerticalAlignment="Stretch" Height="20" Width="118"
+            <ComboBox x:Name="ComboBoxItemOfFilterList" Margin="0,0,20,0" DisplayMemberPath="Name" IsEnabled="False" SelectionChanged="ComboBoxClassExpenses_SelectionChanged" VerticalAlignment="Stretch" Height="20" Width="118"
                       ToolTip="Что в списке этого типа"/>
         </StackPanel>
 
