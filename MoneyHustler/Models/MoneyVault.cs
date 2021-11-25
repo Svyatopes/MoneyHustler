@@ -108,5 +108,10 @@ namespace MoneyHustler.Models
             }
         }
 
+        public decimal ReturnBalanceWithDifferenceAmount(decimal deltaAmount)
+        {
+            return _balance - deltaAmount;
+        }
+
     }
 }
