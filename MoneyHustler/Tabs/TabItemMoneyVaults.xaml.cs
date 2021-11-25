@@ -55,6 +55,8 @@ namespace MoneyHustler.Tabs
 
         }
 
+
+
         private void UpdateListOfVaults()
         {
             _listMoneyVaults.Clear();
@@ -428,5 +430,10 @@ namespace MoneyHustler.Tabs
         }
 
         #endregion
+
+        private void TabItem_Selected(object sender, RoutedEventArgs e)
+        {
+            UpdateListOfVaults();
+        }
     }
 }
