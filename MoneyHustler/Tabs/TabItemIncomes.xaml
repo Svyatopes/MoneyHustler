@@ -64,11 +64,11 @@
                     Orientation="Vertical" Height="207" VerticalAlignment="Top" Margin="0,8,0,0" HorizontalAlignment="Center" Width="128">
             <DatePicker Background="#FFC3B9A0" x:Name="DatePickerIncomeDate" SelectedDateFormat="Short" Margin="0,0,0,5" ToolTip="Когда?"/>
             <TextBox Background="#FFC3B9A0" x:Name="TextBoxIncomeAmount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" TextChanged="Amount_TextChanged" ToolTip="Сколько?" Height="20"/>
-            <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxIncomePerson" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Кто?" Height="20"/>
+            <ComboBox IsEditable="True" Background="#FFC3B9A0" x:Name="ComboBoxIncomePerson" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Кто?" Height="20"/>
             <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxIncomeVault"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Откуда?" Height="20"/>
             <TextBox Background="#FFC3B9A0" x:Name="TextBoxIncomeComment" Style="{StaticResource placeHolder}" MinWidth="100" Tag="Комментарий"  HorizontalAlignment="Stretch" Margin="0,5,0,5" Padding="20,0" ToolTip="Поясните" 
                     Height="20" TextWrapping="Wrap" MaxLength="100" IsUndoEnabled="False" TextAlignment="Justify" MinLines="2"/>
-            <ComboBox  Background="#FFC3B9A0" x:Name="ComboBoxIncomeType" MinWidth="100" DisplayMemberPath="Name" Margin="0,5,0,1" ToolTip="На что?" Height="20" />
+            <ComboBox IsEditable="True" Background="#FFC3B9A0" x:Name="ComboBoxIncomeType" MinWidth="100" DisplayMemberPath="Name" Margin="0,5,0,1" ToolTip="На что?" Height="20" />
         </StackPanel>
 
         <StackPanel x:Name="StackPanelFilterIncomes" Grid.Row="0" 

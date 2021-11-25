@@ -40,7 +40,7 @@ namespace MoneyHustler.Tabs
             listViewForIncomes.ItemsSource = listOfIncomesView;
             _dateStartForView = DateTime.Now.AddYears(-20);
             _dateEndForView = DateTime.Now;
-            
+
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
@@ -163,13 +163,17 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             var income = (Income)button.DataContext;
-            
-            if (income.Amount > income.Vault.GetBalance())
+
+            //if (income.Amount > income.Vault.GetBalance())
+            //{
+            //    MessageBox.Show("Вы не можете удалить этот доход, так как не могли бы совершить некоторые покупки");
+            //    return;
+            //}
+            if (income.Vault.ReturnBalanceWithDifferenceAmount(income.Amount)<0)
             {
                 MessageBox.Show("Вы не можете удалить этот доход, так как не могли бы совершить некоторые покупки");
                 return;
             }
-            
 
             listOfIncomesView.Remove(income);
             income.Vault.Remove(income);
@@ -179,6 +183,22 @@ namespace MoneyHustler.Tabs
         private void ButtonAddEditIncome_Click(object sender, RoutedEventArgs e)
         {
 
+            var personName = ComboBoxIncomePerson.Text;
+            if (string.IsNullOrEmpty(personName))
+            {
+                MessageBox.Show("Вы должны заполнить персону");
+                return;
+            }
+            var incomeTypeName = ComboBoxIncomeType.Text;
+            if (string.IsNullOrEmpty(incomeTypeName))
+            {
+                MessageBox.Show("Вы должны заполнить категорию расхода");
+                return;
+            }
+
+            var person = Storage.GetOrCreatePersonByName(personName);
+            var incomeType = Storage.GetOrCreateIncomeTypeByName(incomeTypeName);
+
             if ((string)ButtonAddEditIncome.Content == "Сохраните")
             {
                 listViewForIncomes.IsEnabled = true;
@@ -186,19 +206,48 @@ namespace MoneyHustler.Tabs
                 StackPanelSelectDateIncomesOnDisplay.IsEnabled = true;
                 ButtonAddEditIncome.Content = "Добавить";
 
+                //может поменяться кошелёк и сумма дохода
+                //если меняется кошелёк, то необходимо удалить доход со старого кошелька
+                //перед этим необходимо проверить, а не станет ли на старом кошельке баланс ниже 0
+
+                //если кошелёк не меняется, а сумма дохода теперь стала меньше, то нужно проверить не станет ли
+                //баланс меньше 0
+
+                //и там там проверка на баланс ниже 0
                 MoneyVault newVault = (MoneyVault)ComboBoxIncomeVault.SelectedItem;
+                if (_income.Vault != newVault) //если кошель поменялся
+                {
+                    //смотрим не станет ли баланс меньше нуля при удалении того расхода из прежнего кошелька
+                    if (_income.Vault.ReturnBalanceWithDifferenceAmount(_income.Amount)<0)
+                    {
+                        MessageBox.Show($"Вы не можете убрать этот доход с '{_income.Vault.Name}', так как баланс уйдёт в минус");
+                        return;
+                    }
+                }
+                else //если кошель остался тем же
+                {
+                    //смотрим не стала ли разница между старой суммой и новой обращать баланс в ноль
+                    //допустим доход был 500, стал 200, то отнимаем от баланса (500 - 200 =) 300
+                    if (_income.Vault.ReturnBalanceWithDifferenceAmount(_income.Amount - Convert.ToDecimal(TextBoxIncomeAmount.Text))<0)
+                    {
+                        MessageBox.Show($"Вы не можете уменьшить сумму дохода, выше чем {_income.Vault.GetBalance()}") ;
+                        return;
+                    }
+                } //если все условия соблюдены, то запишем новый доход
+
+                
                 _income.Amount = Convert.ToDecimal(TextBoxIncomeAmount.Text);
-                _income.Type = (IncomeType)ComboBoxIncomeType.SelectedItem;
+                _income.Type = incomeType;
                 _income.Date = (DateTime)DatePickerIncomeDate.SelectedDate;
-                _income.Person = (Person)ComboBoxIncomePerson.SelectedItem;
+                _income.Person = person;
                 _income.Comment = TextBoxIncomeComment.Text;
 
-                if (_income.Vault != newVault)
+                if (_income.Vault != newVault) 
                 {
                     _income.Vault.Remove(_income);
                     newVault.IncreaseBalance(_income);
                 }
-                
+
             }
             else if ((string)ButtonAddEditIncome.Content == "Добавить")
             {
@@ -206,9 +255,9 @@ namespace MoneyHustler.Tabs
                 (
                    Convert.ToDecimal(TextBoxIncomeAmount.Text),
                    (DateTime)DatePickerIncomeDate.SelectedDate,
-                   (Person)ComboBoxIncomePerson.SelectedItem,
+                   person,
                    TextBoxIncomeComment.Text,
-                   (IncomeType)ComboBoxIncomeType.SelectedItem
+                   incomeType
                 );
 
                 ((MoneyVault)ComboBoxIncomeVault.SelectedItem).IncreaseBalance(newIncome);
@@ -226,59 +275,40 @@ namespace MoneyHustler.Tabs
             TextBoxIncomeComment.Text = string.Empty;
             DatePickerIncomeDate.SelectedDate = DateTime.Today;
             listOfIncomesView.Clear();
-
-            if (0 == ComboBoxOfClassificationIncomes.SelectedIndex)
+            var allIncomes = Storage.GetAllIncomes().Where(item => item.Date >= _dateStartForView && item.Date <= _dateEndForView);
+            if (ComboBoxOfClassificationIncomes.SelectedIndex == 0)
             {
                 //TODO: void UpdateExpenseViewList( можно ли вставить )
-                var allIncomes = Storage.GetAllIncomes();
+
                 foreach (Income item in allIncomes)
                 {
-                    if (item.Date >= _dateStartForView && item.Date <= _dateEndForView
-                        && item.Vault == ComboBoxClassIncomes.SelectedItem)
-                    {
+                    if (item.Vault == ComboBoxClassIncomes.SelectedItem)
                         listOfIncomesView.Add(item);
-                    }
-
                 }
             }
-            else if (1 == ComboBoxOfClassificationIncomes.SelectedIndex)
+            else if (ComboBoxOfClassificationIncomes.SelectedIndex == 1)
             {
-                var allIncomes = Storage.GetAllIncomes();
+
                 foreach (Income item in allIncomes)
                 {
-                    if (item.Date >= _dateStartForView && item.Date <= _dateEndForView
-                        && item.Type == ComboBoxClassIncomes.SelectedItem)
-                    {
+                    if (item.Type == ComboBoxClassIncomes.SelectedItem)
                         listOfIncomesView.Add(item);
-                    }
-
                 }
             }
-            else if (2 == ComboBoxOfClassificationIncomes.SelectedIndex)
+            else if (ComboBoxOfClassificationIncomes.SelectedIndex == 2)
             {
-                var allIncomes = Storage.GetAllIncomes();
+
                 foreach (Income item in allIncomes)
                 {
-                    if (item.Date >= _dateStartForView && item.Date <= _dateEndForView
-                        && item.Person == ComboBoxClassIncomes.SelectedItem)
-                    {
+                    if (item.Person == ComboBoxClassIncomes.SelectedItem)
                         listOfIncomesView.Add(item);
-                    }
-
                 }
             }
             else
             {
-                var allIncomes = Storage.GetAllIncomes();
+
                 foreach (Income item in allIncomes)
-                {
-                    if (item.Date >= _dateStartForView && item.Date <= _dateEndForView)
-                    {
-                        listOfIncomesView.Add(item);
-                    }
-
-                }
-
+                    listOfIncomesView.Add(item);
             }
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
@@ -324,7 +354,7 @@ namespace MoneyHustler.Tabs
 
         private void ComboBoxOfClassificationIncomes_Selected(object sender, RoutedEventArgs e)
         {
-            
+
             if (ComboBoxOfClassificationIncomes.SelectedIndex == 0)
             {
                 ComboBoxClassIncomes.ItemsSource = _storageInstance.Vaults;
@@ -333,8 +363,8 @@ namespace MoneyHustler.Tabs
             }
 
             else if (ComboBoxOfClassificationIncomes.SelectedIndex == 1)
-            { 
-                
+            {
+
                 ComboBoxClassIncomes.ItemsSource = _storageInstance.IncomeTypes;
                 ComboBoxClassIncomes.SelectedItem = _storageInstance.IncomeTypes[0];
 
