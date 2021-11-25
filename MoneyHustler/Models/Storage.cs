@@ -84,6 +84,19 @@ namespace MoneyHustler.Models
             return expenseType;
         }
 
+        public static IncomeType GetOrCreateIncomeTypeByName(string name)
+        {
+            Storage instance = GetInstance();
+            var incomeType = instance.IncomeTypes.FirstOrDefault(item => item.Name == name);
+            if (incomeType == null)
+            {
+                incomeType = new IncomeType() { Name = name };
+                instance.IncomeTypes.Add(incomeType);
+                Storage.Save();
+            }
+            return incomeType;
+        }
+
         public static void Save()
         {
             var storageInstance = GetInstance();
