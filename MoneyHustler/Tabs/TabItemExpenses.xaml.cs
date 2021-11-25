@@ -124,18 +124,10 @@ namespace MoneyHustler.Tabs
             _expense = expense; //записываем в поле ссылку на расход
         }
 
-        private void EditExpense(MoneyVault vaultForDecreaseBalance)
+        private void EditExpense(MoneyVault vaultForDecreaseBalance, Person person, ExpenseType expenseType)
         {
-            //записываем кошель для проверки баланса по датам и сумме расхода
-            //нужно выполнить проверку, является ли кошелёк картой, депозитом или депозитом с ограничением снятия
-            //она выполнится в методе мэни волта
-
             decimal balanceOnSelectDay = vaultForDecreaseBalance.GetBalanceOnDate((DateTime)DatePickerExpenseDate.SelectedDate);
-            //расчитываем баланс на выбранный в календаре день
 
-            //тут для действия, если кошелёк - карта или депозит
-            //в случае депозита с ограничением. нужно смотреть на его манибокс
-            //нужно отловить все нежелательные случаи
             if (_expense.Date >= (DateTime)DatePickerExpenseDate.SelectedDate &&
                 Convert.ToDecimal(TextBoxExpenseAmount.Text) > balanceOnSelectDay //и введённая сумма больше суммы на тот день
             || _expense.Date < (DateTime)DatePickerExpenseDate.SelectedDate && //если изменяемая дата раньше новой и
@@ -152,8 +144,8 @@ namespace MoneyHustler.Tabs
             _expense.Amount = Convert.ToDecimal(TextBoxExpenseAmount.Text);
             _expense.Comment = TextBoxExpenseComment.Text;
             _expense.Date = (DateTime)DatePickerExpenseDate.SelectedDate;
-            _expense.Person = (Person)ComboBoxExpensePerson.SelectedItem;
-            _expense.Type = (ExpenseType)ComboBoxExpenseType.SelectedItem;
+            _expense.Person = person;
+            _expense.Type = expenseType;
             _expense.Vault = (Card)ComboBoxExpenseVault.SelectedItem;
             Storage.Save();
             MessageBox.Show("ок");
@@ -175,7 +167,8 @@ namespace MoneyHustler.Tabs
                 return;
             }
 
-
+            var person = Storage.GetOrCreatePersonByName(personName);
+            var expenseType = Storage.GetOrCreateExpenseTypeByName(expenseTypeName);
 
             if ((string)ButtonAddEditExpense.Content == "Сохраните")
             {
@@ -183,7 +176,7 @@ namespace MoneyHustler.Tabs
 
                 ComboboxIsEditable(); //проверяем есть ли в комбобоксах новое имя или категория и, если да, записываем в сторэдж
 
-                EditExpense((MoneyVault)ComboBoxExpenseVault.SelectedItem);
+                EditExpense((MoneyVault)ComboBoxExpenseVault.SelectedItem, person, expenseType);
 
                 UpdateIncomesViewAndClearAddEditArea();
 
@@ -204,11 +197,7 @@ namespace MoneyHustler.Tabs
                     spMaloDeneg.Play();
                     MessageBox.Show("На выбранном счёте не достаточно средств на выбранную дату", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
-                } //ОТДЕЛЬНЫЙ МЕТОД ВЕРНЁТ БУЛЬКУ И ПРИМЕТ
-
-
-                var person = Storage.GetOrCreatePersonByName(personName);
-                var expenseType = Storage.GetOrCreateExpenseTypeByName(expenseTypeName);
+                }
 
                 Expense newExpense = new Expense
                 (
