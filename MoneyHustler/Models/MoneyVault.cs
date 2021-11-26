@@ -11,7 +11,11 @@ namespace MoneyHustler.Models
     public abstract class MoneyVault
     {
         public string Name { get; set; }
+
+        [JsonIgnore]
         public ReadOnlyCollection<Income> Incomes { get; set; }
+
+        [JsonIgnore]
         public ReadOnlyCollection<Expense> Expenses { get; set; }
 
         [JsonProperty]
