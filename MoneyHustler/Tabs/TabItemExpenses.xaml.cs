@@ -47,9 +47,9 @@ namespace MoneyHustler.Tabs
             spZdarova.SoundLocation = "Audio/zdarova.wav";
             spZdarova.LoadAsync();
             spMaloDeneg.SoundLocation = "Audio/kavo.wav";
-            spMaloDeneg.Load();
+            spMaloDeneg.LoadAsync();
             spAuf.SoundLocation = "Audio/auf.wav";
-            spAuf.Load();
+            spAuf.LoadAsync();
             spOnView.SoundLocation = "Audio/onView.wav";
             spOnView.LoadAsync();
         }
@@ -177,9 +177,6 @@ namespace MoneyHustler.Tabs
                 ComboboxIsEditable(); //проверяем есть ли в комбобоксах новое имя или категория и, если да, записываем в сторэдж
 
                 EditExpense((MoneyVault)ComboBoxExpenseVault.SelectedItem, person, expenseType);
-
-                UpdateIncomesViewAndClearAddEditArea();
-
             }
 
             else if ((string)ButtonAddEditExpense.Content == "Добавить")
@@ -211,11 +208,11 @@ namespace MoneyHustler.Tabs
                 ((MoneyVault)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
 
                 spAuf.Play();
-                Storage.Save();
+                
                 MessageBox.Show("потратил");
-                UpdateIncomesViewAndClearAddEditArea();
-
             }
+            Storage.Save();
+            UpdateIncomesViewAndClearAddEditArea();
         }
 
 
@@ -236,9 +233,10 @@ namespace MoneyHustler.Tabs
             TextBoxExpenseAmount.Text = string.Empty;
             TextBoxExpenseComment.Text = string.Empty;
             DatePickerExpenseDate.SelectedDate = DateTime.Today;
+            //отдельный метод начало
             listOfExpensesView.Clear();
-
-            var allExpenses = Storage.GetAllExpences().Where(item => item.Date >= _dateStartForView && item.Date <= _dateEndForView);
+            
+            var allExpenses = Storage.GetAllExpences();
             if (ComboBoxFilterList.SelectedIndex == 0)
             {
                 //TODO: void UpdateExpenseViewList( можно ли вставить )
@@ -281,6 +279,7 @@ namespace MoneyHustler.Tabs
                 }
 
             }
+            //конец отдельного метода и сюда же сортировку или вообще убрать отовсюду кроме инициализации
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
@@ -358,22 +357,22 @@ namespace MoneyHustler.Tabs
             dataView.Refresh();
         }
         #endregion
-        private void ButtonViewClassificationExpenses_Click(object sender, RoutedEventArgs e)
+        private void ButtonEnableFilter_Click(object sender, RoutedEventArgs e)
         {
-            if ((string)ButtonViewClassificationExpenses.Content == "Показать расходы по")
+            if ((string)ButtonEnableFilter.Content == "Показать расходы по")
             {
 
                 spOnView.Play();
                 //TODO: отдельный метод
-                ButtonViewClassificationExpenses.Content = "К общему списку";
+                ButtonEnableFilter.Content = "К общему списку";
                 SetIsEnabledForItemsOnStackPanel(true);
                 DatePickerExpenseDate.SelectedDate = null;
 
             }
-            else if ((string)ButtonViewClassificationExpenses.Content == "К общему списку")
+            else if ((string)ButtonEnableFilter.Content == "К общему списку")
             {
                 //TODO: отдельный метод
-                ButtonViewClassificationExpenses.Content = "Показать расходы по";
+                ButtonEnableFilter.Content = "Показать расходы по";
                 SetIsEnabledForItemsOnStackPanel(false);
                 DatePickerExpenseDate.SelectedDate = DateTime.Now;
                 ComboBoxFilterList.SelectedItem = null;
@@ -459,12 +458,13 @@ namespace MoneyHustler.Tabs
 
         private void DatePickerSelectStartPeriodOrDayExpenses_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate > _dateEndForView)
+            DateTime DateInPickerSelectStartPeriod = (DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate;
+            if (DateInPickerSelectStartPeriod > _dateEndForView)
             {
-                _dateEndForView = ((DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate).AddDays(1);
+                _dateEndForView = DateInPickerSelectStartPeriod.AddDays(1);
                 DatePickerSelectEndPeriodExpenses.SelectedDate = _dateEndForView;
             }
-            _dateStartForView = (DateTime)(DatePickerSelectStartPeriodOrDayExpenses.SelectedDate);
+            _dateStartForView = DateInPickerSelectStartPeriod;
             DatePickerSelectEndPeriodExpenses.IsEnabled = true;
             DatePickerSelectEndPeriodExpenses.BlackoutDates.Clear();
             DatePickerSelectEndPeriodExpenses.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, _dateStartForView));

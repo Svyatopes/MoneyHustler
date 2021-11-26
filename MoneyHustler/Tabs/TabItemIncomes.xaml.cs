@@ -169,7 +169,7 @@ namespace MoneyHustler.Tabs
             //    MessageBox.Show("Вы не можете удалить этот доход, так как не могли бы совершить некоторые покупки");
             //    return;
             //}
-            if (income.Vault.ReturnBalanceWithDifferenceAmount(income.Amount)<0)
+            if (income.Vault.GetBalance() - income.Amount < 0)
             {
                 MessageBox.Show("Вы не можете удалить этот доход, так как не могли бы совершить некоторые покупки");
                 return;
@@ -214,11 +214,14 @@ namespace MoneyHustler.Tabs
                 //баланс меньше 0
 
                 //и там там проверка на баланс ниже 0
-                MoneyVault newVault = (MoneyVault)ComboBoxIncomeVault.SelectedItem;
-                if (_income.Vault != newVault) //если кошель поменялся
+                decimal different;
+                decimal currentBalanceOfVault = _income.Vault.GetBalance();
+                MoneyVault selectedVault = (MoneyVault)ComboBoxIncomeVault.SelectedItem;
+                if (_income.Vault != selectedVault) //если кошель поменялся
                 {
+                    different = currentBalanceOfVault - _income.Amount;
                     //смотрим не станет ли баланс меньше нуля при удалении того расхода из прежнего кошелька
-                    if (_income.Vault.ReturnBalanceWithDifferenceAmount(_income.Amount)<0)
+                    if (different < 0)
                     {
                         MessageBox.Show($"Вы не можете убрать этот доход с '{_income.Vault.Name}', так как баланс уйдёт в минус");
                         return;
@@ -226,9 +229,10 @@ namespace MoneyHustler.Tabs
                 }
                 else //если кошель остался тем же
                 {
+                    different = currentBalanceOfVault - (_income.Amount - Convert.ToDecimal(TextBoxIncomeAmount.Text));
                     //смотрим не стала ли разница между старой суммой и новой обращать баланс в ноль
                     //допустим доход был 500, стал 200, то отнимаем от баланса (500 - 200 =) 300
-                    if (_income.Vault.ReturnBalanceWithDifferenceAmount(_income.Amount - Convert.ToDecimal(TextBoxIncomeAmount.Text))<0)
+                    if (different < 0)
                     {
                         MessageBox.Show($"Вы не можете уменьшить сумму дохода, выше чем {_income.Vault.GetBalance()}") ;
                         return;
@@ -242,12 +246,11 @@ namespace MoneyHustler.Tabs
                 _income.Person = person;
                 _income.Comment = TextBoxIncomeComment.Text;
 
-                if (_income.Vault != newVault) 
+                if (_income.Vault != selectedVault) 
                 {
                     _income.Vault.Remove(_income);
-                    newVault.IncreaseBalance(_income);
+                    selectedVault.IncreaseBalance(_income);
                 }
-
             }
             else if ((string)ButtonAddEditIncome.Content == "Добавить")
             {
@@ -261,12 +264,11 @@ namespace MoneyHustler.Tabs
                 );
 
                 ((MoneyVault)ComboBoxIncomeVault.SelectedItem).IncreaseBalance(newIncome);
-                Storage.Save();
-
+                
                 MessageBox.Show("поднял");
-                UpdateIncomesViewAndClearAddEditArea();
-
             }
+            Storage.Save();
+            UpdateIncomesViewAndClearAddEditArea();
         }
 
         private void UpdateIncomesViewAndClearAddEditArea()
