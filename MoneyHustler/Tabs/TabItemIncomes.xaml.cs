@@ -51,11 +51,6 @@ namespace MoneyHustler.Tabs
 
         private void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source) //
         {
-            if (source is null)
-            {
-                comboBox.SelectedItem = null;
-                return;
-            }
             comboBox.ItemsSource = source;
             comboBox.SelectedIndex = 0;
         }
@@ -142,11 +137,8 @@ namespace MoneyHustler.Tabs
             }
             var income = (Income)button.DataContext;
 
-            //TODO: попробовать вынести в отдельный метод все изменения View
-            ButtonAddEditIncome.Content = "Сохраните";
-            listViewForIncomes.IsEnabled = false;
-            StackPanelFilterIncomes.IsEnabled = false;
-            StackPanelSelectDateIncomesOnDisplay.IsEnabled = false;
+            ChangeEnabledDisplayAndButtonAddContentInModEdit("Сохраните", false);
+
             ComboBoxIncomePerson.SelectedItem = income.Person;
             ComboBoxIncomeVault.SelectedItem = income.Vault;
             ComboBoxIncomeType.SelectedItem = income.Type;
@@ -157,6 +149,13 @@ namespace MoneyHustler.Tabs
 
         }
 
+        private void ChangeEnabledDisplayAndButtonAddContentInModEdit(string buttonAddEditContent, bool isEnabled)
+        {
+            ButtonAddEditIncome.Content = buttonAddEditContent;
+            listViewForIncomes.IsEnabled = isEnabled;
+            StackPanelFilterIncomes.IsEnabled = isEnabled;
+            StackPanelSelectDateIncomesOnDisplay.IsEnabled = isEnabled;
+        }
 
         //TODO: Transfer how to remove in right way
         private void ButtonDeleteIncome_Click(object sender, RoutedEventArgs e)
@@ -164,11 +163,6 @@ namespace MoneyHustler.Tabs
             var button = (Button)sender;
             var income = (Income)button.DataContext;
 
-            //if (income.Amount > income.Vault.GetBalance())
-            //{
-            //    MessageBox.Show("Вы не можете удалить этот доход, так как не могли бы совершить некоторые покупки");
-            //    return;
-            //}
             if (income.Vault.GetBalance() - income.Amount < 0)
             {
                 MessageBox.Show("Вы не можете удалить этот доход, так как не могли бы совершить некоторые покупки");
@@ -201,19 +195,8 @@ namespace MoneyHustler.Tabs
 
             if ((string)ButtonAddEditIncome.Content == "Сохраните")
             {
-                listViewForIncomes.IsEnabled = true;
-                StackPanelFilterIncomes.IsEnabled = true;
-                StackPanelSelectDateIncomesOnDisplay.IsEnabled = true;
-                ButtonAddEditIncome.Content = "Добавить";
+                ChangeEnabledDisplayAndButtonAddContentInModEdit("Добавить", true);
 
-                //может поменяться кошелёк и сумма дохода
-                //если меняется кошелёк, то необходимо удалить доход со старого кошелька
-                //перед этим необходимо проверить, а не станет ли на старом кошельке баланс ниже 0
-
-                //если кошелёк не меняется, а сумма дохода теперь стала меньше, то нужно проверить не станет ли
-                //баланс меньше 0
-
-                //и там там проверка на баланс ниже 0
                 decimal different;
                 decimal currentBalanceOfVault = _income.Vault.GetBalance();
                 Card selectedVault = (Card)ComboBoxIncomeVault.SelectedItem;
@@ -234,7 +217,7 @@ namespace MoneyHustler.Tabs
                     //допустим доход был 500, стал 200, то отнимаем от баланса (500 - 200 =) 300
                     if (different < 0)
                     {
-                        MessageBox.Show($"Вы не можете уменьшить сумму дохода, выше чем {_income.Vault.GetBalance()}") ;
+                        MessageBox.Show($"Вы не можете уменьшить сумму дохода, выше чем {currentBalanceOfVault}") ;
                         return;
                     }
                 } //если все условия соблюдены, то запишем новый доход
@@ -461,17 +444,8 @@ namespace MoneyHustler.Tabs
             ComboBoxClassIncomes.IsEnabled = isEnable;
         }
 
-        private void ButtonReload_Click(object sender, RoutedEventArgs e)
+        private void TabItemIncomes_Selected(object sender, RoutedEventArgs e)
         {
-            UpdateIncomesViewAndClearAddEditArea();
-        }
-
-        private void TabItemIncome_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (true)
-            {
-
-            }
             UpdateIncomesViewAndClearAddEditArea();
         }
     }

@@ -147,8 +147,6 @@ namespace MoneyHustler.Tabs
             _expense.Person = person;
             _expense.Type = expenseType;
             _expense.Vault = (Card)ComboBoxExpenseVault.SelectedItem;
-            Storage.Save();
-           // MessageBox.Show("ок");
 
         }
 
@@ -174,9 +172,8 @@ namespace MoneyHustler.Tabs
             {
                 ChangeEnabledDisplayAndButtonContentInModEdit("Добавить", true);
 
-                ComboboxIsEditable(); //проверяем есть ли в комбобоксах новое имя или категория и, если да, записываем в сторэдж
-
                 EditExpense((Card)ComboBoxExpenseVault.SelectedItem, person, expenseType);
+                // MessageBox.Show("ок");
             }
 
             else if ((string)ButtonAddEditExpense.Content == "Добавить")
@@ -212,6 +209,7 @@ namespace MoneyHustler.Tabs
               //  MessageBox.Show("потратил");
             }
             Storage.Save();
+            SetDefaultInAddEditArea();
             UpdateIncomesViewAndClearAddEditArea();
         }
 
@@ -228,11 +226,15 @@ namespace MoneyHustler.Tabs
 
         }
 
-        private void UpdateIncomesViewAndClearAddEditArea()
+        private void SetDefaultInAddEditArea()
         {
             TextBoxExpenseAmount.Text = string.Empty;
             TextBoxExpenseComment.Text = string.Empty;
             DatePickerExpenseDate.SelectedDate = DateTime.Today;
+        }
+
+        private void UpdateIncomesViewAndClearAddEditArea()
+        { 
             //отдельный метод начало
             listOfExpensesView.Clear();
             
@@ -275,7 +277,6 @@ namespace MoneyHustler.Tabs
                 foreach (Expense item in allExpenses)
                 {
                     listOfExpensesView.Add(item);
-
                 }
 
             }
@@ -486,27 +487,9 @@ namespace MoneyHustler.Tabs
             ComboBoxItemOfFilterList.IsEnabled = isEnable;
         }
 
-        private void ButtonReload_Click(object sender, RoutedEventArgs e)
+        private void TabItemExpenses_Selected(object sender, RoutedEventArgs e)
         {
             UpdateIncomesViewAndClearAddEditArea();
-        }
-
-        private void ComboboxIsEditable()
-        {
-
-            if (!(_storageInstance.Persons.Any(item => item.Name == ComboBoxExpensePerson.Text)))
-            {
-                Person newPerson = new Person { Name = ComboBoxExpensePerson.Text };
-                _storageInstance.Persons.Add(newPerson);
-                ComboBoxExpensePerson.SelectedItem = newPerson;
-            }
-
-            if (!(_storageInstance.ExpenseTypes.Any(item => item.Name == ComboBoxExpenseType.Text)))
-            {
-                ExpenseType newExpenseType = new ExpenseType { Name = ComboBoxExpenseType.Text };
-                _storageInstance.ExpenseTypes.Add(newExpenseType);
-                ComboBoxExpenseType.SelectedItem = newExpenseType;
-            }
         }
     }
 }
