@@ -216,7 +216,7 @@ namespace MoneyHustler.Tabs
                 //и там там проверка на баланс ниже 0
                 decimal different;
                 decimal currentBalanceOfVault = _income.Vault.GetBalance();
-                MoneyVault selectedVault = (MoneyVault)ComboBoxIncomeVault.SelectedItem;
+                Card selectedVault = (Card)ComboBoxIncomeVault.SelectedItem;
                 if (_income.Vault != selectedVault) //если кошель поменялся
                 {
                     different = currentBalanceOfVault - _income.Amount;
@@ -263,9 +263,9 @@ namespace MoneyHustler.Tabs
                    incomeType
                 );
 
-                ((MoneyVault)ComboBoxIncomeVault.SelectedItem).IncreaseBalance(newIncome);
+                ((Card)ComboBoxIncomeVault.SelectedItem).IncreaseBalance(newIncome);
                 
-                MessageBox.Show("поднял");
+                //MessageBox.Show("поднял");
             }
             Storage.Save();
             UpdateIncomesViewAndClearAddEditArea();

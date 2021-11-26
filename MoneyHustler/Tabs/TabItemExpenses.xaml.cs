@@ -137,7 +137,7 @@ namespace MoneyHustler.Tabs
 
                 spMaloDeneg.Play();
 
-                MessageBox.Show("На этом счету недостаточно средств на выбранную дату", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //MessageBox.Show("На этом счету недостаточно средств на выбранную дату", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -148,7 +148,7 @@ namespace MoneyHustler.Tabs
             _expense.Type = expenseType;
             _expense.Vault = (Card)ComboBoxExpenseVault.SelectedItem;
             Storage.Save();
-            MessageBox.Show("ок");
+           // MessageBox.Show("ок");
 
         }
 
@@ -176,23 +176,23 @@ namespace MoneyHustler.Tabs
 
                 ComboboxIsEditable(); //проверяем есть ли в комбобоксах новое имя или категория и, если да, записываем в сторэдж
 
-                EditExpense((MoneyVault)ComboBoxExpenseVault.SelectedItem, person, expenseType);
+                EditExpense((Card)ComboBoxExpenseVault.SelectedItem, person, expenseType);
             }
 
             else if ((string)ButtonAddEditExpense.Content == "Добавить")
             {
 
-                decimal balanceOnSelectDay = ((MoneyVault)ComboBoxExpenseVault.SelectedItem).
+                decimal balanceOnSelectDay = ((Card)ComboBoxExpenseVault.SelectedItem).
                     GetBalanceOnDate((DateTime)DatePickerExpenseDate.SelectedDate);
                 //расчитываем баланс на выбранный в календаре день
                 if (Convert.ToDecimal(TextBoxExpenseAmount.Text) > balanceOnSelectDay //в прошлом может и было много денег
-                    || (Convert.ToDecimal(TextBoxExpenseAmount.Text) > ((MoneyVault)ComboBoxExpenseVault.SelectedItem).GetBalance()))
+                    || (Convert.ToDecimal(TextBoxExpenseAmount.Text) > ((Card)ComboBoxExpenseVault.SelectedItem).GetBalance()))
                 //но не факт, что сейчас я могу себе такое позволить
                 {
                     UpdateIncomesViewAndClearAddEditArea();
 
                     spMaloDeneg.Play();
-                    MessageBox.Show("На выбранном счёте не достаточно средств на выбранную дату", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                   // MessageBox.Show("На выбранном счёте не достаточно средств на выбранную дату", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -205,11 +205,11 @@ namespace MoneyHustler.Tabs
                    expenseType
                 );
 
-                ((MoneyVault)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
+                ((Card)ComboBoxExpenseVault.SelectedItem).DecreaseBalance(newExpense);
 
                 spAuf.Play();
                 
-                MessageBox.Show("потратил");
+              //  MessageBox.Show("потратил");
             }
             Storage.Save();
             UpdateIncomesViewAndClearAddEditArea();
@@ -236,7 +236,7 @@ namespace MoneyHustler.Tabs
             //отдельный метод начало
             listOfExpensesView.Clear();
             
-            var allExpenses = Storage.GetAllExpences();
+            var allExpenses = Storage.GetAllExpences().Where(item => item.Date >= _dateStartForView && item.Date <= _dateEndForView);  
             if (ComboBoxFilterList.SelectedIndex == 0)
             {
                 //TODO: void UpdateExpenseViewList( можно ли вставить )
