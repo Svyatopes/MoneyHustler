@@ -248,7 +248,7 @@ namespace MoneyHustler.Tabs
 
             var enteredExpenseTypeName = TextBoxEnterExpenseCategory.Text.Trim();
 
-            if (_storageInstance.IncomeTypes.Any(item => item.Name == enteredExpenseTypeName))
+            if (_storageInstance.ExpenseTypes.Any(item => item.Name == enteredExpenseTypeName))
             {
                 MessageBox.Show("Такая категория уже существует!");
                 return;
