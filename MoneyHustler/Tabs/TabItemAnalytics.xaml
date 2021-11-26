@@ -1,9 +1,44 @@
 ﻿<TabItem x:Class="MoneyHustler.Tabs.TabItemAnalytics"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+
             Header="Аналитика" Background="#FFC3B9A0" BorderBrush="{x:Null}"
             >
     <Grid>
-        <TextBlock Text="Tab Data analytics" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
+            <RowDefinition Height="80*"></RowDefinition>
+
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Label HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Выбор периода</Label>
+            <ComboBox x:Name="ComboBoxPeriod" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100" SelectionChanged="ComboBoxPeriodItemSelected">
+                <ComboBoxItem>
+                    За месяц
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    За три месяца
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    За шесть месяцев
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    За все время
+                </ComboBoxItem>
+
+            </ComboBox>
+        </StackPanel>
+        <Label Grid.Row="1" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Граффик трат за месяц</Label>
+        <lvc:PieChart Name="Chart" Grid.Row="2" Series="{Binding SeriesCollection}" 
+                      LegendLocation="Right" InnerRadius="100" Margin="0 15">
+            <lvc:PieChart.ChartLegend>
+                <lvc:DefaultLegend FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" BulletSize="20"></lvc:DefaultLegend>
+            </lvc:PieChart.ChartLegend>
+            <lvc:PieChart.DataTooltip>
+                <lvc:DefaultTooltip BulletSize="20"></lvc:DefaultTooltip>
+            </lvc:PieChart.DataTooltip>
+        </lvc:PieChart> 
     </Grid>
 </TabItem>
