@@ -232,7 +232,7 @@ namespace MoneyHustler.Tabs
                     case Card:
 
                         decimal cashback;
-                        var parsedCashback = decimal.TryParse(TextBoxInitialAmount.Text, out cashback);
+                        var parsedCashback = decimal.TryParse(TextBoxPercentCashback.Text, out cashback);
 
                         if (!parsedCashback)
                         {
