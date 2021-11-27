@@ -62,7 +62,7 @@
         
         <StackPanel x:Name="StackPanelControlTemplateExpense" Grid.Row="2" Grid.Column="1" 
                     Orientation="Vertical" Height="207" VerticalAlignment="Top" Margin="0,8,0,0" HorizontalAlignment="Center" Width="128">
-            <DatePicker Background="#FFC3B9A0" x:Name="DatePickerExpenseDate" SelectedDateFormat="Short" Margin="0,0,0,5" ToolTip="Когда?"/>
+            <DatePicker Background="#FFC3B9A0" x:Name="DatePickerChooseDateOfExpense" SelectedDateFormat="Short" Margin="0,0,0,5" ToolTip="Когда?"/>
             <TextBox Background="#FFC3B9A0" x:Name="TextBoxExpenseAmount" Style="{StaticResource placeHolder}" Tag="Сумма" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" TextChanged="Amount_TextChanged" ToolTip="Сколько?" Height="20"/>
             <ComboBox IsEditable="True" Background="#FFC3B9A0" x:Name="ComboBoxExpensePerson" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Кто?" Height="20"/>
             <ComboBox Background="#FFC3B9A0" x:Name="ComboBoxExpenseVault"  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,0,5" Padding="20,0" DisplayMemberPath="Name" ToolTip="Откуда?" Height="20"/>
@@ -124,7 +124,7 @@
             </ListView.View>
         </ListView>
 
-        <ComboBox x:Name="ComboBoxSelectPeriod" Width="115"  SelectedIndex="0" SelectionChanged="ComboBoxSelectPeriod_SelectionChanged" Grid.Row="1" HorizontalAlignment="Left" Margin="38,0,0,0" VerticalAlignment="Center">
+        <ComboBox x:Name="ComboBoxSelectPeriodLastExpenses" Width="115"  SelectedIndex="0" SelectionChanged="ComboBoxSelectPeriod_SelectionChanged" Grid.Row="1" HorizontalAlignment="Left" Margin="38,0,0,0" VerticalAlignment="Center">
             <ComboBoxItem>
                 Всё время
             </ComboBoxItem>
@@ -143,9 +143,9 @@
         </ComboBox>
         <StackPanel x:Name="StackPanelSelectDateOnDisplay" Orientation="Horizontal" HorizontalAlignment="Left" Height="28" Margin="163,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="459" Visibility="Hidden">
             <Label Foreground="#FFC3B9A0" Content="С " Background="#FF1F1F1F" Margin="7,0,0,0" VerticalAlignment="Center" Height="23" FontWeight="Bold"/>
-            <DatePicker x:Name="DatePickerSelectStartPeriodOrDayExpenses" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectStartPeriodOrDayExpenses_SelectedDateChanged"/>
+            <DatePicker x:Name="DatePickerSelectStartPeriodOrDayExpenses" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectStartPeriodOrDayExpenses_SelectedDateChanged"/>
             <Label Foreground="#FFC3B9A0" Content="До " Background="#FF1F1F1F" VerticalAlignment="Center" Height="25" FontWeight="Bold"/>
-            <DatePicker x:Name="DatePickerSelectEndPeriodExpenses" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectEndPeriodExpenses_SelectedDateChanged">
+            <DatePicker x:Name="DatePickerSelectEndPeriodExpenses"  Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectEndPeriodExpenses_SelectedDateChanged">
                 <DatePicker.BlackoutDates>
 
                 </DatePicker.BlackoutDates>
