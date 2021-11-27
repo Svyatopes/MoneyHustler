@@ -47,9 +47,42 @@ namespace MoneyHustler.Tabs
 
             SetIncomeLabelsForAdding();
             SetExpenseLabelsForAdding();
-        }      
+        }
 
+        private void TabItemCategories_Selected(object sender, RoutedEventArgs e)
+        {
+            UpdateCollectionsAndView();
+        }
+
+        #region Update
+
+        private void UpdateCollectionsAndView()
+        {
+            UpdateIncomesCollection();
+            UpdateExpensesCollection();
+            SetIncomeLabelsForAdding();
+            SetExpenseLabelsForAdding();
+            CleanAllTextboxes();
+
+        }
+
+        private void CleanAllTextboxes()
+        {
+            TextBoxEnterIncomeCategory.Text = string.Empty;
+            TextBoxEnterExpenseCategory.Text = string.Empty;
+        }
+
+        #endregion
         #region Incomes
+
+        private void UpdateIncomesCollection()
+        {
+            _incomeTypes.Clear();
+            foreach (IncomeType type in _storageInstance.IncomeTypes)
+            {
+                _incomeTypes.Add(type);
+            }
+        }
 
         private void ButtonRemoveIncomeCategoryClick(object sender, RoutedEventArgs e)
         {
@@ -66,6 +99,7 @@ namespace MoneyHustler.Tabs
             _incomeTypes.Remove(incomeType);
 
             Storage.Save();
+            MessageBox.Show("Успешно удалено!");
         }
 
 
@@ -117,17 +151,11 @@ namespace MoneyHustler.Tabs
 
             _incomeTypeToRename.Name = enteredIncomeTypeName;
 
-            _incomeTypes.Clear();
-            foreach (IncomeType type in _storageInstance.IncomeTypes)
-            {
-                _incomeTypes.Add(type);
-            }
-
-            MessageBox.Show("Успешно переименовано!");
+            UpdateIncomesCollection();           
             SetIncomeLabelsForAdding();
-
             Storage.Save();
 
+            MessageBox.Show("Успешно переименовано!");
         }
 
 
@@ -150,10 +178,21 @@ namespace MoneyHustler.Tabs
             TextBoxEnterIncomeCategory.Text = string.Empty;
 
             Storage.Save();
+            MessageBox.Show("Успешно добавлено!");
         }
 
         #endregion
         #region Expenses
+
+
+        private void UpdateExpensesCollection()
+        {
+            _expenseTypes.Clear();
+            foreach (ExpenseType type in _storageInstance.ExpenseTypes)
+            {
+                _expenseTypes.Add(type);
+            }
+        }
 
         private void ButtonRemoveExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
@@ -170,6 +209,7 @@ namespace MoneyHustler.Tabs
             _expenseTypes.Remove(expenseType);
 
             Storage.Save();
+            MessageBox.Show("Успешно удалено!");
         }
 
         private void SetExpenseLabelsForEditing(string name)
@@ -220,16 +260,11 @@ namespace MoneyHustler.Tabs
 
             _expenseTypeToRename.Name = enteredExpenseTypeName;
 
-            _expenseTypes.Clear();
-            foreach (ExpenseType type in _storageInstance.ExpenseTypes)
-            {
-                _expenseTypes.Add(type);
-            }
+            UpdateExpensesCollection();
+            SetExpenseLabelsForAdding();
+            Storage.Save();
 
             MessageBox.Show("Успешно переименовано!");
-            SetExpenseLabelsForAdding();
-
-            Storage.Save();
         }
 
         private void ButtonAddExpenseCategoryClick(object sender, RoutedEventArgs e)
@@ -251,6 +286,7 @@ namespace MoneyHustler.Tabs
             TextBoxEnterExpenseCategory.Text = string.Empty;
 
             Storage.Save();
+            MessageBox.Show("Успешно добавлено!");
         }
         #endregion
     }
