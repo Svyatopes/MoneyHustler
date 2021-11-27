@@ -200,7 +200,7 @@ namespace MoneyHustler.Tabs
                     return;
                 }
 
-                if (DatePickerDayClose.SelectedDate.Value.Month == DatePickerDayOpen.SelectedDate.Value.Month)
+                if (DatePickerDayClose.SelectedDate.Value.Month == DatePickerDayOpen.SelectedDate.Value.Month && DatePickerDayClose.SelectedDate.Value.Year == DatePickerDayOpen.SelectedDate.Value.Year)
                 {
                     MessageBox.Show("You cannot take a loan and pay it off in the same month");
                     return;
@@ -338,6 +338,9 @@ namespace MoneyHustler.Tabs
 
         private void ButtonPayOnceItemClick(object sender, RoutedEventArgs e)
         {
+            var button = (Button)sender;
+            var credit = (Credit)button.DataContext;
+            _credit = credit;
             ChangeVisibilityOncePaymentClick(true);
         }
 
@@ -349,10 +352,10 @@ namespace MoneyHustler.Tabs
         private void ButtonOncePaySaveClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
-            var credit = (Credit)button.DataContext;
+            
             decimal enteredValue = 0;
 
-            if (credit.Amount == 0)
+            if (_credit.Amount == 0)
             {
                 MessageBox.Show("Кредит уже оплачен, молодец!*Звуки салюта*");
                 return;
@@ -377,14 +380,14 @@ namespace MoneyHustler.Tabs
                 return;
             }
 
-            if (enteredValue > credit.Amount)
+            if (enteredValue > _credit.Amount)
             {
                 MessageBox.Show("The payment amount exceeds the loan amount");
                 return;
             }
 
 
-            credit.PayOneTimePayment(enteredValue);
+            _credit.PayOneTimePayment(enteredValue);
             ChangeVisibilityOncePaymentClick(false);
             UpdateCreditsView();
 

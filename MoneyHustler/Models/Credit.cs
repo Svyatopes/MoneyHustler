@@ -101,7 +101,9 @@ namespace MoneyHustler.Models
             BindedCard.DecreaseBalance(expense);
             _repaid += payValue;
             InitialAmount -= _repaid;
+            
             SetMonthlyPayment();
+            Amount = MonthlyPayment * GetMounthPeriod();
             InitialAmount += _repaid;
         }
 

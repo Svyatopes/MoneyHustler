@@ -34,8 +34,8 @@
             <ListView.View >
                 <GridView>
                     <GridViewColumn Header="Название"  Width="auto"   DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Сумма" Width="Auto"  DisplayMemberBinding="{Binding Value, StringFormat=0.00}"/>
-                    <GridViewColumn Header="Cумма платежа" Width="Auto"  DisplayMemberBinding="{Binding AnnuentPayValue, StringFormat=0}"/>
+                    <GridViewColumn Header="Сумма" Width="Auto"  DisplayMemberBinding="{Binding Amount, StringFormat=0.00}"/>
+                    <GridViewColumn Header="Cумма платежа" Width="Auto"  DisplayMemberBinding="{Binding MonthlyPayment, StringFormat=0}"/>
                     <GridViewColumn Header="Ежемесячный платеж" Width="Auto" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
