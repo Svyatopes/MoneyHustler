@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using MoneyHustler.Helpers;
+
 namespace MoneyHustler.Tabs
 {
     /// <summary>
@@ -22,7 +24,7 @@ namespace MoneyHustler.Tabs
     /// </summary>
     public partial class TabItemCategories : TabItem
     {
-        private Storage _storageInstance = Storage.GetInstance();
+        private Storage _storageInstance;
 
         private ObservableCollection<IncomeType> _incomeTypes;
 
@@ -35,6 +37,8 @@ namespace MoneyHustler.Tabs
         {
             InitializeComponent();
 
+            _storageInstance = Storage.GetInstance();
+
             _incomeTypes = new ObservableCollection<IncomeType>(_storageInstance.IncomeTypes);
             _expenseTypes = new ObservableCollection<ExpenseType>(_storageInstance.ExpenseTypes);
 
@@ -43,21 +47,7 @@ namespace MoneyHustler.Tabs
 
             SetIncomeLabelsForAdding();
             SetExpenseLabelsForAdding();
-        }
-
-        private void SetButtonEnabledAndVisibility(Button button, bool enabled)
-        {
-            if (enabled)
-            {
-                button.Visibility = Visibility.Visible;
-                button.IsEnabled = true;
-            }
-            else
-            {
-                button.Visibility = Visibility.Hidden;
-                button.IsEnabled = false;
-            }
-        }
+        }      
 
         #region Incomes
 
@@ -84,8 +74,8 @@ namespace MoneyHustler.Tabs
             LabelAddIncomeCategories.Content = $"Переименовать: {name}";
             LabelEnterIncomeCategories.Content = "Введите новое название: ";
 
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, true);
-            SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, false);
 
             TextBoxEnterIncomeCategory.Text = string.Empty;
         }
@@ -95,8 +85,8 @@ namespace MoneyHustler.Tabs
             LabelAddIncomeCategories.Content = "Добавить категорию: ";
             LabelEnterIncomeCategories.Content = "Введите название категории: ";
 
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, false);
-            SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, true);
 
             TextBoxEnterIncomeCategory.Text = string.Empty;
         } 
@@ -187,8 +177,8 @@ namespace MoneyHustler.Tabs
             LabelAddExpenseCategories.Content = $"Переименовать: {name}";
             LabelEnterExpenseCategories.Content = "Введите новое название: ";
 
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, true);
-            SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, false);
 
             TextBoxEnterExpenseCategory.Text = string.Empty;
         }
@@ -198,8 +188,8 @@ namespace MoneyHustler.Tabs
             LabelAddExpenseCategories.Content = "Добавить категорию: ";
             LabelEnterExpenseCategories.Content = "Введите название категории: ";
 
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, false);
-            SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, true);
 
             TextBoxEnterExpenseCategory.Text = string.Empty;
         }
@@ -215,7 +205,7 @@ namespace MoneyHustler.Tabs
 
         private void ButtonRenameFinallyExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
-            if (TextBoxEnterExpenseCategory.Text.Length == 0)
+            if (string.IsNullOrWhiteSpace(TextBoxEnterExpenseCategory.Text))
             {
                 return;
             }
