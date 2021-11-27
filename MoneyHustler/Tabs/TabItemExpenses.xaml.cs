@@ -394,8 +394,8 @@ namespace MoneyHustler.Tabs
                 DatePickerChooseDateOfExpense.SelectedDate = DateTime.Now;
                 ComboBoxFilterList.SelectedItem = null;
                 ComboBoxItemOfFilterList.SelectedItem = null;
-                UpdateExpensesViewAndClearAddEditArea();
             }
+            UpdateExpensesViewAndClearAddEditArea();
         }
 
         private void ComboBoxOfClassificationExpenses_Selected(object sender, RoutedEventArgs e)
@@ -462,13 +462,13 @@ namespace MoneyHustler.Tabs
 
         private void DatePickerSelectStartPeriodOrDayExpenses_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            DateTime DateInPickerSelectStartPeriod = (DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate;
-            if (DateInPickerSelectStartPeriod > _dateEndForView)
+            DateTime dateInPickerSelectStartPeriod = (DateTime)DatePickerSelectStartPeriodOrDayExpenses.SelectedDate;
+            if (dateInPickerSelectStartPeriod > _dateEndForView)
             {
                 _dateEndForView = DateTime.MaxValue;
                 DatePickerSelectEndPeriodExpenses.SelectedDate = _dateEndForView;
             }
-            _dateStartForView = DateInPickerSelectStartPeriod;
+            _dateStartForView = dateInPickerSelectStartPeriod;
             DatePickerSelectEndPeriodExpenses.BlackoutDates.Clear();
             DatePickerSelectEndPeriodExpenses.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, _dateStartForView));
             UpdateExpensesViewAndClearAddEditArea();

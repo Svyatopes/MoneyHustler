@@ -38,8 +38,8 @@ namespace MoneyHustler.Tabs
             InitializeComponent();
             listOfIncomesView = new ObservableCollection<Income>(Storage.GetAllIncomes());
             listViewForIncomes.ItemsSource = listOfIncomesView;
-            _dateStartForView = DateTime.Now.AddYears(-20);
-            _dateEndForView = DateTime.Now;
+            _dateStartForView = DateTime.MinValue;
+            _dateEndForView = DateTime.MaxValue;
 
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
@@ -192,14 +192,14 @@ namespace MoneyHustler.Tabs
 
             var person = Storage.GetOrCreatePersonByName(personName);
             var incomeType = Storage.GetOrCreateIncomeTypeByName(incomeTypeName);
-
+            Card selectedVault = (Card)ComboBoxIncomeVault.SelectedItem;
             if ((string)ButtonAddEditIncome.Content == "Сохраните")
             {
                 ChangeEnabledDisplayAndButtonAddContentInModEdit("Добавить", true);
 
                 decimal different;
                 decimal currentBalanceOfVault = _income.Vault.GetBalance();
-                Card selectedVault = (Card)ComboBoxIncomeVault.SelectedItem;
+                
                 if (_income.Vault != selectedVault) //если кошель поменялся
                 {
                     different = currentBalanceOfVault - _income.Amount;
@@ -246,46 +246,56 @@ namespace MoneyHustler.Tabs
                    incomeType
                 );
 
-                ((Card)ComboBoxIncomeVault.SelectedItem).IncreaseBalance(newIncome);
+                selectedVault.IncreaseBalance(newIncome);
                 
                 //MessageBox.Show("поднял");
             }
             Storage.Save();
+            SetDefaultInAddEditArea();
             UpdateIncomesViewAndClearAddEditArea();
         }
 
-        private void UpdateIncomesViewAndClearAddEditArea()
+        private void SetDefaultInAddEditArea()
         {
             TextBoxIncomeAmount.Text = string.Empty;
             TextBoxIncomeComment.Text = string.Empty;
             DatePickerIncomeDate.SelectedDate = DateTime.Today;
+        }
+
+        private enum ComboBoxFilterItems
+        {
+            Vault,
+            IncomeType,
+            Persons
+        }
+
+        private void UpdateIncomesViewAndClearAddEditArea()
+        {
             listOfIncomesView.Clear();
             var allIncomes = Storage.GetAllIncomes().Where(item => item.Date >= _dateStartForView && item.Date <= _dateEndForView);
-            if (ComboBoxOfClassificationIncomes.SelectedIndex == 0)
+            if (ComboBoxFilterIncomes.SelectedIndex == (int)ComboBoxFilterItems.Vault)
             {
-                //TODO: void UpdateExpenseViewList( можно ли вставить )
 
                 foreach (Income item in allIncomes)
                 {
-                    if (item.Vault == ComboBoxClassIncomes.SelectedItem)
+                    if (item.Vault == ComboBoxItemOfFilter.SelectedItem)
                         listOfIncomesView.Add(item);
                 }
             }
-            else if (ComboBoxOfClassificationIncomes.SelectedIndex == 1)
+            else if (ComboBoxFilterIncomes.SelectedIndex == (int)ComboBoxFilterItems.IncomeType)
             {
 
                 foreach (Income item in allIncomes)
                 {
-                    if (item.Type == ComboBoxClassIncomes.SelectedItem)
+                    if (item.Type == ComboBoxItemOfFilter.SelectedItem)
                         listOfIncomesView.Add(item);
                 }
             }
-            else if (ComboBoxOfClassificationIncomes.SelectedIndex == 2)
+            else if (ComboBoxFilterIncomes.SelectedIndex == (int)ComboBoxFilterItems.Persons)
             {
-
                 foreach (Income item in allIncomes)
                 {
-                    if (item.Person == ComboBoxClassIncomes.SelectedItem)
+                    if (item.Person == ComboBoxItemOfFilter.SelectedItem)
                         listOfIncomesView.Add(item);
                 }
             }
@@ -331,45 +341,48 @@ namespace MoneyHustler.Tabs
                 ButtonViewClassificationIncomes.Content = "Показать доходы по";
                 SetIsEnabledForItemsOnStackPanel(false);
                 DatePickerIncomeDate.SelectedDate = DateTime.Now;
-                ComboBoxOfClassificationIncomes.SelectedItem = null;
-                ComboBoxClassIncomes.SelectedItem = null;
-                UpdateIncomesViewAndClearAddEditArea();
+                ComboBoxFilterIncomes.SelectedItem = null;
+                ComboBoxItemOfFilter.SelectedItem = null;
             }
+            UpdateIncomesViewAndClearAddEditArea();
         }
-
-        private void ComboBoxOfClassificationIncomes_Selected(object sender, RoutedEventArgs e)
+        private void SetIsEnabledForItemsOnStackPanel(bool isEnable)
+        {
+            ComboBoxFilterIncomes.IsEnabled = isEnable;
+            ComboBoxItemOfFilter.IsEnabled = isEnable;
+        }
+        private void ComboBoxFilterIncomes_Selected(object sender, RoutedEventArgs e)
         {
 
-            if (ComboBoxOfClassificationIncomes.SelectedIndex == 0)
+            switch (ComboBoxFilterIncomes.SelectedIndex)
             {
-                ComboBoxClassIncomes.ItemsSource = _storageInstance.Vaults;
-                ComboBoxClassIncomes.SelectedItem = _storageInstance.Vaults[0];
-
+                case (int)ComboBoxFilterItems.Vault:
+                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Vaults);
+                    break;
+                case (int)ComboBoxFilterItems.IncomeType:
+                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.IncomeTypes);
+                    break;
+                case (int)ComboBoxFilterItems.Persons:
+                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Persons);
+                    break;
+                default:
+                    return;
             }
 
-            else if (ComboBoxOfClassificationIncomes.SelectedIndex == 1)
-            {
-
-                ComboBoxClassIncomes.ItemsSource = _storageInstance.IncomeTypes;
-                ComboBoxClassIncomes.SelectedItem = _storageInstance.IncomeTypes[0];
-
-            }
-
-            else if (ComboBoxOfClassificationIncomes.SelectedIndex == 2)
-            {
-                ComboBoxClassIncomes.ItemsSource = _storageInstance.Persons;
-                ComboBoxClassIncomes.SelectedItem = _storageInstance.Persons[0];
-            }
-
-            else
-            {
-                return;
-            }
         }
 
         private void ComboBoxClassIncomes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateIncomesViewAndClearAddEditArea();
+        }
+
+        private enum ItemsOfComboBoxSelectPeriodLastIncomes
+        {
+            AllTime,
+            Today,
+            LastWeek,
+            LastMonth,
+            ChooseYourself
         }
 
         private void ComboBoxSelectPeriodIncomes_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -379,31 +392,26 @@ namespace MoneyHustler.Tabs
                 return;
             }
 
-            if (ComboBoxSelectPeriodIncomes.SelectedIndex == 0)
+            switch (ComboBoxSelectPeriodIncomes.SelectedIndex)
             {
-                ChangePeriodOnDisplay(4000);
-            }
-
-            else if (ComboBoxSelectPeriodIncomes.SelectedIndex == 1)
-            {
-                ChangePeriodOnDisplay(0);
-            }
-
-            else if (ComboBoxSelectPeriodIncomes.SelectedIndex == 2)
-            {
-                ChangePeriodOnDisplay(7);
-            }
-            else if (ComboBoxSelectPeriodIncomes.SelectedIndex == 3)
-            {
-                ChangePeriodOnDisplay(30);
-            }
-
-            else if (ComboBoxSelectPeriodIncomes.SelectedIndex == 4)
-            {
-                StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Visible;
-                StackPanelSelectDateIncomesOnDisplay.IsEnabled = true;
-                DatePickerSelectStartPeriodOrDayIncomes.IsEnabled = true;
-
+                case (int)ItemsOfComboBoxSelectPeriodLastIncomes.AllTime:
+                    ChangePeriodOnDisplay(DateTime.MinValue);
+                    break;
+                case (int)ItemsOfComboBoxSelectPeriodLastIncomes.Today:
+                    ChangePeriodOnDisplay(DateTime.Now.Date);
+                    break;
+                case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastWeek:
+                    ChangePeriodOnDisplay(DateTime.Now.AddDays(-7).Date);
+                    break;
+                case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastMonth:
+                    ChangePeriodOnDisplay(DateTime.Now.AddMonths(-1).Date);
+                    break;
+                case (int)ItemsOfComboBoxSelectPeriodLastIncomes.ChooseYourself:
+                    StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Visible;
+                    StackPanelSelectDateIncomesOnDisplay.IsEnabled = true;
+                    break;
+                default:
+                    return;
             }
         }
 
@@ -415,33 +423,26 @@ namespace MoneyHustler.Tabs
 
         private void DatePickerSelectStartPeriodOrDayIncomes_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((DateTime)DatePickerSelectStartPeriodOrDayIncomes.SelectedDate
-                > _dateEndForView)
+            DateTime dateInPickerSelectStartPeriod = (DateTime)DatePickerSelectStartPeriodOrDayIncomes.SelectedDate;
+            if (dateInPickerSelectStartPeriod > _dateEndForView)
             {
-                _dateEndForView = ((DateTime)DatePickerSelectStartPeriodOrDayIncomes.SelectedDate).AddDays(1);
+                _dateEndForView = DateTime.MaxValue;
                 DatePickerSelectEndPeriodIncomes.SelectedDate = _dateEndForView;
             }
 
-            _dateStartForView = (DateTime)(DatePickerSelectStartPeriodOrDayIncomes.SelectedDate);
-            DatePickerSelectEndPeriodIncomes.IsEnabled = true;
+            _dateStartForView = dateInPickerSelectStartPeriod;
             DatePickerSelectEndPeriodIncomes.BlackoutDates.Clear();
-            DatePickerSelectEndPeriodIncomes.BlackoutDates.Add(new CalendarDateRange(DateTime.Today.AddYears(-10), _dateStartForView));
+            DatePickerSelectEndPeriodIncomes.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, _dateStartForView));
             UpdateIncomesViewAndClearAddEditArea();
         }
 
-        private void ChangePeriodOnDisplay(int inputDays)
+        private void ChangePeriodOnDisplay(DateTime startDate)
         {
             StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Hidden;
             StackPanelSelectDateIncomesOnDisplay.IsEnabled = false;
-            _dateStartForView = DateTime.Today.AddDays(-inputDays);
-            _dateEndForView = DateTime.Now;
+            _dateStartForView = startDate;
+            _dateEndForView = (startDate == DateTime.MinValue) ? DateTime.MaxValue : DateTime.Now;
             UpdateIncomesViewAndClearAddEditArea();
-        }
-
-        private void SetIsEnabledForItemsOnStackPanel(bool isEnable)
-        {
-            ComboBoxOfClassificationIncomes.IsEnabled = isEnable;
-            ComboBoxClassIncomes.IsEnabled = isEnable;
         }
 
         private void TabItemIncomes_Selected(object sender, RoutedEventArgs e)

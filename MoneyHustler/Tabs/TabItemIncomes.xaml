@@ -75,7 +75,7 @@
                     Orientation="Horizontal" Height="22" VerticalAlignment="Top" Margin="0,18,0,0" HorizontalAlignment="Center" Width="414">
             <Button x:Name="ButtonViewClassificationIncomes" Height="21" Content="Показать доходы по" Margin="0,0,20,0"  
                     Width="137" VerticalAlignment="Center" ToolTip="НАЖМИ"  Click="ButtonViewClassificationIncomes_Click"/>
-            <ComboBox x:Name="ComboBoxOfClassificationIncomes" Margin="0,0,20,0" SelectionChanged="ComboBoxOfClassificationIncomes_Selected"
+            <ComboBox x:Name="ComboBoxFilterIncomes" Margin="0,0,20,0" SelectionChanged="ComboBoxFilterIncomes_Selected"
                       IsEnabled="False" Width="108" VerticalAlignment="Stretch" Height="20" ToolTip="Что интересует, а?">
                 <ComboBoxItem>
                     На счёт
@@ -87,7 +87,7 @@
                     Кто поднял
                 </ComboBoxItem>
             </ComboBox>
-            <ComboBox x:Name="ComboBoxClassIncomes" Margin="0,0,20,0" DisplayMemberPath="Name" IsEnabled="False" VerticalAlignment="Stretch" Height="20" Width="118"
+            <ComboBox x:Name="ComboBoxItemOfFilter" Margin="0,0,20,0" DisplayMemberPath="Name" IsEnabled="False" VerticalAlignment="Stretch" Height="20" Width="118"
                       SelectionChanged="ComboBoxClassIncomes_SelectionChanged" ToolTip="Что в списке этого типа"/>
         </StackPanel>
 
@@ -144,11 +144,11 @@
                 Выбрать самостоятельно
             </ComboBoxItem>
         </ComboBox>
-        <StackPanel x:Name="StackPanelSelectDateIncomesOnDisplay" Orientation="Horizontal" HorizontalAlignment="Left" Height="28" Margin="163,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="459" Visibility="Hidden">
+        <StackPanel IsEnabled="False" x:Name="StackPanelSelectDateIncomesOnDisplay" Orientation="Horizontal" HorizontalAlignment="Left" Height="28" Margin="163,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="459" Visibility="Hidden">
             <Label Foreground="#FFC3B9A0" Content="С " Background="#FF1F1F1F" Margin="7,0,0,0" VerticalAlignment="Center" Height="23" FontWeight="Bold"/>
-            <DatePicker x:Name="DatePickerSelectStartPeriodOrDayIncomes" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectStartPeriodOrDayIncomes_SelectedDateChanged"/>
+            <DatePicker x:Name="DatePickerSelectStartPeriodOrDayIncomes" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectStartPeriodOrDayIncomes_SelectedDateChanged"/>
             <Label Foreground="#FFC3B9A0" Content="До " Background="#FF1F1F1F" VerticalAlignment="Center" Height="25" FontWeight="Bold" FontFamily="Calibri Light"/>
-            <DatePicker x:Name="DatePickerSelectEndPeriodIncomes" IsEnabled="False" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectEndPeriodIncomes_SelectedDateChanged">
+            <DatePicker x:Name="DatePickerSelectEndPeriodIncomes" Visibility="Visible" Width="107" SelectedDateChanged="DatePickerSelectEndPeriodIncomes_SelectedDateChanged">
                 <DatePicker.BlackoutDates>
 
                 </DatePicker.BlackoutDates>
