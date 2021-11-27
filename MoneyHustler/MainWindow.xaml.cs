@@ -1,5 +1,4 @@
-﻿using MoneyHustler.AuxiliaryWindows;
-using MoneyHustler.Models;
+﻿using MoneyHustler.Models;
 using MoneyHustler.Tabs;
 using System;
 using System.Collections.Generic;
