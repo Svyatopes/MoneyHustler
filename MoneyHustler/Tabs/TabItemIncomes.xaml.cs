@@ -1,21 +1,12 @@
 ﻿using MoneyHustler.Models;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MoneyHustler.Tabs
 {
@@ -31,8 +22,8 @@ namespace MoneyHustler.Tabs
         private DateTime _dateEndForView;
 
         private Income _income;
-        private GridViewColumnHeader _lastHeaderClicked = null;
-        private ListSortDirection _lastDirection = ListSortDirection.Descending;
+        private GridViewColumnHeader _lastHeaderClicked;
+        private ListSortDirection _lastDirection;
         public TabItemIncomes()
         {
             InitializeComponent();
@@ -46,12 +37,14 @@ namespace MoneyHustler.Tabs
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
             SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
-
             DatePickerIncomeDate.SelectedDate = DateTime.Now;
+
+            _lastHeaderClicked = null;
+            _lastDirection = ListSortDirection.Descending;
+
             Sort("Date", _lastDirection);
         }
 
-        
 
         #region Sort
         private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
@@ -127,14 +120,10 @@ namespace MoneyHustler.Tabs
         #endregion
 
 
-        #region RegionButtons
+        #region Buttons
         private void ButtonEditIncome_Click(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
-            if (button == null)
-            {
-                return;
-            }
             var income = (Income)button.DataContext;
 
             ChangeStateListAreaAndSetButtonAddEditContent("Сохраните", false);
@@ -189,14 +178,11 @@ namespace MoneyHustler.Tabs
             }
             if ((string)ButtonAddEditIncome.Content == "Сохраните")
             {
-                ChangeStateListAreaAndSetButtonAddEditContent("Добавить", true);
-
-                decimal different;
                 decimal currentBalanceOfVault = _income.Vault.GetBalance();
 
                 if (_income.Vault != selectedVault) //если кошель поменялся
                 {
-                    different = currentBalanceOfVault - _income.Amount;
+                    var different = currentBalanceOfVault - _income.Amount;
                     //смотрим не станет ли баланс меньше нуля при удалении того расхода из прежнего кошелька
                     if (different < 0)
                     {
@@ -212,7 +198,7 @@ namespace MoneyHustler.Tabs
                 }
                 else //если кошель остался тем же
                 {
-                    different = currentBalanceOfVault - (_income.Amount - Convert.ToDecimal(TextBoxIncomeAmount.Text));
+                    var different = currentBalanceOfVault - (_income.Amount - Convert.ToDecimal(TextBoxIncomeAmount.Text));
                     //смотрим не стала ли разница между старой суммой и новой обращать баланс в ноль
                     //допустим доход был 500, стал 200, то отнимаем от баланса (500 - 200 =) 300
                     if (different < 0)
@@ -230,7 +216,7 @@ namespace MoneyHustler.Tabs
                 _income.Type = incomeType;
                 _income.Date = (DateTime)DatePickerIncomeDate.SelectedDate;
                 _income.Person = person;
-                _income.Comment = TextBoxIncomeComment.Text;
+                _income.Comment = TextBoxIncomeComment.Text.Trim();
 
                 if (_income.Vault != selectedVault)
                 {
@@ -240,6 +226,8 @@ namespace MoneyHustler.Tabs
                     listOfIncomesView.Add(_income);
                 }
                 UpdateIncomesViewAndClearAddEditArea(); //иначе не обновляется
+                ChangeStateListAreaAndSetButtonAddEditContent("Добавить", true);
+
             }
             else if ((string)ButtonAddEditIncome.Content == "Добавить")
             {
@@ -248,7 +236,7 @@ namespace MoneyHustler.Tabs
                    incomeAmount,
                    (DateTime)DatePickerIncomeDate.SelectedDate,
                    person,
-                   TextBoxIncomeComment.Text,
+                   TextBoxIncomeComment.Text.Trim(),
                    incomeType
                 );
 
@@ -284,7 +272,7 @@ namespace MoneyHustler.Tabs
         #endregion
 
 
-        #region RegionTextBox
+        #region TextBoxes
 
         private bool IncomeAmountTryParse(string incomeAmountInString, out decimal incomeAmount)
         {
@@ -293,7 +281,7 @@ namespace MoneyHustler.Tabs
 
         private void Amount_TextChanged(object sender, TextChangedEventArgs e)
         {
-            decimal incomeAmount = 0; 
+            decimal incomeAmount = 0;
             if (!IncomeAmountTryParse(TextBoxIncomeAmount.Text, out incomeAmount))
             {
                 ButtonAddEditIncome.IsEnabled = false;
@@ -307,7 +295,7 @@ namespace MoneyHustler.Tabs
         #endregion
 
 
-        #region RegionComboBox
+        #region ComboBoxes
 
         private void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source) //
         {
@@ -390,7 +378,7 @@ namespace MoneyHustler.Tabs
         #endregion
 
 
-        #region RegionDatePicker
+        #region DatePickers
         private void DatePickerSelectEndPeriodIncomes_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             _dateEndForView = (DateTime)DatePickerSelectEndPeriodIncomes.SelectedDate;
@@ -414,7 +402,7 @@ namespace MoneyHustler.Tabs
         #endregion
 
 
-        #region RegionStateAndView
+        #region StateAndViewItems
 
         private void ChangeStateListAreaAndSetButtonAddEditContent(string buttonAddEditContent, bool isEnabled)
         {
