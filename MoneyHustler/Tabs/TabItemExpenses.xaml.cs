@@ -61,7 +61,7 @@ namespace MoneyHustler.Tabs
 
             spZdarova.Play();
 
-            listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
+            listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpenses());
             listViewForExpenses.ItemsSource = listOfExpensesView;
             _dateStartForView = DateTime.Now.AddYears(-20);
             _dateEndForView = DateTime.Now.AddYears(20);
@@ -247,7 +247,7 @@ namespace MoneyHustler.Tabs
             if (0 == ComboBoxOfClassificationExpenses.SelectedIndex)
             {
                 //TODO: void UpdateExpenseViewList( можно ли вставить )
-                var allExpenses = Storage.GetAllExpences();
+                var allExpenses = Storage.GetAllExpenses();
                 foreach (Expense item in allExpenses)
                 {
                     if (item.Date >= _dateStartForView && item.Date <= _dateEndForView
@@ -259,7 +259,7 @@ namespace MoneyHustler.Tabs
             }
             else if (1 == ComboBoxOfClassificationExpenses.SelectedIndex)
             {
-                var allExpenses = Storage.GetAllExpences();
+                var allExpenses = Storage.GetAllExpenses();
                 foreach (Expense item in allExpenses)
                 {
                     if (item.Date >= _dateStartForView && item.Date <= _dateEndForView
@@ -272,7 +272,7 @@ namespace MoneyHustler.Tabs
             }
             else if (2 == ComboBoxOfClassificationExpenses.SelectedIndex)
             {
-                var allExpenses = Storage.GetAllExpences();
+                var allExpenses = Storage.GetAllExpenses();
                 foreach (Expense item in allExpenses)
                 {
                     if (item.Date >= _dateStartForView && item.Date <= _dateEndForView
@@ -285,7 +285,7 @@ namespace MoneyHustler.Tabs
             }
             else
             {
-                var allExpenses = Storage.GetAllExpences();
+                var allExpenses = Storage.GetAllExpenses();
                 foreach (Expense item in allExpenses)
                 {
                     if (item.Date >= _dateStartForView && item.Date <= _dateEndForView)

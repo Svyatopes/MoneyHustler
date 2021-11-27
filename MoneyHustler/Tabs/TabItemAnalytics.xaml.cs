@@ -40,7 +40,7 @@ namespace MoneyHustler.Tabs
         public void CreateDiogram(string period = "За все время")
         {
             listOfExpensTypeseView = new ObservableCollection<ExpenseType>(_storageInstance.ExpenseTypes);
-            listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
+            listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpenses());
             DateTime pickedPeriod = new DateTime();
 
             switch (period)

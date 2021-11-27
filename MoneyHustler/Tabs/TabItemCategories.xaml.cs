@@ -56,7 +56,7 @@ namespace MoneyHustler.Tabs
             var button = (Button)sender;
             var incomeType = (IncomeType)button.DataContext;
 
-            if (Storage.GetAllIncomes().Any(item => item.Type == incomeType))
+            if (Storage.IsIncomeTypeUsedInVaults(incomeType))
             {
                 MessageBox.Show("Эта категория используется вами!");
                 return;
@@ -160,7 +160,7 @@ namespace MoneyHustler.Tabs
             var button = (Button)sender;
             var expenseType = (ExpenseType)button.DataContext;
 
-            if (Storage.GetAllExpences().Any(item => item.Type == expenseType))
+            if (Storage.IsExpenseTypeUsedInVaults(expenseType))
             {
                 MessageBox.Show("Эта категория используется вами!");
                 return;

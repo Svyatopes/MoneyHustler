@@ -36,7 +36,7 @@ namespace MoneyHustler.AuxiliaryWindows
         {
             var button = (Button)sender;
             var person = (Person)button.DataContext;
-            if (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpences().Any(item => item.Person == person))
+            if (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpenses().Any(item => item.Person == person))
             {
                 MessageBox.Show("You can't remove this person, cause this name is already used in incomes/expenses");
                 return;
