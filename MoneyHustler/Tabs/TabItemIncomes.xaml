@@ -73,8 +73,8 @@
 
         <StackPanel x:Name="StackPanelFilterIncomes" Grid.Row="0" 
                     Orientation="Horizontal" Height="22" VerticalAlignment="Top" Margin="0,18,0,0" HorizontalAlignment="Center" Width="414">
-            <Button x:Name="ButtonViewClassificationIncomes" Height="21" Content="Показать доходы по" Margin="0,0,20,0"  
-                    Width="137" VerticalAlignment="Center" ToolTip="НАЖМИ"  Click="ButtonViewClassificationIncomes_Click"/>
+            <Button x:Name="ButtonEnableDisableFilters" Height="21" Content="Показать доходы по" Margin="0,0,20,0"  
+                    Width="137" VerticalAlignment="Center" ToolTip="НАЖМИ"  Click="ButtonEnableDisableFilters_Click"/>
             <ComboBox x:Name="ComboBoxFilterIncomes" Margin="0,0,20,0" SelectionChanged="ComboBoxFilterIncomes_Selected"
                       IsEnabled="False" Width="108" VerticalAlignment="Stretch" Height="20" ToolTip="Что интересует, а?">
                 <ComboBoxItem>
@@ -88,7 +88,7 @@
                 </ComboBoxItem>
             </ComboBox>
             <ComboBox x:Name="ComboBoxItemOfFilter" Margin="0,0,20,0" DisplayMemberPath="Name" IsEnabled="False" VerticalAlignment="Stretch" Height="20" Width="118"
-                      SelectionChanged="ComboBoxClassIncomes_SelectionChanged" ToolTip="Что в списке этого типа"/>
+                      SelectionChanged="ComboBoxItemFilter_SelectionChanged" ToolTip="Что в списке этого типа"/>
         </StackPanel>
 
 
