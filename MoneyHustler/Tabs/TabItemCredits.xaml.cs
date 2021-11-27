@@ -315,9 +315,13 @@ namespace MoneyHustler.Tabs
 
                 LabelOncePay.Visibility = Visibility.Visible;
                 TextBoxOncePay.Visibility = Visibility.Visible;
+                //LabelPayDate.Visibility = Visibility.Visible;
+                //DatePickerPayDay.Visibility = Visibility.Visible; 
 
                 ButtonOncePayBack.Visibility = Visibility.Visible;
                 ButtonOncePaySave.Visibility = Visibility.Visible;
+
+
 
                 ButtonAdd.IsEnabled = false;
             }
@@ -328,6 +332,8 @@ namespace MoneyHustler.Tabs
 
                 LabelOncePay.Visibility = Visibility.Hidden;
                 TextBoxOncePay.Visibility = Visibility.Hidden;
+                //LabelPayDate.Visibility = Visibility.Hidden;
+                //DatePickerPayDay.Visibility = Visibility.Hidden;
 
                 ButtonOncePayBack.Visibility = Visibility.Hidden;
                 ButtonOncePaySave.Visibility = Visibility.Hidden;
@@ -386,8 +392,22 @@ namespace MoneyHustler.Tabs
                 return;
             }
 
+            //if (DatePickerPayDay.SelectedDate.Value < _credit.OpenDate)
+            //{
+            //    MessageBox.Show("The payment date cannot be earlier than the opening date");
+            //    return;
+            //}
+
+            //if (DatePickerPayDay.SelectedDate.Value > _credit.CloseDate)
+            //{
+            //    MessageBox.Show("The payment date cannot be later than the opening date");
+            //    return;
+            //}
+
+            //DateTime payDate = DatePickerPayDay.SelectedDate.Value;
 
             _credit.PayOneTimePayment(enteredValue);
+
             ChangeVisibilityOncePaymentClick(false);
             UpdateCreditsView();
 

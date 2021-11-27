@@ -9,7 +9,6 @@ namespace MoneyHustler.Models
     public class Credit
     {
         private Storage _storageInstance = Storage.GetInstance();
-        private decimal _repaid;
         public decimal? Amount { get; set; }
 
         public decimal InitialAmount { get; set; }
@@ -32,8 +31,6 @@ namespace MoneyHustler.Models
         }
         public Credit(string name, double percent, decimal? amount, decimal initialAmount, Person person, Card card, DateTime dayClose, DateTime dayOpen)
         {
-           
-            _repaid = 0;
             Name = name;
             Percent = percent;
             InitialAmount = initialAmount;
@@ -54,7 +51,7 @@ namespace MoneyHustler.Models
 
         private void DecreaseValue(Expense expense)
         {
-            if (Amount < expense.Amount)
+            if ((Amount+1) < expense.Amount)
             {
                 throw new ArgumentException("You can't decrease your credit with amount more than current balance.");
             }
@@ -98,13 +95,16 @@ namespace MoneyHustler.Models
                 expenseType = new ExpenseType() { Name = "Кредит" };
             }
             Expense expense = new Expense(payValue, DateTime.Today, Person, "Единовременный платеж по кредиту", expenseType);
+
             BindedCard.DecreaseBalance(expense);
-            _repaid += payValue;
-            InitialAmount -= _repaid;
+            decimal tmp = InitialAmount;
+
+            InitialAmount = (decimal)Amount;
+            InitialAmount -= payValue;
             
             SetMonthlyPayment();
             Amount = MonthlyPayment * GetMounthPeriod();
-            InitialAmount += _repaid;
+            InitialAmount = tmp;
         }
 
 
