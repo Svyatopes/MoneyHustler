@@ -92,5 +92,7 @@ namespace MoneyHustler.Models
 
             _instance = JsonConvert.DeserializeObject<Storage>(jsonString, _jsonSettings);
         }
+
+        
     }
 }

@@ -14,6 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MoneyHustler.Helpers;
+
+
 
 namespace MoneyHustler.Tabs
 {
@@ -22,16 +25,19 @@ namespace MoneyHustler.Tabs
     /// </summary>
     public partial class TabItemMyFamily : TabItem
     {
+        private Storage _storageInstance = Storage.GetInstance();
+
+        private ObservableCollection<Person> _persons;
+
+        private Person _personToRename;
+
         public TabItemMyFamily()
         {
             InitializeComponent();
             _persons = new ObservableCollection<Person>(_storageInstance.Persons);
             ListViewPersonsDisplay.ItemsSource = _persons;
         }
-        private Storage _storageInstance = Storage.GetInstance();
-
-        private ObservableCollection<Person> _persons;
-        private Person _personToRename;
+          
         
         private void ButtonDeleteClick(object sender, RoutedEventArgs e)
         {
@@ -47,7 +53,7 @@ namespace MoneyHustler.Tabs
             Storage.Save();
         }
 
-        private void SetButtonEnabledAndVisibility(Button button, bool enabled)
+        private void SetButtonEnabledAndVisibility(Button button, bool enabled) //move this method to helpers
         {
             if (enabled)
             {
@@ -88,7 +94,7 @@ namespace MoneyHustler.Tabs
             }
 
 
-            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
+            if (CheckIfPersonExist(enteredPerson))
             {
                 MessageBox.Show("Такое имя уже существует");
                 return;
@@ -129,7 +135,7 @@ namespace MoneyHustler.Tabs
             }
 
 
-            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
+            if (CheckIfPersonExist(enteredPerson))
             {
                 MessageBox.Show("Такое имя уже существует");
                 return;
@@ -141,7 +147,7 @@ namespace MoneyHustler.Tabs
 
         }
 
-        private void UpdatePersonsView()
+        private void UpdatePersonsView() //я так поняла, что в итоге этот метод оставляем из-за табов
         {
             TextBoxEnterMemberName.Text = String.Empty;
             _persons.Clear();
@@ -152,6 +158,20 @@ namespace MoneyHustler.Tabs
             }
         }
 
+        public  bool CheckIfPersonExist(string enteredPerson) // я не помню, где должен быть этот метод
+        {
+            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
+            {
+                return true;
+            }
+            return false;
+            
+        }
         
+        
+
+        
+
+
     }
 }
