@@ -53,27 +53,14 @@ namespace MoneyHustler.Tabs
             Storage.Save();
         }
 
-        private void SetButtonEnabledAndVisibility(Button button, bool enabled) //move this method to helpers
-        {
-            if (enabled)
-            {
-                button.Visibility = Visibility.Visible;
-                button.IsEnabled = true;
-            }
-            else
-            {
-                button.Visibility = Visibility.Hidden;
-                button.IsEnabled = false;
-            }
-        }
         private void ButtonRenameExistingMemberClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var person = (Person)button.DataContext;
             ListViewPersonsDisplay.IsEnabled = false;
             TextBoxEnterMemberName.Text = person.Name;
-            SetButtonEnabledAndVisibility(ButtonAddNewMember, false);
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddNewMember, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, true);
             LabelAddFamilyMembers.Visibility = Visibility.Hidden;
             LabelEditFamilyMembers.Visibility = Visibility.Visible;
             LabelEditFamilyMembers.Content = "Переименовать участника: \n" + person.Name;
@@ -112,8 +99,8 @@ namespace MoneyHustler.Tabs
                 _personToRename.Name = enteredPerson;
             }
             TextBoxEnterMemberName.Text = String.Empty;
-            SetButtonEnabledAndVisibility(ButtonAddNewMember, true);
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddNewMember, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, false);
             UpdatePersonsView();
             ListViewPersonsDisplay.IsEnabled = true;
             LabelAddFamilyMembers.Visibility = Visibility.Visible;

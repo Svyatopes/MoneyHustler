@@ -10,7 +10,7 @@ namespace MoneyHustler.Helpers
 {
     public class UIHelpers
     {
-        public void SetButtonEnabledAndVisibility(Button button, bool enabled) 
+        public static void SetButtonEnabledAndVisibility(Button button, bool enabled) 
         {
             if (enabled)
             {
