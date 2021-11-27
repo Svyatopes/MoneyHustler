@@ -42,25 +42,18 @@ namespace MoneyHustler.Tabs
             UpdateCollectionsAndView();
         }
 
-        #region Update
-
         private void UpdateCollectionsAndView()
         {
             UpdateIncomesCollection();
             UpdateExpensesCollection();
             SetIncomeLabelsForAdding();
             SetExpenseLabelsForAdding();
-            CleanAllTextboxes();
 
-        }
-
-        private void CleanAllTextboxes()
-        {
             TextBoxEnterIncomeCategory.Text = string.Empty;
             TextBoxEnterExpenseCategory.Text = string.Empty;
+
         }
 
-        #endregion
         #region Incomes
 
         private void UpdateIncomesCollection()
