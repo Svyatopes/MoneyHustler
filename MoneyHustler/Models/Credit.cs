@@ -51,7 +51,7 @@ namespace MoneyHustler.Models
 
         private void DecreaseValue(Expense expense)
         {
-            if ((Amount+1) < expense.Amount)
+            if ((Amount + (decimal)0.01) < expense.Amount)
             {
                 throw new ArgumentException("You can't decrease your credit with amount more than current balance.");
             }
