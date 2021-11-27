@@ -8,7 +8,7 @@ namespace MoneyHustler.Models
 {
     public class Credit
     {
-        private Storage _storageInstance = Storage.GetInstance();
+       
         public decimal? Amount { get; set; }
 
         public decimal InitialAmount { get; set; }
@@ -73,27 +73,16 @@ namespace MoneyHustler.Models
             return percentPeriod;
         }
 
-        public void PayMonthlyPayment()
+        public void PayMonthlyPayment(ExpenseType expenseType)
         {
-            var expenseType = _storageInstance.ExpenseTypes.FirstOrDefault(item => item.Name == "Кредит");
-            if (expenseType == null)
-            {
-                expenseType = new ExpenseType() { Name = "Кредит" };
-                _storageInstance.ExpenseTypes.Add(expenseType);
-            }
             Expense expense = new Expense(MonthlyPayment, DateTime.Today, Person, "Ежемесячная оплата по кредиту", expenseType);
             BindedCard.DecreaseBalance(expense);
             DecreaseValue(expense);
 
         }
 
-        public void PayOneTimePayment(decimal payValue)
+        public void PayOneTimePayment(decimal payValue, ExpenseType expenseType)
         {
-            var expenseType = _storageInstance.ExpenseTypes.FirstOrDefault(item => item.Name == "Кредит");
-            if (expenseType == null)
-            {
-                expenseType = new ExpenseType() { Name = "Кредит" };
-            }
             Expense expense = new Expense(payValue, DateTime.Today, Person, "Единовременный платеж по кредиту", expenseType);
 
             BindedCard.DecreaseBalance(expense);
@@ -101,7 +90,7 @@ namespace MoneyHustler.Models
 
             InitialAmount = (decimal)Amount;
             InitialAmount -= payValue;
-            
+
             SetMonthlyPayment();
             Amount = MonthlyPayment * GetMounthPeriod();
             InitialAmount = tmp;

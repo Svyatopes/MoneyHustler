@@ -159,8 +159,9 @@ namespace MoneyHustler.AuxiliaryWindows
                 return;
             }
 
-            credit.PayMonthlyPayment();
-            UpdateCreditsView();
+
+            //credit.PayMonthlyPayment();
+            //UpdateCreditsView();
            
 
             Storage.Save();
