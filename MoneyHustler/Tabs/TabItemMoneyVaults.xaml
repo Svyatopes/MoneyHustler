@@ -25,6 +25,8 @@
                         <GridViewColumn Header="Наименование" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
                         <GridViewColumn Header="Баланс" Width="Auto" DisplayMemberBinding="{Binding Balance}"/>
                         <GridViewColumn Header="Тип" Width="Auto" DisplayMemberBinding="{Binding TypeName}"/>
+                        <GridViewColumn Header="Кэшбек" Width="Auto" DisplayMemberBinding="{Binding CashBack}"/>
+                        <GridViewColumn Header="Процент на остаток" Width="Auto" DisplayMemberBinding="{Binding Percent}"/>
                         <GridViewColumn Header="Изменить" Width="Auto">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>

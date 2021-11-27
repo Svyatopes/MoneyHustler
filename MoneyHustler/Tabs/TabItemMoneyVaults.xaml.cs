@@ -28,6 +28,8 @@ namespace MoneyHustler.Tabs
             public string Name { get; set; }
             public decimal Balance { get; set; }
             public string TypeName { get; set; }
+            public decimal? CashBack { get; set; }
+            public decimal? Percent { get; set; }
             public MoneyVault Vault { get; set; }
 
             public MoneyVaultForView(MoneyVault vault)
@@ -35,6 +37,15 @@ namespace MoneyHustler.Tabs
                 Vault = vault;
                 Name = vault.Name;
                 Balance = vault.GetBalance();
+                switch(vault)
+                {
+                    case Card:
+                        CashBack = ((Card)vault).CashBack;
+                        break;
+                    case Deposit:
+                        Percent = ((Deposit)vault).Percent;
+                        break;
+                }
             }
         }
 
