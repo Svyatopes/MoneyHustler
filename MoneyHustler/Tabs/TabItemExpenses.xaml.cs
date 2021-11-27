@@ -94,16 +94,6 @@ namespace MoneyHustler.Tabs
             Storage.Save();
         }
 
-        private void ChangeAddEditViewState(Expense expense)
-        {
-            ComboBoxExpensePerson.SelectedItem = expense.Person;
-            ComboBoxExpenseVault.SelectedItem = expense.Vault;
-            ComboBoxExpenseType.SelectedItem = expense.Type;
-            DatePickerChooseDateOfExpense.SelectedDate = expense.Date;
-            TextBoxExpenseComment.Text = expense.Comment;
-            TextBoxExpenseAmount.Text = expense.Amount.ToString();
-        }
-
         private bool CheckingPossipilityOfEditingExpense(MoneyVault vaultForEditExpense, DateTime chooseDateOfExpense)
         {
             decimal balanceOnSelectDay = vaultForEditExpense.GetBalanceOnDate(chooseDateOfExpense);
@@ -263,7 +253,6 @@ namespace MoneyHustler.Tabs
         }
 
         #endregion
-        
 
         #region RegionTextBox
         private bool ExpenseAmountTryParse(string expenseAmountInString, out decimal expenseAmount)
@@ -282,6 +271,17 @@ namespace MoneyHustler.Tabs
         #endregion
 
         #region RegionStatesIemsAndView
+
+        private void ChangeAddEditViewState(Expense expense)
+        {
+            ComboBoxExpensePerson.SelectedItem = expense.Person;
+            ComboBoxExpenseVault.SelectedItem = expense.Vault;
+            ComboBoxExpenseType.SelectedItem = expense.Type;
+            DatePickerChooseDateOfExpense.SelectedDate = expense.Date;
+            TextBoxExpenseComment.Text = expense.Comment;
+            TextBoxExpenseAmount.Text = expense.Amount.ToString();
+        }
+
         private void ChangeStateListAreaAndSetButtonAddEditContent(string buttonAddEditContent, bool isEnabled)
         {
             ButtonAddEditExpense.Content = buttonAddEditContent;
@@ -361,8 +361,6 @@ namespace MoneyHustler.Tabs
 
         #endregion
 
-
-
         #region RegionForSort
         private void GridViewColumnHeaderExpenses_ClickedOnHeader(object sender, RoutedEventArgs e)
         {
@@ -434,7 +432,6 @@ namespace MoneyHustler.Tabs
             dataView.Refresh();
         }
         #endregion
-
 
         #region RegionComboBoxes
         private void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source) //
