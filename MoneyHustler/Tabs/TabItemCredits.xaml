@@ -2,6 +2,8 @@
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             Header="Кредиты" Background="#FFC3B9A0" BorderBrush="{x:Null}"
+            Selector.Selected="TabItemCreditSelected"
+         
             >
     <Grid>
         <Grid.RowDefinitions>

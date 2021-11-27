@@ -413,5 +413,10 @@ namespace MoneyHustler.Tabs
 
             Storage.Save();
         }
+
+        private void TabItemCreditSelected(object sender, RoutedEventArgs e)
+        {
+            UpdateCreditsView();
+        }
     }
 }
