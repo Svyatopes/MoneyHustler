@@ -60,14 +60,12 @@ namespace MoneyHustler.Models
 
         public static bool IsIncomeTypeUsedInVaults(IncomeType incomeType)
         {
-            if (GetAllIncomes().Any(item => item.Type == incomeType)) return true;
-            else return false;
+            return GetAllIncomes().Any(item => item.Type == incomeType);
         }
 
         public static bool IsExpenseTypeUsedInVaults(ExpenseType expenseType)
         {
-            if (GetAllExpenses().Any(item => item.Type == expenseType)) return true;
-            else return false;
+            return GetAllExpenses().Any(item => item.Type == expenseType);
         }
 
         public static void Save()
