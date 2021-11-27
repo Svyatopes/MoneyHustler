@@ -48,10 +48,6 @@ namespace MoneyHustler.Tabs
             UpdateExpensesCollection();
             SetIncomeLabelsForAdding();
             SetExpenseLabelsForAdding();
-
-            TextBoxEnterIncomeCategory.Text = string.Empty;
-            TextBoxEnterExpenseCategory.Text = string.Empty;
-
         }
 
         #region Incomes
