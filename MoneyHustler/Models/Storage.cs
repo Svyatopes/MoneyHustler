@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using Newtonsoft.Json;
@@ -44,17 +45,27 @@ namespace MoneyHustler.Models
             return allIncomes;
         }
 
-        public static List<Expense> GetAllExpences()
+        public static List<Expense> GetAllExpenses()
         {
-            List<Expense> allExpences = new List<Expense>();
+            List<Expense> allExpenses = new List<Expense>();
 
             Storage instance = GetInstance();
             foreach (MoneyVault moneyVault in instance.Vaults)
             {
-                allExpences.AddRange(moneyVault.Expenses);
+                allExpenses.AddRange(moneyVault.Expenses);
             }
 
-            return allExpences;
+            return allExpenses;
+        }
+
+        public static bool IsIncomeTypeUsedInVaults(IncomeType incomeType)
+        {
+            return GetAllIncomes().Any(item => item.Type == incomeType);
+        }
+
+        public static bool IsExpenseTypeUsedInVaults(ExpenseType expenseType)
+        {
+            return GetAllExpenses().Any(item => item.Type == expenseType);
         }
 
         public static void Save()

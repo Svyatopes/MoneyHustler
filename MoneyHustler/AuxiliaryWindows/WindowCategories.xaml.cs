@@ -66,7 +66,7 @@ namespace MoneyHustler.AuxiliaryWindows
             var button = (Button)sender;
             var expenseType = (ExpenseType)button.DataContext;
 
-            if (Storage.GetAllExpences().Any(item => item.Type == expenseType))
+            if (Storage.GetAllExpenses().Any(item => item.Type == expenseType))
             {
                 MessageBox.Show("Эта категория используется вами!");
                 return;

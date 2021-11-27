@@ -1,19 +1,9 @@
-﻿using MoneyHustler.Models;
-using System;
-using System.Collections.Generic;
+﻿using MoneyHustler.Helpers;
+using MoneyHustler.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MoneyHustler.Tabs
 {
@@ -22,7 +12,7 @@ namespace MoneyHustler.Tabs
     /// </summary>
     public partial class TabItemCategories : TabItem
     {
-        private Storage _storageInstance = Storage.GetInstance();
+        private Storage _storageInstance;
 
         private ObservableCollection<IncomeType> _incomeTypes;
 
@@ -35,6 +25,8 @@ namespace MoneyHustler.Tabs
         {
             InitializeComponent();
 
+            _storageInstance = Storage.GetInstance();
+
             _incomeTypes = new ObservableCollection<IncomeType>(_storageInstance.IncomeTypes);
             _expenseTypes = new ObservableCollection<ExpenseType>(_storageInstance.ExpenseTypes);
 
@@ -45,28 +37,36 @@ namespace MoneyHustler.Tabs
             SetExpenseLabelsForAdding();
         }
 
-        private void SetButtonEnabledAndVisibility(Button button, bool enabled)
+        private void TabItemCategories_Selected(object sender, RoutedEventArgs e)
         {
-            if (enabled)
-            {
-                button.Visibility = Visibility.Visible;
-                button.IsEnabled = true;
-            }
-            else
-            {
-                button.Visibility = Visibility.Hidden;
-                button.IsEnabled = false;
-            }
+            UpdateCollectionsAndView();
+        }
+
+        private void UpdateCollectionsAndView()
+        {
+            UpdateIncomesCollection();
+            UpdateExpensesCollection();
+            SetIncomeLabelsForAdding();
+            SetExpenseLabelsForAdding();
         }
 
         #region Incomes
+
+        private void UpdateIncomesCollection()
+        {
+            _incomeTypes.Clear();
+            foreach (IncomeType type in _storageInstance.IncomeTypes)
+            {
+                _incomeTypes.Add(type);
+            }
+        }
 
         private void ButtonRemoveIncomeCategoryClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var incomeType = (IncomeType)button.DataContext;
 
-            if (Storage.GetAllIncomes().Any(item => item.Type == incomeType))
+            if (Storage.IsIncomeTypeUsedInVaults(incomeType))
             {
                 MessageBox.Show("Эта категория используется вами!");
                 return;
@@ -76,6 +76,7 @@ namespace MoneyHustler.Tabs
             _incomeTypes.Remove(incomeType);
 
             Storage.Save();
+            MessageBox.Show("Успешно удалено!");
         }
 
 
@@ -84,8 +85,8 @@ namespace MoneyHustler.Tabs
             LabelAddIncomeCategories.Content = $"Переименовать: {name}";
             LabelEnterIncomeCategories.Content = "Введите новое название: ";
 
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, true);
-            SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, false);
 
             TextBoxEnterIncomeCategory.Text = string.Empty;
         }
@@ -95,11 +96,11 @@ namespace MoneyHustler.Tabs
             LabelAddIncomeCategories.Content = "Добавить категорию: ";
             LabelEnterIncomeCategories.Content = "Введите название категории: ";
 
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, false);
-            SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyIncomeCategory, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, true);
 
             TextBoxEnterIncomeCategory.Text = string.Empty;
-        } 
+        }
 
         private void ButtonRenameIncomeCategoryClick(object sender, RoutedEventArgs e)
         {
@@ -127,17 +128,11 @@ namespace MoneyHustler.Tabs
 
             _incomeTypeToRename.Name = enteredIncomeTypeName;
 
-            _incomeTypes.Clear();
-            foreach (IncomeType type in _storageInstance.IncomeTypes)
-            {
-                _incomeTypes.Add(type);
-            }
-
-            MessageBox.Show("Успешно переименовано!");
+            UpdateIncomesCollection();
             SetIncomeLabelsForAdding();
-
             Storage.Save();
 
+            MessageBox.Show("Успешно переименовано!");
         }
 
 
@@ -160,17 +155,28 @@ namespace MoneyHustler.Tabs
             TextBoxEnterIncomeCategory.Text = string.Empty;
 
             Storage.Save();
+            MessageBox.Show("Успешно добавлено!");
         }
 
         #endregion
         #region Expenses
+
+
+        private void UpdateExpensesCollection()
+        {
+            _expenseTypes.Clear();
+            foreach (ExpenseType type in _storageInstance.ExpenseTypes)
+            {
+                _expenseTypes.Add(type);
+            }
+        }
 
         private void ButtonRemoveExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var expenseType = (ExpenseType)button.DataContext;
 
-            if (Storage.GetAllExpences().Any(item => item.Type == expenseType))
+            if (Storage.IsExpenseTypeUsedInVaults(expenseType))
             {
                 MessageBox.Show("Эта категория используется вами!");
                 return;
@@ -180,6 +186,7 @@ namespace MoneyHustler.Tabs
             _expenseTypes.Remove(expenseType);
 
             Storage.Save();
+            MessageBox.Show("Успешно удалено!");
         }
 
         private void SetExpenseLabelsForEditing(string name)
@@ -187,8 +194,8 @@ namespace MoneyHustler.Tabs
             LabelAddExpenseCategories.Content = $"Переименовать: {name}";
             LabelEnterExpenseCategories.Content = "Введите новое название: ";
 
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, true);
-            SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, false);
 
             TextBoxEnterExpenseCategory.Text = string.Empty;
         }
@@ -198,8 +205,8 @@ namespace MoneyHustler.Tabs
             LabelAddExpenseCategories.Content = "Добавить категорию: ";
             LabelEnterExpenseCategories.Content = "Введите название категории: ";
 
-            SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, false);
-            SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExpenseCategory, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddExpenseCategory, true);
 
             TextBoxEnterExpenseCategory.Text = string.Empty;
         }
@@ -215,7 +222,7 @@ namespace MoneyHustler.Tabs
 
         private void ButtonRenameFinallyExpenseCategoryClick(object sender, RoutedEventArgs e)
         {
-            if (TextBoxEnterExpenseCategory.Text.Length == 0)
+            if (string.IsNullOrWhiteSpace(TextBoxEnterExpenseCategory.Text))
             {
                 return;
             }
@@ -230,16 +237,11 @@ namespace MoneyHustler.Tabs
 
             _expenseTypeToRename.Name = enteredExpenseTypeName;
 
-            _expenseTypes.Clear();
-            foreach (ExpenseType type in _storageInstance.ExpenseTypes)
-            {
-                _expenseTypes.Add(type);
-            }
+            UpdateExpensesCollection();
+            SetExpenseLabelsForAdding();
+            Storage.Save();
 
             MessageBox.Show("Успешно переименовано!");
-            SetExpenseLabelsForAdding();
-
-            Storage.Save();
         }
 
         private void ButtonAddExpenseCategoryClick(object sender, RoutedEventArgs e)
@@ -261,6 +263,7 @@ namespace MoneyHustler.Tabs
             TextBoxEnterExpenseCategory.Text = string.Empty;
 
             Storage.Save();
+            MessageBox.Show("Успешно добавлено!");
         }
         #endregion
     }
