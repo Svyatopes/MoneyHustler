@@ -92,10 +92,10 @@ namespace MoneyHustler.Tabs
 
             TextBoxName.Text = _credit.Name;
 
-            TextBoxValueWithoutPercent.Text = Convert.ToString(_credit.ValuewithoutPercent);
+            TextBoxValueWithoutPercent.Text = Convert.ToString(_credit.InitialAmount);
 
-            DatePickerDayOpen.SelectedDate = _credit.DayOpen;
-            DatePickerDayClose.SelectedDate = _credit.DayClose;
+            DatePickerDayOpen.SelectedDate = _credit.OpenDate;
+            DatePickerDayClose.SelectedDate = _credit.CloseDate;
 
             TextBoxPercent.Text = Convert.ToString(_credit.Percent);
 
@@ -138,7 +138,7 @@ namespace MoneyHustler.Tabs
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
 
-            if (credit.Value == 0)
+            if (credit.Amount == 0)
             {
                 MessageBox.Show("Кредит уже оплачен, молодец!*Звуки салюта*");
                 return;
@@ -255,14 +255,140 @@ namespace MoneyHustler.Tabs
             {
                 ColumnLabels.Width = new GridLength(20, GridUnitType.Star);
                 ColumnTextBox.Width = new GridLength(20, GridUnitType.Star);
+                LabelName.Visibility = Visibility.Visible;
+                LabelValueWithoutPercent.Visibility = Visibility.Visible;
+                LabelOpenDate.Visibility = Visibility.Visible;
+                LabelCloseDate.Visibility = Visibility.Visible;
+                LabelPercent.Visibility = Visibility.Visible;
+                LabelCards.Visibility = Visibility.Visible;
+                LabelPerson.Visibility = Visibility.Visible;
+
+                TextBoxName.Visibility = Visibility.Visible;
+                TextBoxValueWithoutPercent.Visibility = Visibility.Visible;
+                DatePickerDayOpen.Visibility = Visibility.Visible;
+                DatePickerDayClose.Visibility = Visibility.Visible;
+                TextBoxPercent.Visibility = Visibility.Visible;
+                ComboBoxCards.Visibility = Visibility.Visible;
+                ComboBoxPerson.Visibility = Visibility.Visible;
+
+                ButtonSave.Visibility = Visibility.Visible;
+                ButtonBack.Visibility = Visibility.Visible;
+
+
                 ButtonAdd.IsEnabled = false;
             }
             else
             {
                 ColumnLabels.Width = new GridLength(0, GridUnitType.Star);
                 ColumnTextBox.Width = new GridLength(0, GridUnitType.Star);
+
+                LabelName.Visibility = Visibility.Hidden;
+                LabelValueWithoutPercent.Visibility = Visibility.Hidden;
+                LabelOpenDate.Visibility = Visibility.Hidden;
+                LabelCloseDate.Visibility = Visibility.Hidden;
+                LabelPercent.Visibility = Visibility.Hidden;
+                LabelCards.Visibility = Visibility.Hidden;
+                LabelPerson.Visibility = Visibility.Hidden;
+
+                TextBoxName.Visibility = Visibility.Hidden;
+                TextBoxValueWithoutPercent.Visibility = Visibility.Hidden;
+                DatePickerDayOpen.Visibility = Visibility.Hidden;
+                DatePickerDayClose.Visibility = Visibility.Hidden;
+                TextBoxPercent.Visibility = Visibility.Hidden;
+                ComboBoxCards.Visibility = Visibility.Hidden;
+                ComboBoxPerson.Visibility = Visibility.Hidden;
+
+                ButtonSave.Visibility = Visibility.Hidden;
+                ButtonBack.Visibility = Visibility.Hidden;
+
                 ButtonAdd.IsEnabled = true;
             }
+        }
+
+
+        private void ChangeVisibilityOncePaymentClick(bool visible)
+        {
+            if (visible)
+            {
+                ColumnLabels.Width = new GridLength(20, GridUnitType.Star);
+                ColumnTextBox.Width = new GridLength(20, GridUnitType.Star);
+
+                LabelOncePay.Visibility = Visibility.Visible;
+                TextBoxOncePay.Visibility = Visibility.Visible;
+
+                ButtonOncePayBack.Visibility = Visibility.Visible;
+                ButtonOncePaySave.Visibility = Visibility.Visible;
+
+                ButtonAdd.IsEnabled = false;
+            }
+            else
+            {
+                ColumnLabels.Width = new GridLength(0, GridUnitType.Star);
+                ColumnTextBox.Width = new GridLength(0, GridUnitType.Star);
+
+                LabelOncePay.Visibility = Visibility.Hidden;
+                TextBoxOncePay.Visibility = Visibility.Hidden;
+
+                ButtonOncePayBack.Visibility = Visibility.Hidden;
+                ButtonOncePaySave.Visibility = Visibility.Hidden;
+
+                ButtonAdd.IsEnabled = true;
+            }
+        }
+
+        private void ButtonPayOnceItemClick(object sender, RoutedEventArgs e)
+        {
+            ChangeVisibilityOncePaymentClick(true);
+        }
+
+        private void ButtonOncePayBackClick(object sender, RoutedEventArgs e)
+        {
+            ChangeVisibilityOncePaymentClick(false);
+        }
+
+        private void ButtonOncePaySaveClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var credit = (Credit)button.DataContext;
+            decimal enteredValue = 0;
+
+            if (credit.Amount == 0)
+            {
+                MessageBox.Show("Кредит уже оплачен, молодец!*Звуки салюта*");
+                return;
+            }
+
+            if (TextBoxOncePay.Text == String.Empty)
+            {
+                MessageBox.Show("You need to enter the value!");
+                return;
+            }
+
+
+            if (!decimal.TryParse(TextBoxOncePay.Text, out enteredValue))
+            {
+                MessageBox.Show("You entered some invalid string to amount field!");
+                return;
+            }
+
+            if (enteredValue < 0)
+            {
+                MessageBox.Show("Amount can't be less than zero.");
+                return;
+            }
+
+            if (enteredValue > credit.Amount)
+            {
+                MessageBox.Show("The payment amount exceeds the loan amount");
+                return;
+            }
+
+
+            credit.PayOneTimePayment(enteredValue);
+            ChangeVisibilityOncePaymentClick(false);
+            UpdateCreditsView();
+
+            Storage.Save();
         }
     }
 }

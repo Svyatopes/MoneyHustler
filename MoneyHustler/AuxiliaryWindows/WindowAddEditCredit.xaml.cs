@@ -52,10 +52,10 @@ namespace MoneyHustler.AuxiliaryWindows
 
             TextBoxName.Text = _credit.Name;
 
-            TextBoxValueWithoutPercent.Text = Convert.ToString(_credit.ValuewithoutPercent);
+            TextBoxValueWithoutPercent.Text = Convert.ToString(_credit.InitialAmount);
 
-            DatePickerDayOpen.SelectedDate = _credit.DayOpen;
-            DatePickerDayClose.SelectedDate = _credit.DayClose;
+            DatePickerDayOpen.SelectedDate = _credit.OpenDate;
+            DatePickerDayClose.SelectedDate = _credit.CloseDate;
 
             TextBoxPercent.Text = Convert.ToString(_credit.Percent);
 
