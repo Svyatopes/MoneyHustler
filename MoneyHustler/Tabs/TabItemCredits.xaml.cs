@@ -1,20 +1,9 @@
 ﻿using MoneyHustler.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MoneyHustler.Tabs
 {
@@ -77,7 +66,7 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             _credit = null;
-            ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> {ColumnLabelsEditSave, ColumnTextBoxEditSave});
+            ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
             ChnageIsEnabledProperty(true);
         }
 
@@ -169,7 +158,7 @@ namespace MoneyHustler.Tabs
         {
             decimal enteredValue;
             double enteredPercent;
-            
+
             if (TextBoxValueWithoutPercent.IsEnabled == true)
             {
                 if (TextBoxValueWithoutPercent.Text == String.Empty)
@@ -294,7 +283,7 @@ namespace MoneyHustler.Tabs
         private void ButtonOncePaySaveClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
-            
+
             decimal enteredValue = 0;
 
             if (_credit.Amount == 0)
