@@ -1,10 +1,9 @@
-﻿using MoneyHustler.Models;
+﻿using MoneyHustler.Helpers;
+using MoneyHustler.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-
-using MoneyHustler.Helpers;
 
 namespace MoneyHustler.Tabs
 {
@@ -112,7 +111,7 @@ namespace MoneyHustler.Tabs
             UIHelpers.SetButtonEnabledAndVisibility(ButtonAddIncomeCategory, true);
 
             TextBoxEnterIncomeCategory.Text = string.Empty;
-        } 
+        }
 
         private void ButtonRenameIncomeCategoryClick(object sender, RoutedEventArgs e)
         {
@@ -140,7 +139,7 @@ namespace MoneyHustler.Tabs
 
             _incomeTypeToRename.Name = enteredIncomeTypeName;
 
-            UpdateIncomesCollection();           
+            UpdateIncomesCollection();
             SetIncomeLabelsForAdding();
             Storage.Save();
 
