@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using Newtonsoft.Json;
@@ -93,6 +94,16 @@ namespace MoneyHustler.Models
             _instance = JsonConvert.DeserializeObject<Storage>(jsonString, _jsonSettings);
         }
 
-        
+        public static bool IsPesonUsedInVaults(Person person)
+        {
+            if (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpences().Any(item => item.Person == person))
+            {
+                return true;
+            }
+            return false;
+        }
+       
+
+
     }
 }

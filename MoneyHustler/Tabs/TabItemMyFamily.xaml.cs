@@ -25,7 +25,7 @@ namespace MoneyHustler.Tabs
     /// </summary>
     public partial class TabItemMyFamily : TabItem
     {
-        private Storage _storageInstance = Storage.GetInstance();
+        private Storage _storageInstance;
 
         private ObservableCollection<Person> _persons;
 
@@ -34,6 +34,7 @@ namespace MoneyHustler.Tabs
         public TabItemMyFamily()
         {
             InitializeComponent();
+            _storageInstance = Storage.GetInstance();
             _persons = new ObservableCollection<Person>(_storageInstance.Persons);
             ListViewPersonsDisplay.ItemsSource = _persons;
         }
@@ -43,7 +44,7 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             var person = (Person)button.DataContext;
-            if (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpences().Any(item => item.Person == person))
+            if (Storage.IsPesonUsedInVaults(person))
             {
                 MessageBox.Show("You can't remove this person, cause this name is already used in incomes/expenses");
                 return;
@@ -144,8 +145,15 @@ namespace MoneyHustler.Tabs
                 _persons.Add(income);
             }
         }
-
-        public  bool CheckIfPersonExist(string enteredPerson) // я не помню, где должен быть этот метод
+        //public static bool IsPesonUsedInVaults(Person person)
+        //{
+        //    if (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpences().Any(item => item.Person == person))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+        public  bool CheckIfPersonExist(string enteredPerson) // 
         {
             if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
             {
