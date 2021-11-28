@@ -40,13 +40,6 @@ namespace MoneyHustler.Models
             }
         }
 
-        public new void IncreaseBalance(Income income)
-        {
-            _balance += income.Amount;
-            income.Vault = this;
-            _incomes.Add(income);
-        }
-
         public new void DecreaseBalance(Expense expense)
         {
             _balance -= expense.Amount;
@@ -63,8 +56,8 @@ namespace MoneyHustler.Models
                 return;
             }
             //создание переменной для перечисления с момента открытия вклада:
-            DateTime dateCounterFromOpenDate = new(OpenDate.Year, OpenDate.Month, OpenDate.Day);
 
+            DateTime dateCounterFromOpenDate = new(OpenDate.Year, OpenDate.Month, OpenDate.Day);
             //поиск категории по начислению процентов (она будет, если вклад не первый)
             var incomeTypePercentOfDeposit = _storageInstance.IncomeTypes.FirstOrDefault(item => item.Name == "Проценты по вкладу");
             if (incomeTypePercentOfDeposit == null)
@@ -127,59 +120,6 @@ namespace MoneyHustler.Models
             }
             _balance = curBal;
         }
-
-        /*
-        //метод перерасчёта вклада при изменении баланса задним числом
-
-        //у вклада в зависимости от баланса начисляются проценты
-        private void RecalculateDeposit(MoneyTraffic financialTurnover)//принимает расход или доход
-        {
-            if (financialTurnover.Date == DateTime.Today)
-            {
-                return;
-            }
-
-            //ищем минимальный баланс того месяца и года
-            MinBalanceOfMounth minBalanceOnMonthFinancialTurover = MinBalanceMounth.FirstOrDefault
-            (item => item.MonthMin == financialTurnover.Date.Month 
-            && financialTurnover.Date.Year == item.YearMin);
-
-            //в зависимости от типа финансового оборота рассчитываем новое значение
-            switch (financialTurnover)
-            {
-                case Expense:
-                    minBalanceOnMonthFinancialTurover.MinBalance += financialTurnover.Amount;
-                    break;
-                case Income:
-                    minBalanceOnMonthFinancialTurover.MinBalance -= financialTurnover.Amount;
-                    break;
-                default:
-                    break;
-            };
-
-            //получаем список следующих минимальных балансов после изменённого
-            var listNextMinBalnces = MinBalanceMounth.
-                Where(item => item.MonthMin > minBalanceOnMonthFinancialTurover.MonthMin
-            && minBalanceOnMonthFinancialTurover.YearMin >= item.YearMin);
-            
-            
-            //так я получу список всех доходов от процентов по вкладу, в этот и следующие месяцы
-            var listEarnIncomesDeposit = _incomes.Where(item => item.Type.Name == "Проценты по вкладу"
-            && (item.Date.Month >= minBalanceOnMonthFinancialTurover.MonthMin
-            && item.Date.Year == minBalanceOnMonthFinancialTurover.YearMin
-            || item.Date.Year > minBalanceOnMonthFinancialTurover.YearMin));
-
-            foreach (Income income in listEarnIncomesDeposit)
-            {
-                //баланс этого кошелька будет меняться с изменением суммы дохода
-                income.Amount = minBalanceOnMonthFinancialTurover.MinBalance * (Percent / 100) / 12;
-
-            }
-
-
-        }
-        */
-
 
 
     }
