@@ -32,12 +32,12 @@ namespace MoneyHustler.Tabs
         public TabItemAnalytics()
         {
             InitializeComponent();  
-            CreateDiogram();
+            CreateDiagram();
             DataContext = this;
 
         }
 
-        public void CreateDiogram(string period = "За все время")
+        public void CreateDiagram(string period = "За все время")
         {
             listOfExpensTypeseView = new ObservableCollection<ExpenseType>(_storageInstance.ExpenseTypes);
             listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpenses());
@@ -88,7 +88,7 @@ namespace MoneyHustler.Tabs
             ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
             var period = selectedItem.Content.ToString();
             SeriesCollection.Clear();
-            CreateDiogram(period);
+            CreateDiagram(period);
             Chart.Update();
 
         }
