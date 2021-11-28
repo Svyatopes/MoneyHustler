@@ -60,7 +60,7 @@ namespace MoneyHustler.Tabs
             var person = (Person)button.DataContext;
             if (Storage.IsPesonUsedInVaults(person))
             {
-                MessageBox.Show("You can't remove this person, cause this name is already used in incomes/expenses");
+                MessageBox.Show("Этого человека убрать нельзя");
                 return;
             }
             _storageInstance.Persons.Remove(person);
