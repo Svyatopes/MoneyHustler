@@ -53,20 +53,23 @@ namespace MoneyHustler.Tabs
             _persons.Remove(person);
             Storage.Save();
         }
+        private void SetPersonLabelsForEditing(string name)
+        {
+            ListViewPersonsDisplay.IsEnabled = false;
+            TextBoxEnterMemberName.Text = name;
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddNewMember, false);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, true);
+            LabelAddFamilyMembers.Visibility = Visibility.Hidden;
+            LabelEditFamilyMembers.Visibility = Visibility.Visible;
+            LabelEditFamilyMembers.Content =$"Переименовать участника: \n + { name}";
+        }
 
         private void ButtonRenameExistingMemberClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var person = (Person)button.DataContext;
-            ListViewPersonsDisplay.IsEnabled = false;
-            TextBoxEnterMemberName.Text = person.Name;
-            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddNewMember, false);
-            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, true);
-            LabelAddFamilyMembers.Visibility = Visibility.Hidden;
-            LabelEditFamilyMembers.Visibility = Visibility.Visible;
-            LabelEditFamilyMembers.Content = "Переименовать участника: \n" + person.Name;
-
-
+            
+            SetPersonLabelsForEditing(person.Name);
 
             _personToRename = person;
         }
@@ -75,7 +78,7 @@ namespace MoneyHustler.Tabs
 
             string enteredPerson = TextBoxEnterMemberName.Text.Trim();
 
-            if (TextBoxEnterMemberName.Text == String.Empty)
+            if (string.IsNullOrWhiteSpace(enteredPerson))
             {
                 MessageBox.Show("Введите имя пользователя!");
                 return;
@@ -145,23 +148,7 @@ namespace MoneyHustler.Tabs
                 _persons.Add(income);
             }
         }
-        //public static bool IsPesonUsedInVaults(Person person)
-        //{
-        //    if (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpences().Any(item => item.Person == person))
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
-        //public  bool CheckIfPersonExist(string enteredPerson) // 
-        //{
-        //    if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-            
-        //}
+        
         
         
 
