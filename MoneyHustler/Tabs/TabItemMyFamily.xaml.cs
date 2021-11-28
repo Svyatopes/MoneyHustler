@@ -38,8 +38,22 @@ namespace MoneyHustler.Tabs
             _persons = new ObservableCollection<Person>(_storageInstance.Persons);
             ListViewPersonsDisplay.ItemsSource = _persons;
         }
-          
-        
+
+        private void TabItemFamily_Selected(object sender, RoutedEventArgs e)
+        {
+            UpdatePersonsView();
+        }
+        private void UpdatePersonsView()
+        {
+            _persons.Clear();
+            var allPersons = _storageInstance.Persons;
+            foreach (var income in allPersons)
+            {
+                _persons.Add(income);
+            }
+        }
+
+
         private void ButtonDeleteClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
@@ -57,13 +71,27 @@ namespace MoneyHustler.Tabs
         {
             ListViewPersonsDisplay.IsEnabled = false;
             TextBoxEnterMemberName.Text = name;
+
             UIHelpers.SetButtonEnabledAndVisibility(ButtonAddNewMember, false);
             UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, true);
+
             LabelAddFamilyMembers.Visibility = Visibility.Hidden;
             LabelEditFamilyMembers.Visibility = Visibility.Visible;
-            LabelEditFamilyMembers.Content =$"Переименовать участника: \n + { name}";
+
+            LabelEditFamilyMembers.Content =$"Переименовать участника: \n{ name}";
         }
 
+        private void SetPersonLabelsAfterEditing()
+        {
+            TextBoxEnterMemberName.Text = String.Empty;
+
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddNewMember, true);
+            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, false);
+
+            ListViewPersonsDisplay.IsEnabled = true;
+            LabelAddFamilyMembers.Visibility = Visibility.Visible;
+            LabelEditFamilyMembers.Visibility = Visibility.Hidden;
+        }
         private void ButtonRenameExistingMemberClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
@@ -102,13 +130,8 @@ namespace MoneyHustler.Tabs
             {
                 _personToRename.Name = enteredPerson;
             }
-            TextBoxEnterMemberName.Text = String.Empty;
-            UIHelpers.SetButtonEnabledAndVisibility(ButtonAddNewMember, true);
-            UIHelpers.SetButtonEnabledAndVisibility(ButtonRenameFinallyExistingMember, false);
+            SetPersonLabelsAfterEditing();
             UpdatePersonsView();
-            ListViewPersonsDisplay.IsEnabled = true;
-            LabelAddFamilyMembers.Visibility = Visibility.Visible;
-            LabelEditFamilyMembers.Visibility = Visibility.Hidden;
             Storage.Save();
 
 
@@ -133,27 +156,13 @@ namespace MoneyHustler.Tabs
             }
 
             _storageInstance.Persons.Add(new Person { Name = enteredPerson });
-            UpdatePersonsView();
+            _persons.Add(new Person { Name = enteredPerson });
             Storage.Save();
 
         }
 
-        private void UpdatePersonsView() //я так поняла, что в итоге этот метод оставляем из-за табов
-        {
-            TextBoxEnterMemberName.Text = String.Empty;
-            _persons.Clear();
-            var allPersons = _storageInstance.Persons;
-            foreach (var income in allPersons)
-            {
-                _persons.Add(income);
-            }
-        }
-        
-        
-        
+       
 
         
-
-
     }
 }
