@@ -55,7 +55,7 @@ namespace MoneyHustler.Tabs
             soundAccompainementZdarova.Play();
             _storageInstance = Storage.GetInstance();
 
-            listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpences());
+            listOfExpensesView = new ObservableCollection<Expense>(Storage.GetAllExpenses());
             listViewForExpenses.ItemsSource = listOfExpensesView;
             _dateStartForView = DateTime.MinValue;
             _dateEndForView = DateTime.MaxValue;
@@ -485,7 +485,7 @@ namespace MoneyHustler.Tabs
         {
             listOfExpensesView.Clear();
 
-            var allExpenses = Storage.GetAllExpences().Where(item => item.Date >= _dateStartForView && item.Date <= _dateEndForView);
+            var allExpenses = Storage.GetAllExpenses().Where(item => item.Date >= _dateStartForView && item.Date <= _dateEndForView);
             if (ComboBoxFilterList.SelectedIndex == (int)ComboBoxFilterItems.Vault)
             {
                 foreach (Expense item in allExpenses)
