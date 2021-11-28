@@ -10,8 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Icons\mainico.ico" />
     <None Remove="ImgIncomes.jpg" />
     <None Remove="Img\Bg.jpg" />
+    <None Remove="mainico.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,9 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Icons\mainico.ico" />
     <Resource Include="Img\Bg.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="mainico.ico" />
   </ItemGroup>
 
   <ItemGroup>

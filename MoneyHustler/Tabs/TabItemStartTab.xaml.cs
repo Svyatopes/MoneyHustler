@@ -29,8 +29,6 @@ namespace MoneyHustler.Tabs
         private Storage _storageInstance = Storage.GetInstance();
         private ObservableCollection<ExpenseType> _listOfExpenseTypesView;
         private ObservableCollection<Expense> _listOfExpensesView;
-
-        System.Windows.Controls.DataVisualization.ResourceDictionaryCollection pieSeriesPalette = new System.Windows.Controls.DataVisualization.ResourceDictionaryCollection();
         public TabItemStartTab()
         {
             InitializeComponent();

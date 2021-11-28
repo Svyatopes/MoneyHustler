@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:tabData="clr-namespace:MoneyHustler.Tabs"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="503" Width="885" Background="#FF1F1F1F" WindowStartupLocation="CenterScreen">
+        mc:Ignorable="d" Height="503" Width="885" Background="#FF1F1F1F" WindowStartupLocation="CenterScreen" Title="Капуста под присмотром" Icon="Icons/mainico.ico">
 
     <Grid Margin="0, 0, 0, 0">
     <UniformGrid Columns="7" Margin="3, 0, 3, 0">
