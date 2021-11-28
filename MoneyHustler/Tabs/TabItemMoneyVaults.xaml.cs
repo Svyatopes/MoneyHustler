@@ -273,7 +273,7 @@ namespace MoneyHustler.Tabs
                     var DateOfOpenDeposit = (DateTime)DatePickerDayOfOpenDeposit.DisplayDate;
                     ((Deposit)vaultToAdd).OpenDate = DateOfOpenDeposit;
                     ((Deposit)vaultToAdd).PaymentDay = DateOfOpenDeposit.Day;
-
+                    ((Deposit)vaultToAdd).StartInitializeIncomesOfDeposit();
                     break;
 
                 default:
