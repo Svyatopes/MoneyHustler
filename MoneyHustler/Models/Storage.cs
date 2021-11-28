@@ -45,17 +45,27 @@ namespace MoneyHustler.Models
             return allIncomes;
         }
 
-        public static List<Expense> GetAllExpences()
+        public static List<Expense> GetAllExpenses()
         {
-            List<Expense> allExpences = new List<Expense>();
+            List<Expense> allExpenses = new List<Expense>();
 
             Storage instance = GetInstance();
             foreach (MoneyVault moneyVault in instance.Vaults)
             {
-                allExpences.AddRange(moneyVault.Expenses);
+                allExpenses.AddRange(moneyVault.Expenses);
             }
 
-            return allExpences;
+            return allExpenses;
+        }
+
+        public static bool IsIncomeTypeUsedInVaults(IncomeType incomeType)
+        {
+            return GetAllIncomes().Any(item => item.Type == incomeType);
+        }
+
+        public static bool IsExpenseTypeUsedInVaults(ExpenseType expenseType)
+        {
+            return GetAllExpenses().Any(item => item.Type == expenseType);
         }
 
         public static Person GetOrCreatePersonByName(string name)
@@ -132,5 +142,24 @@ namespace MoneyHustler.Models
 
             _instance = JsonConvert.DeserializeObject<Storage>(jsonString, _jsonSettings);
         }
+
+        public static bool IsPesonUsedInVaults(Person person)
+        {
+            return (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpences().Any(item => item.Person == person));
+        }
+
+        public static bool CheckIfPersonExist(string enteredPerson)  
+        {
+            Storage _storageInstance = GetInstance();
+            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+
+
     }
 }

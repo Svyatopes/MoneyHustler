@@ -12,9 +12,12 @@
   <ItemGroup>
     <None Remove="ImgIncomes.jpg" />
     <None Remove="Img\Bg.jpg" />
+    <None Remove="Img\earth.jpg" />
+    <None Remove="mainico.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
@@ -22,6 +25,10 @@
     <Resource Include="Img\Bg.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Img\earth.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="mainico.ico" />
   </ItemGroup>
 
   <ItemGroup>

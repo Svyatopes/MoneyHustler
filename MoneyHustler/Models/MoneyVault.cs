@@ -99,6 +99,11 @@ namespace MoneyHustler.Models
             return balanceOnSelectedDay;
         }
 
+        public bool IsHaveIncomesOrExpenses()
+        {
+            return Incomes.Any() || Expenses.Any();
+        }
+
         public void ChangedAmountInIncomeOrExpense(MoneyTraffic moneyTraffic, decimal newAmount)
         {
             switch (moneyTraffic)

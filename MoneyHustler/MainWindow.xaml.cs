@@ -1,5 +1,4 @@
-﻿using MoneyHustler.AuxiliaryWindows;
-using MoneyHustler.Models;
+﻿using MoneyHustler.Models;
 using MoneyHustler.Tabs;
 using System;
 using System.Collections.Generic;
@@ -26,42 +25,10 @@ namespace MoneyHustler
         public MainWindow()
         {
             Storage.Load();
+
             InitializeComponent();
 
         }
-
-        protected override void OnRenderSizeChanged(System.Windows.SizeChangedInfo sizeInfo)
-        {
-            double mainTabItemWidth;
-            double financeTabControlWidth;
-            double categoriesTabControlWidth;
-
-            int deltaForMainTab = 3;
-            int deltaForFinanceTab = 13;
-
-            foreach (TabItem item in MainTabControl.Items)
-            {
-                mainTabItemWidth = (this.ActualWidth / MainTabControl.Items.Count) - deltaForMainTab;
-                if (mainTabItemWidth < 0) mainTabItemWidth = 0;
-
-                item.Width = mainTabItemWidth;
-            }
-
-            foreach (TabItem item in FinanceTabControl.Items)
-            {
-                financeTabControlWidth = (this.ActualWidth / FinanceTabControl.Items.Count) - deltaForFinanceTab;
-                if (financeTabControlWidth < 0) financeTabControlWidth = 0;
-
-                item.Width = financeTabControlWidth;
-            }
-
-            foreach (TabItem item in TabItemCategoriesName.TabControlCategories.Items)
-            {
-                categoriesTabControlWidth = (this.ActualWidth / FinanceTabControl.Items.Count) - deltaForFinanceTab;
-                if (categoriesTabControlWidth < 0) categoriesTabControlWidth = 0;
-
-                item.Width = categoriesTabControlWidth;
-            }
-        }   
+ 
     }
 }
