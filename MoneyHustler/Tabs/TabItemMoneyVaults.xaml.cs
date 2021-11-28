@@ -270,7 +270,7 @@ namespace MoneyHustler.Tabs
 
                     ((Deposit)vaultToAdd).Percent = vaultPercentDeposit.Value;
 
-                    var DateOfOpenDeposit = (DateTime)DatePickerDayOfOpenDeposit.DisplayDate;
+                    var DateOfOpenDeposit = (DateTime)DatePickerDayOfOpenDeposit.SelectedDate;
                     ((Deposit)vaultToAdd).OpenDate = DateOfOpenDeposit;
                     ((Deposit)vaultToAdd).PaymentDay = DateOfOpenDeposit.Day;
                     ((Deposit)vaultToAdd).StartInitializeIncomesOfDeposit();
