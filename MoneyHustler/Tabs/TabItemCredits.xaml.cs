@@ -22,8 +22,7 @@ namespace MoneyHustler.Tabs
             InitializeComponent();
             listOfCreditsView = new ObservableCollection<Credit>(_storageInstance.Credits);
             listViewForCredits.ItemsSource = listOfCreditsView;
-            var cards = _storageInstance.Vaults.Where(item => item.GetType() == typeof(Card));
-            ComboBoxCards.ItemsSource = cards;
+            ComboBoxCards.ItemsSource = _storageInstance.Vaults.Where(item => item.GetType() == typeof(Card)); ;
             ComboBoxPerson.ItemsSource = _storageInstance.Persons;
 
 
@@ -66,7 +65,7 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             _credit = null;
-            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 20);
+            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 20);
             ButtonAdd.IsEnabled = false;
             ChangeButtonIsEnabledProperty(true);
         }
@@ -75,7 +74,7 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
-            UIHelpers.ChangeVisibilityColumns( new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 20);
+            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 20);
             ButtonAdd.IsEnabled = false;
             _credit = credit;
 
@@ -147,7 +146,7 @@ namespace MoneyHustler.Tabs
         private void ButtonBackClick(object sender, RoutedEventArgs e)
         {
 
-            UIHelpers.ChangeVisibilityColumns( new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 0);
+            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 0);
             ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
 
@@ -158,22 +157,9 @@ namespace MoneyHustler.Tabs
             decimal enteredValue;
             decimal enteredPercent;
 
-
-            if (TextBoxValueWithoutPercent.Text == String.Empty)
-            {
-                MessageBox.Show("Вам нужно ввести число!");
-                return;
-            }
-
-            if (!decimal.TryParse(TextBoxValueWithoutPercent.Text, out enteredValue))
+            if ((TextBoxValueWithoutPercent.Text == String.Empty) || (!decimal.TryParse(TextBoxValueWithoutPercent.Text, out enteredValue)) || (enteredValue < 0))
             {
                 MessageBox.Show("Вы ввели недопустимую сумму кредита!");
-                return;
-            }
-
-            if (enteredValue < 0)
-            {
-                MessageBox.Show("Кредит не может быть отрицательным!");
                 return;
             }
 
@@ -195,17 +181,11 @@ namespace MoneyHustler.Tabs
                 return;
             }
 
-            if (!decimal.TryParse(TextBoxPercent.Text, out enteredPercent))
+            if ((!decimal.TryParse(TextBoxPercent.Text, out enteredPercent)) || (enteredPercent < 0))
             {
                 MessageBox.Show("Вы ввели неккортектный процент!");
                 return;
             }
-            if (enteredPercent < 0)
-            {
-                MessageBox.Show("Процент не может быть отрицательным!");
-                return;
-            }
-
 
             enteredValue = Convert.ToDecimal(TextBoxValueWithoutPercent.Text);
             enteredPercent = Convert.ToDecimal(TextBoxPercent.Text);
@@ -246,7 +226,7 @@ namespace MoneyHustler.Tabs
 
             Storage.Save();
 
-            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 0);
+            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 0);
             ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
         }
@@ -256,19 +236,20 @@ namespace MoneyHustler.Tabs
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
             _credit = credit;
-            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 20);
+            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 20);
             ButtonAdd.IsEnabled = false;
         }
 
         private void ButtonOncePayBackClick(object sender, RoutedEventArgs e)
         {
-            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 0);
+            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 0);
             ButtonAdd.IsEnabled = true;
         }
 
         private void ButtonOncePaySaveClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
+
 
             decimal enteredValue = 0;
 
@@ -278,28 +259,15 @@ namespace MoneyHustler.Tabs
                 return;
             }
 
-            if (TextBoxOncePay.Text == String.Empty)
+            if ((TextBoxOncePay.Text == String.Empty) || (!decimal.TryParse(TextBoxOncePay.Text, out enteredValue)) || (enteredValue < 0))
             {
-                MessageBox.Show("You need to enter the value!");
-                return;
-            }
-
-
-            if (!decimal.TryParse(TextBoxOncePay.Text, out enteredValue))
-            {
-                MessageBox.Show("You entered some invalid string to amount field!");
-                return;
-            }
-
-            if (enteredValue < 0)
-            {
-                MessageBox.Show("Amount can't be less than zero.");
+                MessageBox.Show("Введено некорректное число!");
                 return;
             }
 
             if (enteredValue > _credit.Amount)
             {
-                MessageBox.Show("The payment amount exceeds the loan amount");
+                MessageBox.Show("Сумма платежа больше чем остаток долга по кредиту");
                 return;
             }
 
@@ -307,7 +275,7 @@ namespace MoneyHustler.Tabs
 
             _credit.PayOneTimePayment(enteredValue, expenseType);
 
-            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 0);
+            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 0);
             ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
 
