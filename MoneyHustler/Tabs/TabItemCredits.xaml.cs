@@ -1,21 +1,10 @@
-﻿using MoneyHustler.Models;
+﻿using MoneyHustler.Helpers;
+using MoneyHustler.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
 namespace MoneyHustler.Tabs
 {
     /// <summary>
@@ -23,79 +12,89 @@ namespace MoneyHustler.Tabs
     /// </summary>
     public partial class TabItemCredits : TabItem
     {
-        private Storage _storageInstance = Storage.GetInstance();
+        private Storage _storageInstance;
 
         private ObservableCollection<Credit> listOfCreditsView;
         private Credit _credit;
+        private ObservableCollection<ColumnDefinition> columnsSaveEdit;
+        private ObservableCollection<ColumnDefinition> columnsOncePay;
+        private const double ColumnVisibilityOn = 20;
+        private const double ColumnVisibilityOff = 0;
+
         public TabItemCredits()
         {
-            if (_storageInstance.Credits == null)
-            {
-                _storageInstance.Credits = new List<Credit> { };
-            }
+            _storageInstance = Storage.GetInstance();
             InitializeComponent();
+            columnsSaveEdit = new ObservableCollection<ColumnDefinition>();
+            columnsOncePay = new ObservableCollection<ColumnDefinition>();
+            columnsSaveEdit.Add(ColumnLabelsEditSave);
+            columnsSaveEdit.Add(ColumnTextBoxEditSave);
+            columnsOncePay.Add(ColumnLabelsOncePay);
+            columnsOncePay.Add(ColumnTextBoxOncePay);
             listOfCreditsView = new ObservableCollection<Credit>(_storageInstance.Credits);
             listViewForCredits.ItemsSource = listOfCreditsView;
-
-            ComboBoxCards.ItemsSource = _storageInstance.Vaults;
+            ComboBoxCards.ItemsSource = _storageInstance.Vaults.Where(item => item.GetType() == typeof(Card)); ;
             ComboBoxPerson.ItemsSource = _storageInstance.Persons;
-
-            ChangeVisibilityOfGridAddEditVault(false);
 
 
         }
+        private void ChangeButtonIsEnabledProperty(bool isEnabled)
+        {
+            if (isEnabled)
+            {
+                TextBoxValueWithoutPercent.IsEnabled = true;
+                DatePickerDayOpen.IsEnabled = true;
+                DatePickerDayClose.IsEnabled = true;
+                TextBoxPercent.IsEnabled = true;
 
+                TextBoxName.Text = null;
+
+                TextBoxValueWithoutPercent.Text = null;
+
+                DatePickerDayOpen.SelectedDate = null;
+                DatePickerDayClose.SelectedDate = null;
+
+                TextBoxPercent.Text = null;
+
+
+                ComboBoxCards.ItemsSource = _storageInstance.Vaults;
+                ComboBoxCards.SelectedItem = null;
+
+                ComboBoxPerson.ItemsSource = _storageInstance.Persons;
+                ComboBoxPerson.SelectedItem = null;
+            }
+            else
+            {
+
+                TextBoxValueWithoutPercent.IsEnabled = false;
+                DatePickerDayOpen.IsEnabled = false;
+                DatePickerDayClose.IsEnabled = false;
+                TextBoxPercent.IsEnabled = false;
+            }
+        }
         private void ButtonAddCreditClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             _credit = null;
-            ChangeVisibilityOfGridAddEditVault(true);
-
-
-            TextBoxValueWithoutPercent.IsEnabled = true;
-            DatePickerDayOpen.IsEnabled = true;
-            DatePickerDayClose.IsEnabled = true;
-            TextBoxPercent.IsEnabled = true;
-
-            TextBoxName.Text = null;
-
-            TextBoxValueWithoutPercent.Text = null;
-
-            DatePickerDayOpen.SelectedDate = null;
-            DatePickerDayClose.SelectedDate = null;
-
-            TextBoxPercent.Text = null;
-
-
-            ComboBoxCards.ItemsSource = _storageInstance.Vaults;
-            ComboBoxCards.SelectedItem = null;
-
-            ComboBoxPerson.ItemsSource = _storageInstance.Persons;
-            ComboBoxPerson.SelectedItem = null;
-
-
+            UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOn);
+            ButtonAdd.IsEnabled = false;
+            ChangeButtonIsEnabledProperty(true);
         }
 
         private void ButtonEditCreditClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
-            ChangeVisibilityOfGridAddEditVault(true);
+            UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOn);
+            ButtonAdd.IsEnabled = false;
             _credit = credit;
-
-
-            TextBoxValueWithoutPercent.IsEnabled = false;
-            DatePickerDayOpen.IsEnabled = false;
-            DatePickerDayClose.IsEnabled = false;
-            TextBoxPercent.IsEnabled = false;
-
 
             TextBoxName.Text = _credit.Name;
 
-            TextBoxValueWithoutPercent.Text = Convert.ToString(_credit.ValuewithoutPercent);
+            TextBoxValueWithoutPercent.Text = Convert.ToString(_credit.InitialAmount);
 
-            DatePickerDayOpen.SelectedDate = _credit.DayOpen;
-            DatePickerDayClose.SelectedDate = _credit.DayClose;
+            DatePickerDayOpen.SelectedDate = _credit.OpenDate;
+            DatePickerDayClose.SelectedDate = _credit.CloseDate;
 
             TextBoxPercent.Text = Convert.ToString(_credit.Percent);
 
@@ -113,10 +112,9 @@ namespace MoneyHustler.Tabs
         private void UpdateCreditsView()
         {
             listOfCreditsView.Clear();
-            var allCredits = _storageInstance.Credits;
-            foreach (var income in allCredits)
+            foreach (Credit credit in _storageInstance.Credits)
             {
-                listOfCreditsView.Add(income);
+                listOfCreditsView.Add(credit);
             }
         }
 
@@ -138,13 +136,14 @@ namespace MoneyHustler.Tabs
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
 
-            if (credit.Value == 0)
+            if (credit.Amount == 0)
             {
                 MessageBox.Show("Кредит уже оплачен, молодец!*Звуки салюта*");
                 return;
             }
 
-            credit.PayMonthlyPayment();
+            ExpenseType expenseType = Storage.GetOrCreateExpenseTypeByName("Кредит");
+            credit.PayMonthlyPayment(expenseType);
             UpdateCreditsView();
 
 
@@ -157,112 +156,157 @@ namespace MoneyHustler.Tabs
         private void ButtonBackClick(object sender, RoutedEventArgs e)
         {
 
-            ChangeVisibilityOfGridAddEditVault(false);
+            UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOff);
+            ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
 
         }
 
         private void ButtonSaveClick(object sender, RoutedEventArgs e)
         {
+            decimal enteredValue;
+            decimal enteredPercent;
 
-            decimal enteredValue = 0;
-            decimal enteredPercent = 0;
-            if (TextBoxValueWithoutPercent.IsEnabled == true)
+            if ((TextBoxValueWithoutPercent.Text == String.Empty) || (!decimal.TryParse(TextBoxValueWithoutPercent.Text, out enteredValue)) || (enteredValue < 0))
             {
-                if (TextBoxValueWithoutPercent.Text == String.Empty)
-                {
-                    MessageBox.Show("You need to enter the value!");
-                    return;
-                }
-
-
-                if (!decimal.TryParse(TextBoxValueWithoutPercent.Text, out enteredValue))
-                {
-                    MessageBox.Show("You entered some invalid string to amount field!");
-                    return;
-                }
-
-                if (enteredValue < 0)
-                {
-                    MessageBox.Show("Amount can't be less than zero.");
-                    return;
-                }
-
-                if (ComboBoxCards.SelectedItem == null)
-                {
-                    MessageBox.Show("You need to choose card!");
-                    return;
-                }
-
-                if (DatePickerDayClose.SelectedDate < DatePickerDayOpen.SelectedDate)
-                {
-                    MessageBox.Show("The closing date cannot be earlier than the opening date!");
-                    return;
-                }
-
-                if (DatePickerDayClose.SelectedDate.Value.Month == DatePickerDayOpen.SelectedDate.Value.Month)
-                {
-                    MessageBox.Show("You cannot take a loan and pay it off in the same month");
-                    return;
-                }
-
-
-                if (!decimal.TryParse(TextBoxPercent.Text, out enteredPercent))
-                {
-                    MessageBox.Show("You entered some invalid string to percent field!");
-                    return;
-                }
-
-                if (enteredPercent < 0)
-                {
-                    MessageBox.Show("Percent can't be less than zero.");
-                    return;
-                }
+                MessageBox.Show("Вы ввели недопустимую сумму кредита!");
+                return;
             }
 
+            if (ComboBoxCards.SelectedItem == null)
+            {
+                MessageBox.Show("Вам нужно выбрать карту!");
+                return;
+            }
 
+            if (DatePickerDayOpen.SelectedDate == null)
+            {
+                MessageBox.Show("Вам нужно выбрать дату открытия!");
+                return;
+            }
 
-            var enteredVault = (Card)ComboBoxCards.SelectedItem;
+            if (DatePickerDayClose.SelectedDate == null)
+            {
+                MessageBox.Show("Вам нужно выбрать дату закрытия!");
+                return;
+            }
+
+            if (DatePickerDayClose.SelectedDate < DatePickerDayOpen.SelectedDate)
+            {
+                MessageBox.Show("Дата закрытия должна быть не раньше даты открытия!");
+                return;
+            }
+
+            if (DatePickerDayClose.SelectedDate.Value.Month == DatePickerDayOpen.SelectedDate.Value.Month && DatePickerDayClose.SelectedDate.Value.Year == DatePickerDayOpen.SelectedDate.Value.Year)
+            {
+                MessageBox.Show("Нельзя Открыть кредит меньше чем на один месяц!");
+                return;
+            }
+
+            if ((!decimal.TryParse(TextBoxPercent.Text, out enteredPercent)) || (enteredPercent < 0))
+            {
+                MessageBox.Show("Вы ввели неккортектный процент!");
+                return;
+            }
+
+            enteredValue = Convert.ToDecimal(TextBoxValueWithoutPercent.Text);
+            enteredPercent = Convert.ToDecimal(TextBoxPercent.Text);
+
+            string enteredName = TextBoxName.Text.Trim();
+            Person enteredPerson = (Person)ComboBoxPerson.SelectedItem;
+            Card enteredCard = (Card)ComboBoxCards.SelectedItem;
 
             if (_credit == null)
             {
-
-
-                _credit = new Credit(TextBoxName.Text, Convert.ToDouble(TextBoxPercent.Text), null, enteredValue, (Person)ComboBoxPerson.SelectedItem, (Card)ComboBoxCards.SelectedItem, (
-                    DateTime)DatePickerDayClose.SelectedDate, (DateTime)DatePickerDayOpen.SelectedDate);
+                var findSameCredit = _storageInstance.Credits.FirstOrDefault(item => item.Name == enteredName);
+                if (findSameCredit != null)
+                {
+                    MessageBox.Show("Кредит с таким именем уже существует!");
+                    return;
+                }
+                DateTime entredCloseDate = (DateTime)DatePickerDayClose.SelectedDate;
+                DateTime entredOpenDate = (DateTime)DatePickerDayOpen.SelectedDate;
+                _credit = new Credit(enteredName, enteredPercent, null, enteredValue, enteredPerson, enteredCard, entredCloseDate, entredOpenDate);
                 _storageInstance.Credits.Add(_credit);
 
             }
             else
             {
-
-                _credit.Name = TextBoxName.Text;
-                _credit.BindedCard = (Card)ComboBoxCards.SelectedItem;
-                _credit.Person = (Person)ComboBoxPerson.SelectedItem;
+                if (_credit.Name != enteredName.Trim())
+                {
+                    var findSameCredit = _storageInstance.Credits.FirstOrDefault(item => item.Name == enteredName);
+                    if (findSameCredit != null)
+                    {
+                        MessageBox.Show("Кредит с таким именем уже существует!");
+                        return;
+                    }
+                }
+                _credit.Name = enteredName.Trim();
+                _credit.BindedCard = enteredCard;
+                _credit.Person = enteredPerson;
             }
 
             Storage.Save();
 
-            ChangeVisibilityOfGridAddEditVault(false);
+            UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOff);
+            ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
         }
 
-
-
-        private void ChangeVisibilityOfGridAddEditVault(bool visible)
+        private void ButtonPayOnceItemClick(object sender, RoutedEventArgs e)
         {
-            if (visible)
+            var button = (Button)sender;
+            var credit = (Credit)button.DataContext;
+            _credit = credit;
+            UIHelpers.ChangeWidthGridColumns(columnsOncePay, ColumnVisibilityOn);
+            ButtonAdd.IsEnabled = false;
+        }
+
+        private void ButtonOncePayBackClick(object sender, RoutedEventArgs e)
+        {
+            UIHelpers.ChangeWidthGridColumns(columnsOncePay, ColumnVisibilityOff);
+            ButtonAdd.IsEnabled = true;
+        }
+
+        private void ButtonOncePaySaveClick(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+
+
+            decimal enteredValue = 0;
+
+            if (_credit.Amount == 0)
             {
-                ColumnLabels.Width = new GridLength(20, GridUnitType.Star);
-                ColumnTextBox.Width = new GridLength(20, GridUnitType.Star);
-                ButtonAdd.IsEnabled = false;
+                MessageBox.Show("Кредит уже оплачен, молодец!*Звуки салюта*");
+                return;
             }
-            else
+
+            if ((TextBoxOncePay.Text == String.Empty) || (!decimal.TryParse(TextBoxOncePay.Text, out enteredValue)) || (enteredValue < 0))
             {
-                ColumnLabels.Width = new GridLength(0, GridUnitType.Star);
-                ColumnTextBox.Width = new GridLength(0, GridUnitType.Star);
-                ButtonAdd.IsEnabled = true;
+                MessageBox.Show("Введено некорректное число!");
+                return;
             }
+
+            if (enteredValue > _credit.Amount)
+            {
+                MessageBox.Show("Сумма платежа больше чем остаток долга по кредиту");
+                return;
+            }
+
+            var expenseType = Storage.GetOrCreateExpenseTypeByName("Кредит");
+
+            _credit.PayOneTimePayment(enteredValue, expenseType);
+
+            UIHelpers.ChangeWidthGridColumns(columnsOncePay, ColumnVisibilityOff);
+            ButtonAdd.IsEnabled = true;
+            UpdateCreditsView();
+
+            Storage.Save();
+        }
+
+        private void TabItemCreditSelected(object sender, RoutedEventArgs e)
+        {
+            UpdateCreditsView();
         }
     }
 }

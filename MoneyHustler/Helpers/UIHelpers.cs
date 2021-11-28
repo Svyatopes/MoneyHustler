@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,14 @@ namespace MoneyHustler.Helpers
             {
                 button.Visibility = Visibility.Hidden;
                 button.IsEnabled = false;
+            }
+        }
+
+        public static void ChangeWidthGridColumns(ObservableCollection<ColumnDefinition> columns, double stars)
+        {
+            foreach (var item in columns)
+            {
+                item.Width = new GridLength(stars, GridUnitType.Star);
             }
         }
     }
