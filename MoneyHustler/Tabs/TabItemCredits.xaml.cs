@@ -16,10 +16,19 @@ namespace MoneyHustler.Tabs
 
         private ObservableCollection<Credit> listOfCreditsView;
         private Credit _credit;
+        private ObservableCollection<ColumnDefinition> columnsSaveEdit;
+        private ObservableCollection<ColumnDefinition> columnsOncePay;
+        private const double ColumnVisibilityOn = 20;
+        private const double ColumnVisibilityOff = 0;
+
         public TabItemCredits()
         {
             _storageInstance = Storage.GetInstance();
             InitializeComponent();
+            columnsSaveEdit.Add(ColumnLabelsEditSave);
+            columnsSaveEdit.Add(ColumnTextBoxEditSave);
+            columnsOncePay.Add(ColumnLabelsOncePay);
+            columnsOncePay.Add(ColumnTextBoxOncePay);
             listOfCreditsView = new ObservableCollection<Credit>(_storageInstance.Credits);
             listViewForCredits.ItemsSource = listOfCreditsView;
             ComboBoxCards.ItemsSource = _storageInstance.Vaults.Where(item => item.GetType() == typeof(Card)); ;
@@ -65,7 +74,7 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             _credit = null;
-            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 20);
+            UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOn);
             ButtonAdd.IsEnabled = false;
             ChangeButtonIsEnabledProperty(true);
         }
@@ -74,7 +83,7 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
-            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 20);
+            UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOn);
             ButtonAdd.IsEnabled = false;
             _credit = credit;
 
@@ -101,8 +110,7 @@ namespace MoneyHustler.Tabs
         private void UpdateCreditsView()
         {
             listOfCreditsView.Clear();
-            var allCredits = _storageInstance.Credits;
-            foreach (Credit credit in allCredits)
+            foreach (Credit credit in _storageInstance.Credits)
             {
                 listOfCreditsView.Add(credit);
             }
@@ -146,7 +154,7 @@ namespace MoneyHustler.Tabs
         private void ButtonBackClick(object sender, RoutedEventArgs e)
         {
 
-            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 0);
+            UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOff);
             ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
 
@@ -226,7 +234,7 @@ namespace MoneyHustler.Tabs
 
             Storage.Save();
 
-            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 0);
+            UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOff);
             ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
         }
@@ -236,13 +244,13 @@ namespace MoneyHustler.Tabs
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
             _credit = credit;
-            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 20);
+            UIHelpers.ChangeWidthGridColumns(columnsOncePay, ColumnVisibilityOn);
             ButtonAdd.IsEnabled = false;
         }
 
         private void ButtonOncePayBackClick(object sender, RoutedEventArgs e)
         {
-            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 0);
+            UIHelpers.ChangeWidthGridColumns(columnsOncePay, ColumnVisibilityOff);
             ButtonAdd.IsEnabled = true;
         }
 
@@ -275,7 +283,7 @@ namespace MoneyHustler.Tabs
 
             _credit.PayOneTimePayment(enteredValue, expenseType);
 
-            UIHelpers.ChangeWidthGridColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 0);
+            UIHelpers.ChangeWidthGridColumns(columnsOncePay, ColumnVisibilityOff);
             ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
 
