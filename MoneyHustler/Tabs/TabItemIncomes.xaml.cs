@@ -121,6 +121,8 @@ namespace MoneyHustler.Tabs
 
 
         #region Buttons
+
+        
         private void ButtonEditIncome_Click(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
@@ -220,9 +222,10 @@ namespace MoneyHustler.Tabs
 
                 if (_income.Vault != selectedVault)
                 {
-                    //_income.Vault.Remove(_income);
+                    _income.Vault.Remove(_income);
                     listOfIncomesView.Remove(_income);
-                    selectedVault.IncreaseBalance(_income);
+                    IncreaseBalanceOfSelectedVaultType(selectedVault, _income);
+                    //selectedVault.IncreaseBalance(_income);
                     listOfIncomesView.Add(_income);
                 }
                 UpdateIncomesViewAndClearAddEditArea(); //иначе не обновляется
@@ -239,8 +242,8 @@ namespace MoneyHustler.Tabs
                    TextBoxIncomeComment.Text.Trim(),
                    incomeType
                 );
-
-                selectedVault.IncreaseBalance(newIncome);
+                IncreaseBalanceOfSelectedVaultType(selectedVault, newIncome);
+                //selectedVault.IncreaseBalance(newIncome);
                 listOfIncomesView.Add(newIncome);
                 MessageBox.Show("поднял");
             }
@@ -252,14 +255,12 @@ namespace MoneyHustler.Tabs
         {
             if ((string)ButtonEnableDisableFilters.Content == "Показать доходы по")
             {
-                //TODO: отдельный метод
                 ButtonEnableDisableFilters.Content = "К общему списку";
                 SetIsEnabledForItemsOnStackPanel(true);
                 DatePickerIncomeDate.SelectedDate = null;
             }
             else if ((string)ButtonEnableDisableFilters.Content == "К общему списку")
             {
-                //TODO: отдельный метод
                 ButtonEnableDisableFilters.Content = "Показать доходы по";
                 SetIsEnabledForItemsOnStackPanel(false);
                 DatePickerIncomeDate.SelectedDate = DateTime.Now;
@@ -353,22 +354,22 @@ namespace MoneyHustler.Tabs
             {
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.AllTime:
                     ChangeFilterByDatesInListView(DateTime.MinValue);
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(false);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.Today:
                     ChangeFilterByDatesInListView(DateTime.Now.Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(false);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastWeek:
                     ChangeFilterByDatesInListView(DateTime.Now.AddDays(-7).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(false);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastMonth:
                     ChangeFilterByDatesInListView(DateTime.Now.AddMonths(-1).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(false);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.ChooseYourself:
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(true);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true);
                     break;
                 default:
                     return;
@@ -401,8 +402,27 @@ namespace MoneyHustler.Tabs
         }
         #endregion
 
+        #region WorkWithModel
+        private void IncreaseBalanceOfSelectedVaultType(MoneyVault chooseVaultForEditIncome, Income newIncome)
+        {
+            switch (chooseVaultForEditIncome)
+            {
+                case Card:
+                    ((Card)chooseVaultForEditIncome).IncreaseBalance(newIncome);
+                    break;
+                case OnlyTopDeposit:
+                    ((OnlyTopDeposit)chooseVaultForEditIncome).IncreaseBalance(newIncome);
+                    break;
+                case Deposit:
+                    ((Deposit)chooseVaultForEditIncome).IncreaseBalance(newIncome);
+                    break;
+                default:
+                    return;
+            }
+        }
+        #endregion
 
-        #region StateAndViewItems
+        #region StatesAndViewItems
 
         private void ChangeStateListAreaAndSetButtonAddEditContent(string buttonAddEditContent, bool isEnabled)
         {
@@ -470,17 +490,13 @@ namespace MoneyHustler.Tabs
             Sort("Date", _lastDirection);
         }
 
-        private void ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(bool isEnableAndVisible)
+        private void ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(bool isEnableAndVisible)
         {
-            switch (isEnableAndVisible)
-            {
-                case true:
-                    StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Visible;
-                    break;
-                case false:
-                    StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Hidden;
-                    break;
-            }
+            if (isEnableAndVisible)
+                StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Visible;
+            else
+                StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Hidden;
+
             StackPanelSelectDateIncomesOnDisplay.IsEnabled = isEnableAndVisible;
         }
         private void ChangeFilterByDatesInListView(DateTime startDate)

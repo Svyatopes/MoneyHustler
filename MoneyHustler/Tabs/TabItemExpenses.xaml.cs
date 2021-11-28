@@ -33,8 +33,6 @@ namespace MoneyHustler.Tabs
         SoundPlayer soundAccompainementDelete;
 
 
-        //TODO: сделать более понятные названия x:Name
-
         private void LoadAudio() //метод загрузки звукового сопровождения
         {
             soundAccompainementZdarova = new SoundPlayer();
@@ -261,7 +259,6 @@ namespace MoneyHustler.Tabs
             {
 
                 soundAccompainementOnView.Play();
-                //TODO: отдельный метод
                 ButtonEnableFilter.Content = "К общему списку";
                 SetIsEnabledForItemsOnStackPanel(true);
                 DatePickerChooseDateOfExpense.SelectedDate = null;
@@ -269,7 +266,6 @@ namespace MoneyHustler.Tabs
             }
             else if ((string)ButtonEnableFilter.Content == "К общему списку")
             {
-                //TODO: отдельный метод
                 ButtonEnableFilter.Content = "Показать расходы по";
                 SetIsEnabledForItemsOnStackPanel(false);
                 DatePickerChooseDateOfExpense.SelectedDate = DateTime.Now;
@@ -353,22 +349,22 @@ namespace MoneyHustler.Tabs
             {
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.AllTime:
                     ChangeFilterByDatesInListView(DateTime.MinValue);
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(false);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.Today:
                     ChangeFilterByDatesInListView(DateTime.Now.Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(false);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.LastWeek:
                     ChangeFilterByDatesInListView(DateTime.Now.AddDays(-7).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(false);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.LastMonth:
                     ChangeFilterByDatesInListView(DateTime.Now.AddMonths(-1).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(false);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.ChooseYourself:
-                    ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(true);
+                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true);
                     break;
                 default:
                     return;
@@ -397,17 +393,13 @@ namespace MoneyHustler.Tabs
             UpdateExpensesViewAndClearAddEditArea();
         }
 
-        private void ChangeStateAndVisibilityStackPanelSelectDateIncomesOnDisplay(bool isEnableAndVisible)
+        private void ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(bool isEnableAndVisible)
         {
-            switch (isEnableAndVisible)
-            {
-                case true:
-                    StackPanelSelectDateExpensesOnDisplay.Visibility = Visibility.Visible;
-                    break;
-                case false:
-                    StackPanelSelectDateExpensesOnDisplay.Visibility = Visibility.Hidden;
-                    break;
-            }
+            if (isEnableAndVisible)
+                StackPanelSelectDateExpensesOnDisplay.Visibility = Visibility.Visible;
+            else
+                StackPanelSelectDateExpensesOnDisplay.Visibility = Visibility.Hidden;
+
             StackPanelSelectDateExpensesOnDisplay.IsEnabled = isEnableAndVisible;
         }
 
@@ -438,11 +430,6 @@ namespace MoneyHustler.Tabs
             }
         }
 
-
-        #endregion
-
-        #region StatesIemsAndView
-
         private bool CheckingPossipilityOfEditingExpense(MoneyVault vaultForEditExpense, DateTime chooseDateOfExpense)
         {
             decimal balanceOnSelectDay = vaultForEditExpense.GetBalanceOnDate(chooseDateOfExpense);
@@ -460,6 +447,9 @@ namespace MoneyHustler.Tabs
             }
         }
 
+        #endregion
+
+        #region StatesAndViewItems
 
         private void ChangeAddEditViewState(Expense expense)
         {
