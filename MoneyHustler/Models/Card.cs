@@ -25,10 +25,10 @@ namespace MoneyHustler.Models
 
         public new void DecreaseBalance(Expense expense)
         {
-            if (_balance < expense.Amount)
-            {
-                throw new ArgumentException("You can't decrease your balance with amount more than current balance.");
-            }
+            //if (_balance < expense.Amount)
+            //{
+            //    throw new ArgumentException("You can't decrease your balance with amount more than current balance.");
+            //}
             _balance -= expense.Amount;
             expense.Vault = this;
             _expenses.Add(expense);

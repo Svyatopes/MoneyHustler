@@ -415,6 +415,7 @@ namespace MoneyHustler.Tabs
                     break;
                 case Deposit:
                     ((Deposit)chooseVaultForEditIncome).IncreaseBalance(newIncome);
+                    ((Deposit)chooseVaultForEditIncome).RecalculationEarnIncomes(newIncome);
                     break;
                 default:
                     return;
