@@ -16,7 +16,7 @@ namespace MoneyHustler.Models
 
         private Storage _storageInstance = Storage.GetInstance();//ANTON
         public List<BalanceOfMonth> MinBalanceMonth = new List<BalanceOfMonth>(); //ANTON: лист минимальных остатоков за месяц
-        private List<Income> _earnIncomes = new List<Income>(); //доходы чисто по вкладу
+        protected List<Income> _earnIncomes = new List<Income>(); //доходы чисто по вкладу
         public Deposit()
         {
 
@@ -40,11 +40,31 @@ namespace MoneyHustler.Models
             }
         }
 
-        public void AddNewPeriodForMinBalance()
+        public void EarnIncomeAndOpenMonthlyPeriod()
         {
-            if (D)
-            {
+            DateTime lastDayPeriodMinBalance = MinBalanceMonth.Max(item => item._closePeriod);
+            BalanceOfMonth lastBalanceOfMonth = MinBalanceMonth.FirstOrDefault(item => item._closePeriod == lastDayPeriodMinBalance);
 
+            if (DateTime.Now >= lastDayPeriodMinBalance)
+            {
+                var incomeTypePercentOfDeposit = _storageInstance.IncomeTypes.FirstOrDefault(item => item.Name == "Проценты по вкладу");
+                if (incomeTypePercentOfDeposit == null)
+                {
+                    incomeTypePercentOfDeposit = new IncomeType { Name = "Проценты по вкладу" };
+                    _storageInstance.IncomeTypes.Add(incomeTypePercentOfDeposit);
+                }
+
+                Income incomeDeposit = new Income
+                    (_balance * (Percent / 100) / 12,
+                     lastDayPeriodMinBalance,
+                     null,
+                     "Начисление процентов по вкладу",
+                     incomeTypePercentOfDeposit);
+                _earnIncomes.Add(incomeDeposit); //сохраняем в списке доходов чисто по вкладу
+                this.IncreaseBalance(incomeDeposit); //добавляем доход в этот депозит
+                incomeDeposit.Vault = this;
+                _earnIncomes.Add(incomeDeposit);
+                MinBalanceMonth.Add(new BalanceOfMonth(_balance, incomeDeposit, lastDayPeriodMinBalance.AddDays(1)));
             }
         }
 

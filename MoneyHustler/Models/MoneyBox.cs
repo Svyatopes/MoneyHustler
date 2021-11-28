@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace MoneyHustler.Models
 {
-    class MoneyBox
+    public class MoneyBox
     {
+        public Income EarnIncome { get; set; }
+
+        public decimal Amount { get; set }
     }
 }
