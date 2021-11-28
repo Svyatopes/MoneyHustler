@@ -103,5 +103,24 @@ namespace MoneyHustler.Models
 
             _instance = JsonConvert.DeserializeObject<Storage>(jsonString, _jsonSettings);
         }
+
+        public static bool IsPesonUsedInVaults(Person person)
+        {
+            return (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpences().Any(item => item.Person == person));
+        }
+
+        public static bool CheckIfPersonExist(string enteredPerson)  
+        {
+            Storage _storageInstance = GetInstance();
+            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+
+
     }
 }
