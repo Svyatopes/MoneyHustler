@@ -71,7 +71,7 @@ namespace MoneyHustler.AuxiliaryWindows
 
         private void ButtonSaveClick(object sender, RoutedEventArgs e)
         {
-            decimal enteredValue = 0;
+            decimal enteredAmount = 0;
             decimal enteredPercent = 0;
             if (TextBoxValueWithoutPercent.IsEnabled == true)
             {
@@ -82,13 +82,13 @@ namespace MoneyHustler.AuxiliaryWindows
                 }
 
 
-                if (!decimal.TryParse(TextBoxValueWithoutPercent.Text, out enteredValue))
+                if (!decimal.TryParse(TextBoxValueWithoutPercent.Text, out enteredAmount))
                 {
                     MessageBox.Show("You entered some invalid string to amount field!");
                     return;
                 }
 
-                if (enteredValue < 0)
+                if (enteredAmount < 0)
                 {
                     MessageBox.Show("Amount can't be less than zero.");
                     return;
@@ -128,7 +128,7 @@ namespace MoneyHustler.AuxiliaryWindows
             {
                
 
-                _credit = new Credit(TextBoxName.Text, Convert.ToDouble(TextBoxPercent.Text), null, enteredValue, (Person)ComboBoxPerson.SelectedItem, (Card)ComboBoxCards.SelectedItem, (
+                _credit = new Credit(TextBoxName.Text, Convert.ToDecimal(TextBoxPercent.Text), null, enteredAmount, (Person)ComboBoxPerson.SelectedItem, (Card)ComboBoxCards.SelectedItem, (
                     DateTime)DatePickerDayClose.SelectedDate, (DateTime)DatePickerDayOpen.SelectedDate);
                 _storageInstance.Credits.Add(_credit);
 

@@ -28,7 +28,7 @@ namespace MoneyHustler.Tabs
 
 
         }
-        private void ChnageIsEnabledProperty(bool isEnabled)
+        private void ChangeButtonIsEnabledProperty(bool isEnabled)
         {
             if (isEnabled)
             {
@@ -66,16 +66,16 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             _credit = null;
-            UIHelpers.ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 20);
             ButtonAdd.IsEnabled = false;
-            ChnageIsEnabledProperty(true);
+            ChangeButtonIsEnabledProperty(true);
         }
 
         private void ButtonEditCreditClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
-            UIHelpers.ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            UIHelpers.ChangeVisibilityColumns( new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 20);
             ButtonAdd.IsEnabled = false;
             _credit = credit;
 
@@ -103,9 +103,9 @@ namespace MoneyHustler.Tabs
         {
             listOfCreditsView.Clear();
             var allCredits = _storageInstance.Credits;
-            foreach (var income in allCredits)
+            foreach (Credit credit in allCredits)
             {
-                listOfCreditsView.Add(income);
+                listOfCreditsView.Add(credit);
             }
         }
 
@@ -151,7 +151,7 @@ namespace MoneyHustler.Tabs
         private void ButtonBackClick(object sender, RoutedEventArgs e)
         {
 
-            UIHelpers.ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            UIHelpers.ChangeVisibilityColumns( new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 0);
             ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
 
@@ -160,67 +160,59 @@ namespace MoneyHustler.Tabs
         private void ButtonSaveClick(object sender, RoutedEventArgs e)
         {
             decimal enteredValue;
-            double enteredPercent;
+            decimal enteredPercent;
 
-            if (TextBoxValueWithoutPercent.IsEnabled == true)
+
+            if (TextBoxValueWithoutPercent.Text == String.Empty)
             {
-                if (TextBoxValueWithoutPercent.Text == String.Empty)
-                {
-                    MessageBox.Show("You need to enter the value!");
-                    return;
-                }
-
-                var findSameCredit = _storageInstance.Credits.FirstOrDefault(item => item.Name == TextBoxName.Text.Trim());
-                if (findSameCredit == null)
-                {
-                    MessageBox.Show("A credit with the same name already exists");
-                    return;
-                }
-
-                if (!decimal.TryParse(TextBoxValueWithoutPercent.Text, out enteredValue))
-                {
-                    MessageBox.Show("You entered some invalid string to amount field!");
-                    return;
-                }
-
-                if (enteredValue < 0)
-                {
-                    MessageBox.Show("Amount can't be less than zero.");
-                    return;
-                }
-
-                if (ComboBoxCards.SelectedItem == null)
-                {
-                    MessageBox.Show("You need to choose card!");
-                    return;
-                }
-
-                if (DatePickerDayClose.SelectedDate < DatePickerDayOpen.SelectedDate)
-                {
-                    MessageBox.Show("The closing date cannot be earlier than the opening date!");
-                    return;
-                }
-
-                if (DatePickerDayClose.SelectedDate.Value.Month == DatePickerDayOpen.SelectedDate.Value.Month && DatePickerDayClose.SelectedDate.Value.Year == DatePickerDayOpen.SelectedDate.Value.Year)
-                {
-                    MessageBox.Show("You cannot take a loan and pay it off in the same month");
-                    return;
-                }
-
-                if (!double.TryParse(TextBoxPercent.Text, out enteredPercent))
-                {
-                    MessageBox.Show("You entered some invalid string to percent field!");
-                    return;
-                }
-                if (enteredPercent < 0)
-                {
-                    MessageBox.Show("Percent can't be less than zero.");
-                    return;
-                }
+                MessageBox.Show("Вам нужно ввести число!");
+                return;
             }
 
+            if (!decimal.TryParse(TextBoxValueWithoutPercent.Text, out enteredValue))
+            {
+                MessageBox.Show("Вы ввели недопустимую сумму кредита!");
+                return;
+            }
+
+            if (enteredValue < 0)
+            {
+                MessageBox.Show("Кредит не может быть отрицательным!");
+                return;
+            }
+
+            if (ComboBoxCards.SelectedItem == null)
+            {
+                MessageBox.Show("Вам нужно выбрать карту!");
+                return;
+            }
+
+            if (DatePickerDayClose.SelectedDate < DatePickerDayOpen.SelectedDate)
+            {
+                MessageBox.Show("Дата закрытия должна быть не раньше даты открытия!");
+                return;
+            }
+
+            if (DatePickerDayClose.SelectedDate.Value.Month == DatePickerDayOpen.SelectedDate.Value.Month && DatePickerDayClose.SelectedDate.Value.Year == DatePickerDayOpen.SelectedDate.Value.Year)
+            {
+                MessageBox.Show("Нельзя Открыть кредит меньше чем на один месяц!");
+                return;
+            }
+
+            if (!decimal.TryParse(TextBoxPercent.Text, out enteredPercent))
+            {
+                MessageBox.Show("Вы ввели неккортектный процент!");
+                return;
+            }
+            if (enteredPercent < 0)
+            {
+                MessageBox.Show("Процент не может быть отрицательным!");
+                return;
+            }
+
+
             enteredValue = Convert.ToDecimal(TextBoxValueWithoutPercent.Text);
-            enteredPercent = Convert.ToDouble(TextBoxPercent.Text);
+            enteredPercent = Convert.ToDecimal(TextBoxPercent.Text);
 
             string enteredName = TextBoxName.Text.Trim();
             Person enteredPerson = (Person)ComboBoxPerson.SelectedItem;
@@ -228,22 +220,37 @@ namespace MoneyHustler.Tabs
 
             if (_credit == null)
             {
-                DateTime entredOpenDate = (DateTime)DatePickerDayClose.SelectedDate;
-                DateTime entredCloseDate = (DateTime)DatePickerDayOpen.SelectedDate;
+                var findSameCredit = _storageInstance.Credits.FirstOrDefault(item => item.Name == enteredName);
+                if (findSameCredit != null)
+                {
+                    MessageBox.Show("Кредит с таким именем уже существует!");
+                    return;
+                }
+                DateTime entredCloseDate = (DateTime)DatePickerDayClose.SelectedDate;
+                DateTime entredOpenDate = (DateTime)DatePickerDayOpen.SelectedDate;
                 _credit = new Credit(enteredName, enteredPercent, null, enteredValue, enteredPerson, enteredCard, entredCloseDate, entredOpenDate);
                 _storageInstance.Credits.Add(_credit);
 
             }
             else
             {
-                _credit.Name = enteredName;
+                if (_credit.Name != enteredName.Trim())
+                {
+                    var findSameCredit = _storageInstance.Credits.FirstOrDefault(item => item.Name == enteredName);
+                    if (findSameCredit != null)
+                    {
+                        MessageBox.Show("Кредит с таким именем уже существует!");
+                        return;
+                    }
+                }
+                _credit.Name = enteredName.Trim();
                 _credit.BindedCard = enteredCard;
                 _credit.Person = enteredPerson;
             }
 
             Storage.Save();
 
-            UIHelpers.ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }, 0);
             ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
         }
@@ -253,13 +260,13 @@ namespace MoneyHustler.Tabs
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
             _credit = credit;
-            UIHelpers.ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay });
+            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 20);
             ButtonAdd.IsEnabled = false;
         }
 
         private void ButtonOncePayBackClick(object sender, RoutedEventArgs e)
         {
-            UIHelpers.ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay });
+            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 0);
             ButtonAdd.IsEnabled = true;
         }
 
@@ -309,7 +316,7 @@ namespace MoneyHustler.Tabs
 
             _credit.PayOneTimePayment(enteredValue, expenseType);
 
-            UIHelpers.ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay });
+            UIHelpers.ChangeVisibilityColumns(new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay }, 0);
             ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
 

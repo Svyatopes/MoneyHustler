@@ -14,7 +14,7 @@ namespace MoneyHustler.Models
         public decimal InitialAmount { get; set; }
 
         public string Name { get; set; }
-        public double Percent { get; set; }
+        public decimal Percent { get; set; }
         public DateTime CloseDate { get; set; }
 
         public DateTime OpenDate { get; set; }
@@ -29,7 +29,7 @@ namespace MoneyHustler.Models
         {
 
         }
-        public Credit(string name, double percent, decimal? amount, decimal initialAmount, Person person, Card card, DateTime dayClose, DateTime dayOpen)
+        public Credit(string name, decimal percent, decimal? amount, decimal initialAmount, Person person, Card card, DateTime dayClose, DateTime dayOpen)
         {
             Name = name;
             Percent = percent;
@@ -61,8 +61,8 @@ namespace MoneyHustler.Models
         private void SetMonthlyPayment()
         {
             int percentPeriod = GetMounthPeriod();
-            double monthPercent = Percent / (100 * 12);
-            double persentRate = monthPercent / (1 - Math.Pow((1 + monthPercent), 0 - percentPeriod));
+            decimal monthPercent = Percent / (100 * 12);
+            decimal persentRate = (decimal)((double)monthPercent / (1 - Math.Pow((1 + (double)monthPercent), 0 - percentPeriod)));
             decimal payment = InitialAmount * (decimal)persentRate;
             MonthlyPayment = payment;
         }

@@ -25,24 +25,15 @@ namespace MoneyHustler.Helpers
             }
         }
 
-        public static void ChangeVisibilityColumns(bool visible, ObservableCollection<ColumnDefinition> columns)
+        public static void ChangeVisibilityColumns(ObservableCollection<ColumnDefinition> columns, double stars)
         {
-            if (visible)
-            {
-                foreach (var item in columns)
-                {
-                    item.Width = new GridLength(20, GridUnitType.Star);
-                }
 
-            }
-            else
+            foreach (var item in columns)
             {
-                foreach (var item in columns)
-                {
-                    item.Width = new GridLength(0, GridUnitType.Star);
-                }
-
+                item.Width = new GridLength(stars, GridUnitType.Star);
             }
+
+
         }
     }
 }
