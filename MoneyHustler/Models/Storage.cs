@@ -102,7 +102,18 @@ namespace MoneyHustler.Models
             }
             return false;
         }
-       
+
+        public static bool CheckIfPersonExist(string enteredPerson)  
+        {
+            Storage _storageInstance = GetInstance();
+            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
+            {
+                return true;
+            }
+            return false;
+
+        }
+
 
 
     }

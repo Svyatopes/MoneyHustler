@@ -82,7 +82,7 @@ namespace MoneyHustler.Tabs
             }
 
 
-            if (CheckIfPersonExist(enteredPerson))
+            if (Storage.CheckIfPersonExist(enteredPerson))
             {
                 MessageBox.Show("Такое имя уже существует");
                 return;
@@ -123,7 +123,7 @@ namespace MoneyHustler.Tabs
             }
 
 
-            if (CheckIfPersonExist(enteredPerson))
+            if (Storage.CheckIfPersonExist(enteredPerson))
             {
                 MessageBox.Show("Такое имя уже существует");
                 return;
@@ -153,15 +153,15 @@ namespace MoneyHustler.Tabs
         //    }
         //    return false;
         //}
-        public  bool CheckIfPersonExist(string enteredPerson) // 
-        {
-            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
-            {
-                return true;
-            }
-            return false;
+        //public  bool CheckIfPersonExist(string enteredPerson) // 
+        //{
+        //    if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
             
-        }
+        //}
         
         
 
