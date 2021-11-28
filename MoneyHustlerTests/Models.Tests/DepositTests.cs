@@ -6,5 +6,12 @@ namespace MoneyHustlerTests.Models.Tests
 {
     class DepositTests
     {
+        [SetUp]
+        public void Setup()
+        {
+
+        }
+
+     
     }
 }
