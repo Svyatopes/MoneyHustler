@@ -47,19 +47,20 @@ namespace MoneyHustler.Tabs
             {
                 case "За месяц":
                     pickedPeriod = DateTime.Today;
+                    LabelPeriod.Content = $"Граффик трат за {pickedPeriod:dd MMMM yyyy}";
                     break;
                 case "За три месяца":
-                    pickedPeriod = DateTime.Today.AddMonths(-3);
+                    pickedPeriod = DateTime.Today.AddMonths(-2);
+                    LabelPeriod.Content = $"Граффик трат с {pickedPeriod:dd MMMM yyyy} по {DateTime.Today:dd MMMM yyyy}";
                     break;
 
                 case "За шесть месяцев":
-                    pickedPeriod = DateTime.Today.AddMonths(-6);
-                    break;
-                case "За все время":
-                    pickedPeriod = DateTime.UnixEpoch;
+                    pickedPeriod = DateTime.Today.AddMonths(-5);
+                    LabelPeriod.Content = $"Граффик трат с {pickedPeriod:dd MMMM yyyy} по {DateTime.Today:dd MMMM yyyy}";
                     break;
                 default:
                     pickedPeriod = DateTime.UnixEpoch;
+                    LabelPeriod.Content = $"Граффик трат за все время";
                     break;
             }
             if (SeriesCollection == null)
