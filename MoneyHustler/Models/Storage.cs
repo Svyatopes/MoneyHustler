@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using Newtonsoft.Json;
@@ -91,6 +92,18 @@ namespace MoneyHustler.Models
             };
 
             _instance = JsonConvert.DeserializeObject<Storage>(jsonString, _jsonSettings);
+        }
+        public static ExpenseType GetOrCreateExpenseTypeByName(string name)
+        {
+            Storage instance = GetInstance();
+            var expenseType = instance.ExpenseTypes.FirstOrDefault(item => item.Name == name);
+            if (expenseType == null)
+            {
+                expenseType = new ExpenseType() { Name = name };
+                instance.ExpenseTypes.Add(expenseType);
+                Storage.Save();
+            }
+            return expenseType;
         }
     }
 }

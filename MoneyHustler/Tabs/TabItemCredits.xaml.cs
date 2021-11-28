@@ -132,12 +132,8 @@ namespace MoneyHustler.Tabs
                 MessageBox.Show("Кредит уже оплачен, молодец!*Звуки салюта*");
                 return;
             }
-            var expenseType = _storageInstance.ExpenseTypes.FirstOrDefault(item => item.Name == "Кредит");
-            if (expenseType == null)
-            {
-                expenseType = new ExpenseType() { Name = "Кредит" };
-                _storageInstance.ExpenseTypes.Add(expenseType);
-            }
+
+            ExpenseType expenseType = Storage.GetOrCreateExpenseTypeByName("Кредит");
             credit.PayMonthlyPayment(expenseType);
             UpdateCreditsView();
 
@@ -307,12 +303,7 @@ namespace MoneyHustler.Tabs
                 return;
             }
 
-            var expenseType = _storageInstance.ExpenseTypes.FirstOrDefault(item => item.Name == "Кредит");
-            if (expenseType == null)
-            {
-                expenseType = new ExpenseType() { Name = "Кредит" };
-                _storageInstance.ExpenseTypes.Add(expenseType);
-            }
+            var expenseType = Storage.GetOrCreateExpenseTypeByName("Кредит");
 
             _credit.PayOneTimePayment(enteredValue, expenseType);
 
