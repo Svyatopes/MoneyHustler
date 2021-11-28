@@ -26,10 +26,6 @@ namespace MoneyHustler
         {
             Storage.Load();
 
-            Uri iconUri = new Uri("Icons/mainico.ico", UriKind.RelativeOrAbsolute);
-
-            this.Icon = BitmapFrame.Create(iconUri);
-
             InitializeComponent();
 
         }

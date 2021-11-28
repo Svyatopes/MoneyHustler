@@ -20,7 +20,7 @@
             <ColumnDefinition Width="118*"/>
         </Grid.ColumnDefinitions>
 
-        <Image x:Name="MainImage" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" Source="../Img/Bg.jpg" Stretch="UniformToFill" Grid.RowSpan="4" Panel.ZIndex="0"/>
+        <Image x:Name="MainImage" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" Source="../Img/earth.jpg" Stretch="UniformToFill" Grid.RowSpan="4" Panel.ZIndex="0"/>
         <Grid Grid.Column="0" Grid.ColumnSpan="3"  Margin="0,0,0,0"  Grid.RowSpan="4" Background="#BF000000" />
 
         <Label Grid.Row="0" Grid.Column="1" Margin="0, 0, 0, 0" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFC3B9A0" FontSize="24">Добро пожаловать!</Label>
