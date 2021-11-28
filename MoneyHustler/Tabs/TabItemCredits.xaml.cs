@@ -1,10 +1,10 @@
-﻿using MoneyHustler.Models;
+﻿using MoneyHustler.Helpers;
+using MoneyHustler.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-
 namespace MoneyHustler.Tabs
 {
     /// <summary>
@@ -66,7 +66,8 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             _credit = null;
-            ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            UIHelpers.ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            ButtonAdd.IsEnabled = false;
             ChnageIsEnabledProperty(true);
         }
 
@@ -74,7 +75,8 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
-            ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            UIHelpers.ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            ButtonAdd.IsEnabled = false;
             _credit = credit;
 
             TextBoxName.Text = _credit.Name;
@@ -149,7 +151,8 @@ namespace MoneyHustler.Tabs
         private void ButtonBackClick(object sender, RoutedEventArgs e)
         {
 
-            ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave }); ;
+            UIHelpers.ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
 
         }
@@ -240,44 +243,24 @@ namespace MoneyHustler.Tabs
 
             Storage.Save();
 
-            ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            UIHelpers.ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnLabelsEditSave, ColumnTextBoxEditSave });
+            ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
         }
-
-
-
-        private void ChangeVisibilityColumns(bool visible, ObservableCollection<ColumnDefinition> columns)
-        {
-            if (visible)
-            {
-                foreach (var item in columns)
-                {
-                    item.Width = new GridLength(20, GridUnitType.Star);
-                }
-                ButtonAdd.IsEnabled = false;
-            }
-            else
-            {
-                foreach (var item in columns)
-                {
-                    item.Width = new GridLength(0, GridUnitType.Star);
-                }
-                ButtonAdd.IsEnabled = true;
-            }
-        }
-
 
         private void ButtonPayOnceItemClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
             var credit = (Credit)button.DataContext;
             _credit = credit;
-            ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay });
+            UIHelpers.ChangeVisibilityColumns(true, new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay });
+            ButtonAdd.IsEnabled = false;
         }
 
         private void ButtonOncePayBackClick(object sender, RoutedEventArgs e)
         {
-            ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay });
+            UIHelpers.ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay });
+            ButtonAdd.IsEnabled = true;
         }
 
         private void ButtonOncePaySaveClick(object sender, RoutedEventArgs e)
@@ -326,7 +309,8 @@ namespace MoneyHustler.Tabs
 
             _credit.PayOneTimePayment(enteredValue, expenseType);
 
-            ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay });
+            UIHelpers.ChangeVisibilityColumns(false, new ObservableCollection<ColumnDefinition> { ColumnTextBoxOncePay, ColumnLabelsOncePay });
+            ButtonAdd.IsEnabled = true;
             UpdateCreditsView();
 
             Storage.Save();
