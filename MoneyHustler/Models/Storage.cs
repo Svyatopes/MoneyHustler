@@ -45,17 +45,66 @@ namespace MoneyHustler.Models
             return allIncomes;
         }
 
-        public static List<Expense> GetAllExpences()
+        public static List<Expense> GetAllExpenses()
         {
-            List<Expense> allExpences = new List<Expense>();
+            List<Expense> allExpenses = new List<Expense>();
 
             Storage instance = GetInstance();
             foreach (MoneyVault moneyVault in instance.Vaults)
             {
-                allExpences.AddRange(moneyVault.Expenses);
+                allExpenses.AddRange(moneyVault.Expenses);
             }
 
-            return allExpences;
+            return allExpenses;
+        }
+
+        public static bool IsIncomeTypeUsedInVaults(IncomeType incomeType)
+        {
+            return GetAllIncomes().Any(item => item.Type == incomeType);
+        }
+
+        public static bool IsExpenseTypeUsedInVaults(ExpenseType expenseType)
+        {
+            return GetAllExpenses().Any(item => item.Type == expenseType);
+        }
+
+        public static Person GetOrCreatePersonByName(string name)
+        {
+            Storage instance = GetInstance();
+            var person = instance.Persons.FirstOrDefault(item => item.Name == name);
+            if (person == null)
+            {
+                person = new Person() { Name = name };
+                instance.Persons.Add(person);
+                Storage.Save();
+            }
+            return person;
+        }
+
+        public static ExpenseType GetOrCreateExpenseTypeByName(string name)
+        {
+            Storage instance = GetInstance();
+            var expenseType = instance.ExpenseTypes.FirstOrDefault(item => item.Name == name);
+            if (expenseType == null)
+            {
+                expenseType = new ExpenseType() { Name = name };
+                instance.ExpenseTypes.Add(expenseType);
+                Storage.Save();
+            }
+            return expenseType;
+        }
+
+        public static IncomeType GetOrCreateIncomeTypeByName(string name)
+        {
+            Storage instance = GetInstance();
+            var incomeType = instance.IncomeTypes.FirstOrDefault(item => item.Name == name);
+            if (incomeType == null)
+            {
+                incomeType = new IncomeType() { Name = name };
+                instance.IncomeTypes.Add(incomeType);
+                Storage.Save();
+            }
+            return incomeType;
         }
 
         public static void Save()
@@ -105,5 +154,24 @@ namespace MoneyHustler.Models
             }
             return expenseType;
         }
+
+        public static bool IsPesonUsedInVaults(Person person)
+        {
+            return (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpenses().Any(item => item.Person == person));
+        }
+
+        public static bool CheckIfPersonExist(string enteredPerson)  
+        {
+            Storage _storageInstance = GetInstance();
+            if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+
+
     }
 }
