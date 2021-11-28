@@ -40,6 +40,14 @@ namespace MoneyHustler.Models
             }
         }
 
+        public void AddNewPeriodForMinBalance()
+        {
+            if (D)
+            {
+
+            }
+        }
+
         public new void DecreaseBalance(Expense expense)
         {
             _balance -= expense.Amount;

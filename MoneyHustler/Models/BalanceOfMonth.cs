@@ -8,8 +8,6 @@ namespace MoneyHustler.Models
 {
     public class BalanceOfMonth
     {
-        //public int MonthMin;
-        //public int YearMin;
         public decimal MinBalance { get; set; }
 
         public Income EarnIncome { get; set; }
