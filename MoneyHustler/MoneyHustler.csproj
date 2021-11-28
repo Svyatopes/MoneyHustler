@@ -12,6 +12,8 @@
   <ItemGroup>
     <None Remove="ImgIncomes.jpg" />
     <None Remove="Img\Bg.jpg" />
+    <None Remove="Img\earth.jpg" />
+    <None Remove="mainico.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +25,10 @@
     <Resource Include="Img\Bg.jpg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Img\earth.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="mainico.ico" />
   </ItemGroup>
 
   <ItemGroup>
