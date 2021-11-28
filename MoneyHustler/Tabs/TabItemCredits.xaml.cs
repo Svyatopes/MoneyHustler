@@ -25,6 +25,8 @@ namespace MoneyHustler.Tabs
         {
             _storageInstance = Storage.GetInstance();
             InitializeComponent();
+            columnsSaveEdit = new ObservableCollection<ColumnDefinition>();
+            columnsOncePay = new ObservableCollection<ColumnDefinition>();
             columnsSaveEdit.Add(ColumnLabelsEditSave);
             columnsSaveEdit.Add(ColumnTextBoxEditSave);
             columnsOncePay.Add(ColumnLabelsOncePay);
@@ -174,6 +176,18 @@ namespace MoneyHustler.Tabs
             if (ComboBoxCards.SelectedItem == null)
             {
                 MessageBox.Show("Вам нужно выбрать карту!");
+                return;
+            }
+
+            if (DatePickerDayOpen.SelectedDate == null)
+            {
+                MessageBox.Show("Вам нужно выбрать дату открытия!");
+                return;
+            }
+
+            if (DatePickerDayClose.SelectedDate == null)
+            {
+                MessageBox.Show("Вам нужно выбрать дату закрытия!");
                 return;
             }
 
