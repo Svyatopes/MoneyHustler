@@ -8,9 +8,9 @@ using System.Windows.Controls;
 
 namespace MoneyHustler.Helpers
 {
-    public class UIHelpers
+    public static class UIHelpers
     {
-        public static void SetButtonEnabledAndVisibility(Button button, bool enabled) 
+        public static void SetButtonEnabledAndVisibility(Button button, bool enabled)
         {
             if (enabled)
             {
