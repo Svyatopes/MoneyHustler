@@ -22,8 +22,8 @@ namespace MoneyHustler.Tabs
             InitializeComponent();
             listOfCreditsView = new ObservableCollection<Credit>(_storageInstance.Credits);
             listViewForCredits.ItemsSource = listOfCreditsView;
-
-            ComboBoxCards.ItemsSource = _storageInstance.Vaults;
+            var cards = _storageInstance.Vaults.Where(item => item.GetType() == typeof(Card));
+            ComboBoxCards.ItemsSource = cards;
             ComboBoxPerson.ItemsSource = _storageInstance.Persons;
 
 
