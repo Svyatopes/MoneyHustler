@@ -39,21 +39,21 @@
                     <GridViewColumn Header="Ежемесячный платеж" Width="Auto" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  x:Name="ButtonPayment" Content="Оплатить" Margin="0"  Padding="10" VerticalAlignment="Center"  Click="ButtonPayItemClick" />
+                                <Button  x:Name="ButtonPayment" Content="Оплатить" Margin="0"  VerticalAlignment="Center"  Click="ButtonPayItemClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Удалить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="Удалить" Margin="0"  Padding="10" VerticalAlignment="Center"  Click="ButtonRemoveCreditItemClick" />
+                                <Button  Content="Удалить" Margin="0" VerticalAlignment="Center"  Click="ButtonRemoveCreditItemClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Изменить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="Просмотреть" Margin="0"  Padding="10" VerticalAlignment="Center"  Click="ButtonEditCreditClick" />
+                                <Button  Content="Просмотреть" Margin="0" VerticalAlignment="Center"  Click="ButtonEditCreditClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
