@@ -87,6 +87,7 @@ namespace MoneyHustler.Tabs
             var credit = (Credit)button.DataContext;
             UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOn);
             ButtonAdd.IsEnabled = false;
+            ChangeButtonIsEnabledProperty(false);
             _credit = credit;
 
             TextBoxName.Text = _credit.Name;
@@ -292,6 +293,7 @@ namespace MoneyHustler.Tabs
                 MessageBox.Show("Сумма платежа больше чем остаток долга по кредиту");
                 return;
             }
+
 
             var expenseType = Storage.GetOrCreateExpenseTypeByName("Кредит");
 

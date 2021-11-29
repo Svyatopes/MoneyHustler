@@ -31,6 +31,11 @@ namespace MoneyHustler.Models
         [JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
         public MoneyVault Vault { get; set; } // какой кошелек
 
+        public MoneyTraffic()
+        {
+
+        }
+
         public MoneyTraffic(decimal amount, DateTime date, Person person, string comment)
         {
             Amount = amount;
