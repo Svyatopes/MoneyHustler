@@ -24,5 +24,21 @@ namespace MoneyHustlerTests.Models.Tests
             //assert
             Assert.AreEqual(card.GetBalance(), expectedBalance);
         }
+
+        [TestCase(100, 50, 150)]
+
+        public void IncreaseBalanceTest(decimal cardBalance, decimal incomeAmount, decimal expectedBalance)
+        {
+            //arrange
+            Card card = new Card("Card", cardBalance, 0);
+            Income income = new Income();
+            income.Amount = incomeAmount;
+
+            //act          
+            card.IncreaseBalance(income);
+
+            //assert
+            Assert.AreEqual(card.GetBalance(), expectedBalance);
+        }
     }
 }
