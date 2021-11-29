@@ -1,4 +1,5 @@
-﻿using MoneyHustler.Models;
+﻿using MoneyHustler.Helpers;
+using MoneyHustler.Models;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -60,9 +61,9 @@ namespace MoneyHustler.Tabs
             _dateStartForView = DateTime.MinValue;
             _dateEndForView = DateTime.MaxValue;
 
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
             DatePickerChooseDateOfExpense.SelectedDate = DateTime.Now;
 
             _lastHeaderClicked = null;
@@ -311,13 +312,13 @@ namespace MoneyHustler.Tabs
             switch (ComboBoxFilterList.SelectedIndex)
             {
                 case (int)ComboBoxFilterItems.Vault:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilterList, _storageInstance.Vaults);
+                    UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilterList, _storageInstance.Vaults);
                     break;
                 case (int)ComboBoxFilterItems.ExpenseType:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilterList, _storageInstance.ExpenseTypes);
+                    UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilterList, _storageInstance.ExpenseTypes);
                     break;
                 case (int)ComboBoxFilterItems.Persons:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilterList, _storageInstance.Persons);
+                    UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilterList, _storageInstance.Persons);
                     break;
                 default:
                     return;
@@ -526,9 +527,9 @@ namespace MoneyHustler.Tabs
                 }
 
             }
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
             SortExpenses("Date", _lastDirection);
 
         }

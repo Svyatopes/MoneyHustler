@@ -1,4 +1,5 @@
-﻿using MoneyHustler.Models;
+﻿using MoneyHustler.Helpers;
+using MoneyHustler.Models;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -34,9 +35,10 @@ namespace MoneyHustler.Tabs
             _dateStartForView = DateTime.MinValue;
             _dateEndForView = DateTime.MaxValue;
 
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
+
             DatePickerIncomeDate.SelectedDate = DateTime.Now;
 
             _lastHeaderClicked = null;
@@ -315,13 +317,13 @@ namespace MoneyHustler.Tabs
             switch (ComboBoxFilterIncomes.SelectedIndex)
             {
                 case (int)ComboBoxFilterItems.Vault:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Vaults);
+                    UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Vaults);
                     break;
                 case (int)ComboBoxFilterItems.IncomeType:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.IncomeTypes);
+                    UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.IncomeTypes);
                     break;
                 case (int)ComboBoxFilterItems.Persons:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Persons);
+                    UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Persons);
                     break;
                 default:
                     return;
@@ -484,9 +486,9 @@ namespace MoneyHustler.Tabs
                 foreach (Income item in allIncomes)
                     listOfIncomesView.Add(item);
             }
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
+            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
             Sort("Date", _lastDirection);
         }
 

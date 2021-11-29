@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,5 +33,12 @@ namespace MoneyHustler.Helpers
                 item.Width = new GridLength(stars, GridUnitType.Star);
             }
         }
+
+        public static void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source)
+        {
+            comboBox.ItemsSource = source;
+            comboBox.SelectedIndex = 0;
+        }
+
     }
 }
