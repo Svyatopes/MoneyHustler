@@ -6,9 +6,7 @@
             Header="Аналитика" Background="#FFC3B9A0" BorderBrush="{x:Null}"
             >
     <Grid>
-        <TabControl Margin="0,0,0,0" Background="#FF1F1F1F" BorderBrush="#FFC3B9A0" Name="TabControlCategories">
-            <TabItem Header="Расходы за период" Background="#FFC3B9A0" BorderBrush="{x:Null}" Width="{Binding ElementName=c3, Path=(FrameworkElement.ActualWidth)}">
-                <Grid>
+      
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10*"></RowDefinition>
                         <RowDefinition Height="10*"></RowDefinition>
@@ -27,7 +25,7 @@
                             <ComboBoxItem>
                                 За шесть месяцев
                             </ComboBoxItem>
-                            <ComboBoxItem>
+                            <ComboBoxItem IsSelected="True">
                                 За все время
                             </ComboBoxItem>
 
@@ -43,8 +41,6 @@
                             <lvc:DefaultTooltip BulletSize="20"></lvc:DefaultTooltip>
                         </lvc:PieChart.DataTooltip>
                     </lvc:PieChart>
-                </Grid>
-            </TabItem>
-        </TabControl>
+     
     </Grid>
 </TabItem>

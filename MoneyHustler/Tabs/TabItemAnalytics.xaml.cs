@@ -86,6 +86,10 @@ namespace MoneyHustler.Tabs
         {
             ComboBox comboBox = (ComboBox)sender;
             ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            if (selectedItem.Content == null)
+            {
+                return;
+            }
             var period = selectedItem.Content.ToString();
             SeriesCollection.Clear();
             CreateDiagram(period);
