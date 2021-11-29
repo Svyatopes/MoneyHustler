@@ -35,9 +35,9 @@ namespace MoneyHustler.Tabs
             _dateStartForView = DateTime.MinValue;
             _dateEndForView = DateTime.MaxValue;
 
-            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
-            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
-            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomePerson, _storageInstance.Persons);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomeVault, _storageInstance.Vaults);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomeType, _storageInstance.IncomeTypes);
 
             DatePickerIncomeDate.SelectedDate = DateTime.Now;
 
@@ -226,8 +226,8 @@ namespace MoneyHustler.Tabs
                 {
                     _income.Vault.Remove(_income);
                     listOfIncomesView.Remove(_income);
-                    IncreaseBalanceOfSelectedVaultType(selectedVault, _income);
-                    //selectedVault.IncreaseBalance(_income);
+                    VariablesHelper.IncreaseOrDecreaseBalanceOfSelectedVaultType(selectedVault, _income);
+
                     listOfIncomesView.Add(_income);
                 }
                 UpdateIncomesViewAndClearAddEditArea(); //иначе не обновляется
@@ -244,7 +244,7 @@ namespace MoneyHustler.Tabs
                    TextBoxIncomeComment.Text.Trim(),
                    incomeType
                 );
-                IncreaseBalanceOfSelectedVaultType(selectedVault, newIncome);
+                VariablesHelper.IncreaseOrDecreaseBalanceOfSelectedVaultType(selectedVault, newIncome);
                 //selectedVault.IncreaseBalance(newIncome);
                 listOfIncomesView.Add(newIncome);
                 MessageBox.Show("поднял");
@@ -300,11 +300,6 @@ namespace MoneyHustler.Tabs
 
         #region ComboBoxes
 
-        private void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source) //
-        {
-            comboBox.ItemsSource = source;
-            comboBox.SelectedIndex = 0;
-        }
         private enum ComboBoxFilterItems
         {
             Vault,
@@ -317,13 +312,13 @@ namespace MoneyHustler.Tabs
             switch (ComboBoxFilterIncomes.SelectedIndex)
             {
                 case (int)ComboBoxFilterItems.Vault:
-                    UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Vaults);
+                    UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxItemOfFilter, _storageInstance.Vaults);
                     break;
                 case (int)ComboBoxFilterItems.IncomeType:
-                    UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.IncomeTypes);
+                    UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxItemOfFilter, _storageInstance.IncomeTypes);
                     break;
                 case (int)ComboBoxFilterItems.Persons:
-                    UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Persons);
+                    UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxItemOfFilter, _storageInstance.Persons);
                     break;
                 default:
                     return;
@@ -486,9 +481,9 @@ namespace MoneyHustler.Tabs
                 foreach (Income item in allIncomes)
                     listOfIncomesView.Add(item);
             }
-            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
-            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
-            UIHelpers.SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomePerson, _storageInstance.Persons);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomeVault, _storageInstance.Vaults);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomeType, _storageInstance.IncomeTypes);
             Sort("Date", _lastDirection);
         }
 

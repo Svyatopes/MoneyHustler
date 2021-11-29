@@ -34,7 +34,7 @@ namespace MoneyHustler.Helpers
             }
         }
 
-        public static void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source)
+        public static void SetComboBoxItemsSourceAndSelectZeroIndex(ComboBox comboBox, IEnumerable source)
         {
             comboBox.ItemsSource = source;
             comboBox.SelectedIndex = 0;
