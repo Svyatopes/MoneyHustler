@@ -57,14 +57,14 @@
                     <GridViewColumn Header="Удалить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="Удалить" Margin="0"  Padding="10" VerticalAlignment="Center"  Click="ButtonRemoveCreditItemClick" />
+                                <Button  Content="Удалить" Margin="0" VerticalAlignment="Center"  Click="ButtonRemoveCreditItemClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Изменить" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  Content="Просмотреть" Margin="0"  Padding="10" VerticalAlignment="Center"  Click="ButtonEditCreditClick" />
+                                <Button  Content="Просмотреть" Margin="0" VerticalAlignment="Center"  Click="ButtonEditCreditClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
