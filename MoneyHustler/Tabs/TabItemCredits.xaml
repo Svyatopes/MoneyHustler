@@ -2,6 +2,8 @@
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             Header="Кредиты" Background="#FFC3B9A0" BorderBrush="{x:Null}"
+            Selector.Selected="TabItemCreditSelected"
+         
             >
     <Grid>
         <Grid.RowDefinitions>
@@ -18,8 +20,10 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="55*"/>
-            <ColumnDefinition x:Name="ColumnLabels" Width="20*"/>
-            <ColumnDefinition x:Name="ColumnTextBox" Width="15*"/>
+            <ColumnDefinition x:Name="ColumnLabelsEditSave" Width="0*"/>
+            <ColumnDefinition x:Name="ColumnTextBoxEditSave" Width="0*"/>
+            <ColumnDefinition x:Name="ColumnLabelsOncePay" Width="0*"/>
+            <ColumnDefinition x:Name="ColumnTextBoxOncePay" Width="0*"/>
             <ColumnDefinition Width="5*"/>
 
         </Grid.ColumnDefinitions>
@@ -34,12 +38,19 @@
             <ListView.View >
                 <GridView>
                     <GridViewColumn Header="Название"  Width="auto"   DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Сумма" Width="Auto"  DisplayMemberBinding="{Binding Value, StringFormat=0.00}"/>
-                    <GridViewColumn Header="Cумма платежа" Width="Auto"  DisplayMemberBinding="{Binding AnnuentPayValue, StringFormat=0}"/>
+                    <GridViewColumn Header="Сумма" Width="Auto"  DisplayMemberBinding="{Binding Amount, StringFormat=0.00}"/>
+                    <GridViewColumn Header="Cумма платежа" Width="Auto"  DisplayMemberBinding="{Binding MonthlyPayment, StringFormat=0}"/>
                     <GridViewColumn Header="Ежемесячный платеж" Width="Auto" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button  x:Name="ButtonPayment" Content="Оплатить" Margin="0"  Padding="10" VerticalAlignment="Center"  Click="ButtonPayItemClick" />
+                                <Button  x:Name="ButtonPayment" Content="Ежемесячный платеж" Margin="0"  Padding="10" VerticalAlignment="Center"  Click="ButtonPayItemClick" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Совершить единовременный платеж" Width="Auto" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button  x:Name="ButtonOncePayment" Content="Единовременный платеж" Margin="0"  Padding="10" VerticalAlignment="Center"  Click="ButtonPayOnceItemClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -63,24 +74,32 @@
         </ListView>
         <Rectangle x:Name="BackgroundRectangle" Grid.ColumnSpan="2" Grid.Column="2" Grid.RowSpan="7" Grid.Row="1"  Opacity="0.5" Fill="#FF565555" Panel.ZIndex="-1" Margin="0,0,0,0"/>
 
-        <Label Grid.Row="1" Grid.Column="2"  HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Название</Label>
-        <TextBox x:Name="TextBoxName" Grid.Row="1"  Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
-        <Label Grid.Row="2" Grid.Column="2"  HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Сумма</Label>
+        <Label Name="LabelName" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Название</Label>
+        <TextBox x:Name="TextBoxName" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
+        <Label Name="LabelValueWithoutPercent" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Сумма</Label>
         <TextBox x:Name="TextBoxValueWithoutPercent" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
-        <Label Grid.Row="3" Grid.Column="2"  HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Дата открытия</Label>
-        <DatePicker x:Name="DatePickerDayOpen" Grid.Row="3" Grid.Column="3"  HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
-        <Label Grid.Row="4" Grid.Column="2"  HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Дата закрытия</Label>
-        <DatePicker x:Name="DatePickerDayClose" Grid.Row="4" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
-        <Label Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Процент</Label>
+        <Label Name="LabelOpenDate" Grid.Row="3" Grid.Column="2"  HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Дата открытия</Label>
+        <DatePicker x:Name="DatePickerDayOpen" Grid.Row="3" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
+        <Label Name="LabelCloseDate" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Дата закрытия</Label>
+        <DatePicker x:Name="DatePickerDayClose" Grid.Row="4"  Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
+        <Label Name="LabelPercent"  Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Процент</Label>
         <TextBox x:Name="TextBoxPercent" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
-        <Label Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Счет для списания</Label>
+        <Label Name="LabelCards" Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Счет для списания</Label>
         <ComboBox x:Name="ComboBoxCards" Grid.Row="6" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100" DisplayMemberPath="Name"></ComboBox>
-        <Label Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Владелец</Label>
+        <Label Name="LabelPerson" Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Владелец</Label>
         <ComboBox x:Name="ComboBoxPerson" Grid.Row="7" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100" DisplayMemberPath="Name"></ComboBox>
 
-        <Button x:Name="ButtonAdd" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить" Click="ButtonAddCreditClick"/>
+
+        <Button x:Name="ButtonAdd" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="1"  MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Добавить" Click="ButtonAddCreditClick"/>
         <Button x:Name="ButtonBack" Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Назад" Click="ButtonBackClick"/>
-        <Button x:Name="ButtonSave" Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Сохранить" Click="ButtonSaveClick"/>
+        <Button x:Name="ButtonSave" Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="1"  MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Сохранить" Click="ButtonSaveClick"/>
+
+        <Label Name="LabelOncePay" Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Сумма платежа</Label>
+        <TextBox x:Name="TextBoxOncePay" Grid.Row="1"  Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
+
+        <Button x:Name="ButtonOncePaySave" Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Оплатить" Click="ButtonOncePaySaveClick"/>
+        <Button x:Name="ButtonOncePayBack" Grid.Row="8" Grid.Column="5" Grid.ColumnSpan="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Назад" Click="ButtonOncePayBackClick"/>
+
 
     </Grid>
 </TabItem>
