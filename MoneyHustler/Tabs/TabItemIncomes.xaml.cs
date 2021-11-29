@@ -226,9 +226,6 @@ namespace MoneyHustler.Tabs
                 {
                     _income.Vault.Remove(_income);
                     listOfIncomesView.Remove(_income);
-                    VariablesHelper.IncreaseOrDecreaseBalanceOfSelectedVaultType(selectedVault, _income);
-
-                    listOfIncomesView.Add(_income);
                 }
                 UpdateIncomesViewAndClearAddEditArea(); //иначе не обновляется
                 ChangeStateListAreaAndSetButtonAddEditContent("Добавить", true);
@@ -244,8 +241,7 @@ namespace MoneyHustler.Tabs
                    TextBoxIncomeComment.Text.Trim(),
                    incomeType
                 );
-                VariablesHelper.IncreaseOrDecreaseBalanceOfSelectedVaultType(selectedVault, newIncome);
-                //selectedVault.IncreaseBalance(newIncome);
+                IncreaseBalanceOfSelectedVaultType(selectedVault, newIncome);
                 listOfIncomesView.Add(newIncome);
                 MessageBox.Show("поднял");
             }
