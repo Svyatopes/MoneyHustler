@@ -41,13 +41,16 @@ namespace MoneyHustlerTests.Models.Tests
             Assert.AreEqual(expectedMessage, ex.Message);
         }
 
-        [TestCase(50, 50)]
+        [TestCase(50, 1000)]
 
         public void IncreaseBalanceTest(decimal incomeAmount, decimal expectedBalance)
         {
             //arrange
-            Card card = new Card();
+            Card card1 = new Card();
+            Card card = new Card("Card", 1000, 0);
             Income income = new Income();
+            income.Amount = 100;
+            income.Vault = card;
             income.Amount = incomeAmount;
 
             //act          
@@ -56,6 +59,8 @@ namespace MoneyHustlerTests.Models.Tests
             //assert
             Assert.AreEqual(card.GetBalance(), expectedBalance);
         }
+
+
 
         [TestCase(100, 50)]
         public void DecreaseBalanceWithCategoryTest(decimal cardBalance, decimal expenseAmount)
