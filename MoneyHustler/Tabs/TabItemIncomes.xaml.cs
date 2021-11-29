@@ -356,22 +356,22 @@ namespace MoneyHustler.Tabs
             {
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.AllTime:
                     ChangeFilterByDatesInListView(DateTime.MinValue);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.Today:
                     ChangeFilterByDatesInListView(DateTime.Now.Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastWeek:
                     ChangeFilterByDatesInListView(DateTime.Now.AddDays(-7).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastMonth:
                     ChangeFilterByDatesInListView(DateTime.Now.AddMonths(-1).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.ChooseYourself:
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 default:
                     return;
@@ -492,15 +492,6 @@ namespace MoneyHustler.Tabs
             Sort("Date", _lastDirection);
         }
 
-        private void ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(bool isEnableAndVisible)
-        {
-            if (isEnableAndVisible)
-                StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Visible;
-            else
-                StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Hidden;
-
-            StackPanelSelectDateIncomesOnDisplay.IsEnabled = isEnableAndVisible;
-        }
         private void ChangeFilterByDatesInListView(DateTime startDate)
         {
             _dateStartForView = startDate;

@@ -295,11 +295,7 @@ namespace MoneyHustler.Tabs
         #endregion
 
         #region ComboBoxes
-        private void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source) //
-        {
-            comboBox.ItemsSource = source;
-            comboBox.SelectedIndex = 0;
-        }
+        
         private enum ComboBoxFilterItems
         {
             Vault,
@@ -350,22 +346,22 @@ namespace MoneyHustler.Tabs
             {
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.AllTime:
                     ChangeFilterByDatesInListView(DateTime.MinValue);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.Today:
                     ChangeFilterByDatesInListView(DateTime.Now.Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.LastWeek:
                     ChangeFilterByDatesInListView(DateTime.Now.AddDays(-7).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.LastMonth:
                     ChangeFilterByDatesInListView(DateTime.Now.AddMonths(-1).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.ChooseYourself:
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true);
+                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 default:
                     return;
@@ -392,16 +388,6 @@ namespace MoneyHustler.Tabs
         {
             _dateEndForView = (DateTime)DatePickerSelectEndPeriodExpenses.SelectedDate;
             UpdateExpensesViewAndClearAddEditArea();
-        }
-
-        private void ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(bool isEnableAndVisible)
-        {
-            if (isEnableAndVisible)
-                StackPanelSelectDateExpensesOnDisplay.Visibility = Visibility.Visible;
-            else
-                StackPanelSelectDateExpensesOnDisplay.Visibility = Visibility.Hidden;
-
-            StackPanelSelectDateExpensesOnDisplay.IsEnabled = isEnableAndVisible;
         }
 
         private void ChangeFilterByDatesInListView(DateTime startDate)
