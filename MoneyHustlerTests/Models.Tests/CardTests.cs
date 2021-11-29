@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using MoneyHustler.Models;
+using System;
+using System.Linq;
 
 namespace MoneyHustlerTests.Models.Tests
 {
@@ -25,12 +27,26 @@ namespace MoneyHustlerTests.Models.Tests
             Assert.AreEqual(card.GetBalance(), expectedBalance);
         }
 
-        [TestCase(100, 50, 150)]
-
-        public void IncreaseBalanceTest(decimal cardBalance, decimal incomeAmount, decimal expectedBalance)
+        [TestCase(50, 100, "You can't decrease your balance with amount more than current balance.")]
+        public void DecreaseBalanseNegativeTest(decimal cardBalance, decimal expenseAmount, string expectedMessage)
         {
             //arrange
             Card card = new Card("Card", cardBalance, 0);
+            Expense expense = new Expense();
+            expense.Amount = expenseAmount;
+
+            //act, assert
+
+            Exception ex = Assert.Throws(typeof(ArgumentException), () => card.DecreaseBalance(expense));
+            Assert.AreEqual(expectedMessage, ex.Message);
+        }
+
+        [TestCase(50, 50)]
+
+        public void IncreaseBalanceTest(decimal incomeAmount, decimal expectedBalance)
+        {
+            //arrange
+            Card card = new Card();
             Income income = new Income();
             income.Amount = incomeAmount;
 
@@ -40,5 +56,26 @@ namespace MoneyHustlerTests.Models.Tests
             //assert
             Assert.AreEqual(card.GetBalance(), expectedBalance);
         }
+
+        [TestCase(100, 50)]
+        public void DecreaseBalanceWithCategoryTest(decimal cardBalance, decimal expenseAmount)
+        {
+            //arrange
+            Card card = new Card("Card", cardBalance, 0);
+            Expense expense = new Expense();
+            expense.Amount = expenseAmount;
+
+            //act          
+            card.DecreaseBalance(expense);
+
+            Storage _instance = Storage.GetInstance();
+            var incomeTypeCashBack = _instance.IncomeTypes.FirstOrDefault(item => item.Name == "CashBack");
+
+
+            //assert
+            Assert.AreEqual(incomeTypeCashBack.Name, "CashBack");
+        }
+
+
     }
 }
