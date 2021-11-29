@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MoneyHustler.Models
+﻿namespace MoneyHustler.Models
 {
     public class Person //класс члена семьи
     {

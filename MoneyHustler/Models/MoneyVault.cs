@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyHustler.Models
 {
@@ -115,11 +113,6 @@ namespace MoneyHustler.Models
                     _balance += moneyTraffic.Amount - newAmount;
                     break;
             }
-        }
-
-        public decimal ReturnBalanceWithDifferenceAmount(decimal deltaAmount)
-        {
-            return _balance - deltaAmount;
         }
 
     }

@@ -1,7 +1,6 @@
 ﻿using MoneyHustler.Helpers;
 using MoneyHustler.Models;
 using System;
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -124,7 +123,7 @@ namespace MoneyHustler.Tabs
 
         #region Buttons
 
-        
+
         private void ButtonEditIncome_Click(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;

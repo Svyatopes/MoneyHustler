@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyHustler.Models
 {
     public class Credit
     {
-       
+
         public decimal? Amount { get; set; }
 
         public decimal InitialAmount { get; set; }
@@ -86,7 +82,7 @@ namespace MoneyHustler.Models
             Expense expense = new Expense(payValue, DateTime.Today, Person, "Единовременный платеж по кредиту", expenseType);
 
             BindedCard.DecreaseBalance(expense);
-            
+
             decimal procentVlaueAmount = (decimal)(InitialAmount * Percent * DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month)) / 36500;
             decimal creditRepayment = MonthlyPayment - procentVlaueAmount;
             decimal mainDebt = InitialAmount - creditRepayment;
@@ -95,7 +91,7 @@ namespace MoneyHustler.Models
 
             InitialAmount = mainDebt;
             InitialAmount -= payValue;
-            
+
             SetMonthlyPayment();
             Amount = mainDebt - payValue;
             InitialAmount = tmp;
