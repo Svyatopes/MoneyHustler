@@ -81,14 +81,19 @@ namespace MoneyHustler.Models
 
         }
 
-        public void PayOneTimePayment(decimal payValue, ExpenseType expenseType)
+        public void PayOneTimePayment(decimal payValue, ExpenseType expenseType, DateTime paymentDate)
         {
             Expense expense = new Expense(payValue, DateTime.Today, Person, "Единовременный платеж по кредиту", expenseType);
 
             BindedCard.DecreaseBalance(expense);
+            
+            decimal procentVlaueAmount = (decimal)(Amount * Percent * DateTime.DaysInMonth(paymentDate.Year, paymentDate.Month)) / 36500;
+            decimal creditRepayment = MonthlyPayment - procentVlaueAmount;
+            decimal mainDebt = InitialAmount - creditRepayment;
+
             decimal tmp = InitialAmount;
 
-            InitialAmount = (decimal)Amount;
+            InitialAmount = mainDebt;
             InitialAmount -= payValue;
 
             SetMonthlyPayment();

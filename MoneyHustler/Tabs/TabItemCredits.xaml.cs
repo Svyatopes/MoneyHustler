@@ -87,6 +87,7 @@ namespace MoneyHustler.Tabs
             var credit = (Credit)button.DataContext;
             UIHelpers.ChangeWidthGridColumns(columnsSaveEdit, ColumnVisibilityOn);
             ButtonAdd.IsEnabled = false;
+            ChangeButtonIsEnabledProperty(false);
             _credit = credit;
 
             TextBoxName.Text = _credit.Name;
@@ -293,9 +294,22 @@ namespace MoneyHustler.Tabs
                 return;
             }
 
-            var expenseType = Storage.GetOrCreateExpenseTypeByName("Кредит");
+            if (DatePickerPayDay.SelectedDate > _credit.CloseDate)
+            {
+                MessageBox.Show("На этот момент времени кредит уже закрыт!");
+                return;
+            }
 
-            _credit.PayOneTimePayment(enteredValue, expenseType);
+            if (DatePickerPayDay.SelectedDate < _credit.OpenDate)
+            {
+                MessageBox.Show("На этот момент времени кредит еще не открыт!");
+                return;
+            }
+
+            var expenseType = Storage.GetOrCreateExpenseTypeByName("Кредит");
+            var paymentDate = DatePickerPayDay.SelectedDate;
+
+            _credit.PayOneTimePayment(enteredValue, expenseType, (DateTime)paymentDate);
 
             UIHelpers.ChangeWidthGridColumns(columnsOncePay, ColumnVisibilityOff);
             ButtonAdd.IsEnabled = true;

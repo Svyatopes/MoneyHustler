@@ -142,18 +142,7 @@ namespace MoneyHustler.Models
 
             _instance = JsonConvert.DeserializeObject<Storage>(jsonString, _jsonSettings);
         }
-        public static ExpenseType GetOrCreateExpenseTypeByName(string name)
-        {
-            Storage instance = GetInstance();
-            var expenseType = instance.ExpenseTypes.FirstOrDefault(item => item.Name == name);
-            if (expenseType == null)
-            {
-                expenseType = new ExpenseType() { Name = name };
-                instance.ExpenseTypes.Add(expenseType);
-                Storage.Save();
-            }
-            return expenseType;
-        }
+
 
         public static bool IsPesonUsedInVaults(Person person)
         {

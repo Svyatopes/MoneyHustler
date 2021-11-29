@@ -96,6 +96,8 @@
 
         <Label Name="LabelOncePay" Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Сумма платежа</Label>
         <TextBox x:Name="TextBoxOncePay" Grid.Row="1"  Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></TextBox>
+        <Label Name="LabelDatePay" Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center" FontWeight="Normal" Foreground="#FFC3B9A0" FontSize="20" VerticalAlignment="Center">Дата платежа</Label>
+        <DatePicker x:Name="DatePickerPayDay" Grid.Row="2"  Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="100"></DatePicker>
 
         <Button x:Name="ButtonOncePaySave" Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Оплатить" Click="ButtonOncePaySaveClick"/>
         <Button x:Name="ButtonOncePayBack" Grid.Row="8" Grid.Column="5" Grid.ColumnSpan="1" MinHeight="50" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center"  Content="Назад" Click="ButtonOncePayBackClick"/>
