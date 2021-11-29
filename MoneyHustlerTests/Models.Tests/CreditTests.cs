@@ -23,16 +23,6 @@ namespace MoneyHustlerTests.Models.Tests
             return credit;
         }
 
-        public DateTime GetTestDate(int key)
-        {
-            DateTime date = key switch
-            {
-                1 => new DateTime(2021, 12, 29),
-                2 => new DateTime(2022, 12, 29),
-                _ => new DateTime()
-            };
-            return date;
-        }
 
         [TestCase(1, 105508)]
         [TestCase(2, 233770)]
@@ -50,16 +40,15 @@ namespace MoneyHustlerTests.Models.Tests
             Assert.AreEqual(expectedValue, Math.Round((decimal)credit.Amount, 0));
         }
 
-        [TestCase(1, 83987, 20000, 1)]
-        [TestCase(2, 199365, 30000, 2)]
-        public void PayOneTimePaymentTest(int key, decimal expectedValue,  decimal payValue, int dateKey)
+        [TestCase(1, 76026, 20000)]
+        [TestCase(2, 165479, 30000)]
+        public void PayOneTimePaymentTest(int key, decimal expectedValue,  decimal payValue)
         {
             //arrange
             Credit credit = GetTestCredit(key);
-            DateTime date = GetTestDate(key);
             ExpenseType expenseType = new ExpenseType { Name = "Кредит" };
             //act
-            credit.PayOneTimePayment(payValue, expenseType, date);
+            credit.PayOneTimePayment(payValue, expenseType);
 
             //assert
             Assert.AreEqual(expectedValue, Math.Round((decimal)credit.Amount, 0));

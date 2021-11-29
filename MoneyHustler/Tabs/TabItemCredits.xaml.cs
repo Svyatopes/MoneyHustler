@@ -294,22 +294,10 @@ namespace MoneyHustler.Tabs
                 return;
             }
 
-            if (DatePickerPayDay.SelectedDate > _credit.CloseDate)
-            {
-                MessageBox.Show("На этот момент времени кредит уже закрыт!");
-                return;
-            }
-
-            if (DatePickerPayDay.SelectedDate < _credit.OpenDate)
-            {
-                MessageBox.Show("На этот момент времени кредит еще не открыт!");
-                return;
-            }
 
             var expenseType = Storage.GetOrCreateExpenseTypeByName("Кредит");
-            var paymentDate = DatePickerPayDay.SelectedDate;
 
-            _credit.PayOneTimePayment(enteredValue, expenseType, (DateTime)paymentDate);
+            _credit.PayOneTimePayment(enteredValue, expenseType);
 
             UIHelpers.ChangeWidthGridColumns(columnsOncePay, ColumnVisibilityOff);
             ButtonAdd.IsEnabled = true;
