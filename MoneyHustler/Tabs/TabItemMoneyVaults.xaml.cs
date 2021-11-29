@@ -1,20 +1,10 @@
-﻿using MoneyHustler.Models;
+﻿using MoneyHustler.Helpers;
+using MoneyHustler.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MoneyHustler.Helpers;
 
 namespace MoneyHustler.Tabs
 {
@@ -37,7 +27,7 @@ namespace MoneyHustler.Tabs
                 Vault = vault;
                 Name = vault.Name;
                 Balance = vault.GetBalance();
-                switch(vault)
+                switch (vault)
                 {
                     case Card:
                         CashBack = ((Card)vault).CashBack;
@@ -108,12 +98,12 @@ namespace MoneyHustler.Tabs
         {
             if (visible)
             {
-                GridColumnAddEditMoneyVault.Width = new GridLength(1, GridUnitType.Star);
+                UIHelpers.ChangeWidthGridColumns(GridColumnAddEditMoneyVault, 1);
                 GridListOfVaults.IsEnabled = false;
             }
             else
             {
-                GridColumnAddEditMoneyVault.Width = new GridLength(0, GridUnitType.Pixel);
+                UIHelpers.ChangeWidthGridColumns(GridColumnAddEditMoneyVault, 0);
                 GridListOfVaults.IsEnabled = true;
             }
         }

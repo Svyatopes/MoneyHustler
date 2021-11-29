@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -24,6 +19,11 @@ namespace MoneyHustler.Helpers
                 button.Visibility = Visibility.Hidden;
                 button.IsEnabled = false;
             }
+        }
+
+        public static void ChangeWidthGridColumns(ColumnDefinition column, double stars)
+        {
+            column.Width = new GridLength(stars, GridUnitType.Star);
         }
 
         public static void ChangeWidthGridColumns(ObservableCollection<ColumnDefinition> columns, double stars)

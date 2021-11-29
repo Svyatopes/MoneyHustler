@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyHustler.Models
 {
@@ -11,7 +7,7 @@ namespace MoneyHustler.Models
     {
         //данный вклад является копилкой и не имеет даты закрытия
         public decimal Percent { get; set; }
-        public int PaymentDay { get; set; } 
+        public int PaymentDay { get; set; }
 
         public DateTime OpenDate { get; set; } //дата открытия вклада
 

@@ -33,7 +33,7 @@ namespace MoneyHustler.Tabs
             columnsOncePay.Add(ColumnTextBoxOncePay);
             listOfCreditsView = new ObservableCollection<Credit>(_storageInstance.Credits);
             listViewForCredits.ItemsSource = listOfCreditsView;
-            ComboBoxCards.ItemsSource = _storageInstance.Vaults.Where(item => item.GetType() == typeof(Card)); ;
+            ComboBoxCards.ItemsSource = _storageInstance.Vaults.Where(item => item.GetType() == typeof(Card));
             ComboBoxPerson.ItemsSource = _storageInstance.Persons;
 
 
@@ -57,7 +57,7 @@ namespace MoneyHustler.Tabs
                 TextBoxPercent.Text = null;
 
 
-                ComboBoxCards.ItemsSource = _storageInstance.Vaults;
+                ComboBoxCards.ItemsSource = _storageInstance.Vaults.Where(item => item.GetType() == typeof(Card));
                 ComboBoxCards.SelectedItem = null;
 
                 ComboBoxPerson.ItemsSource = _storageInstance.Persons;
@@ -100,7 +100,7 @@ namespace MoneyHustler.Tabs
             TextBoxPercent.Text = Convert.ToString(_credit.Percent);
 
 
-            ComboBoxCards.ItemsSource = _storageInstance.Vaults;
+            ComboBoxCards.ItemsSource = _storageInstance.Vaults.Where(item => item.GetType() == typeof(Card));
             ComboBoxCards.SelectedItem = _credit.BindedCard;
 
             ComboBoxPerson.ItemsSource = _storageInstance.Persons;

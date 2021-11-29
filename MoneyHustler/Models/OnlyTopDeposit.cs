@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyHustler.Models
 {
@@ -16,7 +12,7 @@ namespace MoneyHustler.Models
 
         }
 
-        public OnlyTopDeposit(string name, decimal percent, DateTime openDate, DateTime dayOfCloseDeposit): base(name, percent, openDate)
+        public OnlyTopDeposit(string name, decimal percent, DateTime openDate, DateTime dayOfCloseDeposit) : base(name, percent, openDate)
         {
             DayOfCloseDeposit = dayOfCloseDeposit;
         }

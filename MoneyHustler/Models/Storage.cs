@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
-using Newtonsoft.Json;
 
 namespace MoneyHustler.Models
 {
@@ -13,15 +11,22 @@ namespace MoneyHustler.Models
         //Класс используется как хранилище всех данных в программе.
         private static Storage _instance;
 
-        public List<Credit> Credits = new List<Credit>();
-        public List<Person> Persons = new List<Person>();
-        public List<MoneyVault> Vaults = new List<MoneyVault>();
-        public List<IncomeType> IncomeTypes = new List<IncomeType>();
-        public List<ExpenseType> ExpenseTypes = new List<ExpenseType>();
+        public List<Credit> Credits;
+        public List<Person> Persons;
+        public List<MoneyVault> Vaults;
+        public List<IncomeType> IncomeTypes;
+        public List<ExpenseType> ExpenseTypes;
 
         private const string _path = "./storage.json";
 
-        private Storage() { }
+        private Storage()
+        {
+            Credits = new List<Credit>();
+            Persons = new List<Person>();
+            Vaults = new List<MoneyVault>();
+            IncomeTypes = new List<IncomeType>();
+            ExpenseTypes = new List<ExpenseType>();
+        }
 
         public static Storage GetInstance()
         {
@@ -149,7 +154,7 @@ namespace MoneyHustler.Models
             return (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpenses().Any(item => item.Person == person));
         }
 
-        public static bool CheckIfPersonExist(string enteredPerson)  
+        public static bool CheckIfPersonExist(string enteredPerson)
         {
             Storage _storageInstance = GetInstance();
             if (_storageInstance.Persons.Any(item => item.Name == enteredPerson))
