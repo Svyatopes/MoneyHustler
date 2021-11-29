@@ -1,4 +1,5 @@
-﻿using MoneyHustler.Models;
+﻿using MoneyHustler.Helpers;
+using MoneyHustler.Models;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -34,9 +35,10 @@ namespace MoneyHustler.Tabs
             _dateStartForView = DateTime.MinValue;
             _dateEndForView = DateTime.MaxValue;
 
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomePerson, _storageInstance.Persons);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomeVault, _storageInstance.Vaults);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomeType, _storageInstance.IncomeTypes);
+
             DatePickerIncomeDate.SelectedDate = DateTime.Now;
 
             _lastHeaderClicked = null;
@@ -224,9 +226,6 @@ namespace MoneyHustler.Tabs
                 {
                     _income.Vault.Remove(_income);
                     listOfIncomesView.Remove(_income);
-                    IncreaseBalanceOfSelectedVaultType(selectedVault, _income);
-                    //selectedVault.IncreaseBalance(_income);
-                    listOfIncomesView.Add(_income);
                 }
                 UpdateIncomesViewAndClearAddEditArea(); //иначе не обновляется
                 ChangeStateListAreaAndSetButtonAddEditContent("Добавить", true);
@@ -243,7 +242,6 @@ namespace MoneyHustler.Tabs
                    incomeType
                 );
                 IncreaseBalanceOfSelectedVaultType(selectedVault, newIncome);
-                //selectedVault.IncreaseBalance(newIncome);
                 listOfIncomesView.Add(newIncome);
                 MessageBox.Show("поднял");
             }
@@ -298,11 +296,6 @@ namespace MoneyHustler.Tabs
 
         #region ComboBoxes
 
-        private void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source) //
-        {
-            comboBox.ItemsSource = source;
-            comboBox.SelectedIndex = 0;
-        }
         private enum ComboBoxFilterItems
         {
             Vault,
@@ -315,13 +308,13 @@ namespace MoneyHustler.Tabs
             switch (ComboBoxFilterIncomes.SelectedIndex)
             {
                 case (int)ComboBoxFilterItems.Vault:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Vaults);
+                    UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxItemOfFilter, _storageInstance.Vaults);
                     break;
                 case (int)ComboBoxFilterItems.IncomeType:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.IncomeTypes);
+                    UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxItemOfFilter, _storageInstance.IncomeTypes);
                     break;
                 case (int)ComboBoxFilterItems.Persons:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilter, _storageInstance.Persons);
+                    UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxItemOfFilter, _storageInstance.Persons);
                     break;
                 default:
                     return;
@@ -354,22 +347,22 @@ namespace MoneyHustler.Tabs
             {
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.AllTime:
                     ChangeFilterByDatesInListView(DateTime.MinValue);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.Today:
                     ChangeFilterByDatesInListView(DateTime.Now.Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastWeek:
                     ChangeFilterByDatesInListView(DateTime.Now.AddDays(-7).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastMonth:
                     ChangeFilterByDatesInListView(DateTime.Now.AddMonths(-1).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.ChooseYourself:
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(true, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 default:
                     return;
@@ -484,21 +477,12 @@ namespace MoneyHustler.Tabs
                 foreach (Income item in allIncomes)
                     listOfIncomesView.Add(item);
             }
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomePerson, _storageInstance.Persons);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeVault, _storageInstance.Vaults);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxIncomeType, _storageInstance.IncomeTypes);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomePerson, _storageInstance.Persons);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomeVault, _storageInstance.Vaults);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxIncomeType, _storageInstance.IncomeTypes);
             Sort("Date", _lastDirection);
         }
 
-        private void ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(bool isEnableAndVisible)
-        {
-            if (isEnableAndVisible)
-                StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Visible;
-            else
-                StackPanelSelectDateIncomesOnDisplay.Visibility = Visibility.Hidden;
-
-            StackPanelSelectDateIncomesOnDisplay.IsEnabled = isEnableAndVisible;
-        }
         private void ChangeFilterByDatesInListView(DateTime startDate)
         {
             _dateStartForView = startDate;

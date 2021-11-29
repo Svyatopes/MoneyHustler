@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -31,6 +32,22 @@ namespace MoneyHustler.Helpers
             {
                 item.Width = new GridLength(stars, GridUnitType.Star);
             }
+        }
+
+        public static void SetComboBoxItemsSourceAndSelectZeroIndex(ComboBox comboBox, IEnumerable source)
+        {
+            comboBox.ItemsSource = source;
+            comboBox.SelectedIndex = 0;
+        }
+
+        public static void ChangeStackPanelVisibilityAndEnabled(bool isEnableAndVisible, StackPanel stackPanel)
+        {
+            if (isEnableAndVisible)
+                stackPanel.Visibility = Visibility.Visible;
+            else
+                stackPanel.Visibility = Visibility.Hidden;
+
+            stackPanel.IsEnabled = isEnableAndVisible;
         }
     }
 }

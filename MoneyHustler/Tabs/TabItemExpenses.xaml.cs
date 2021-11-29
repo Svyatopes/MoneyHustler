@@ -1,4 +1,5 @@
-﻿using MoneyHustler.Models;
+﻿using MoneyHustler.Helpers;
+using MoneyHustler.Models;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -60,9 +61,9 @@ namespace MoneyHustler.Tabs
             _dateStartForView = DateTime.MinValue;
             _dateEndForView = DateTime.MaxValue;
 
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxExpensePerson, _storageInstance.Persons);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxExpenseVault, _storageInstance.Vaults);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
             DatePickerChooseDateOfExpense.SelectedDate = DateTime.Now;
 
             _lastHeaderClicked = null;
@@ -294,11 +295,7 @@ namespace MoneyHustler.Tabs
         #endregion
 
         #region ComboBoxes
-        private void SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBox comboBox, IEnumerable source) //
-        {
-            comboBox.ItemsSource = source;
-            comboBox.SelectedIndex = 0;
-        }
+        
         private enum ComboBoxFilterItems
         {
             Vault,
@@ -311,13 +308,13 @@ namespace MoneyHustler.Tabs
             switch (ComboBoxFilterList.SelectedIndex)
             {
                 case (int)ComboBoxFilterItems.Vault:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilterList, _storageInstance.Vaults);
+                    UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxItemOfFilterList, _storageInstance.Vaults);
                     break;
                 case (int)ComboBoxFilterItems.ExpenseType:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilterList, _storageInstance.ExpenseTypes);
+                    UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxItemOfFilterList, _storageInstance.ExpenseTypes);
                     break;
                 case (int)ComboBoxFilterItems.Persons:
-                    SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxItemOfFilterList, _storageInstance.Persons);
+                    UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxItemOfFilterList, _storageInstance.Persons);
                     break;
                 default:
                     return;
@@ -349,22 +346,22 @@ namespace MoneyHustler.Tabs
             {
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.AllTime:
                     ChangeFilterByDatesInListView(DateTime.MinValue);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.Today:
                     ChangeFilterByDatesInListView(DateTime.Now.Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.LastWeek:
                     ChangeFilterByDatesInListView(DateTime.Now.AddDays(-7).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.LastMonth:
                     ChangeFilterByDatesInListView(DateTime.Now.AddMonths(-1).Date);
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.ChooseYourself:
-                    ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(true, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 default:
                     return;
@@ -391,16 +388,6 @@ namespace MoneyHustler.Tabs
         {
             _dateEndForView = (DateTime)DatePickerSelectEndPeriodExpenses.SelectedDate;
             UpdateExpensesViewAndClearAddEditArea();
-        }
-
-        private void ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(bool isEnableAndVisible)
-        {
-            if (isEnableAndVisible)
-                StackPanelSelectDateExpensesOnDisplay.Visibility = Visibility.Visible;
-            else
-                StackPanelSelectDateExpensesOnDisplay.Visibility = Visibility.Hidden;
-
-            StackPanelSelectDateExpensesOnDisplay.IsEnabled = isEnableAndVisible;
         }
 
         private void ChangeFilterByDatesInListView(DateTime startDate)
@@ -526,9 +513,9 @@ namespace MoneyHustler.Tabs
                 }
 
             }
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpensePerson, _storageInstance.Persons);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseVault, _storageInstance.Vaults);
-            SetItemSourceAndSelectedIndexToZeroOrSelectedItem(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxExpensePerson, _storageInstance.Persons);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxExpenseVault, _storageInstance.Vaults);
+            UIHelpers.SetComboBoxItemsSourceAndSelectZeroIndex(ComboBoxExpenseType, _storageInstance.ExpenseTypes);
             SortExpenses("Date", _lastDirection);
 
         }
