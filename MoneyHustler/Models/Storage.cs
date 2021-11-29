@@ -144,7 +144,7 @@ namespace MoneyHustler.Models
         }
 
 
-        public static bool IsPesonUsedInVaults(Person person)
+        public static bool IsPersonUsedInVaults(Person person)
         {
             return (Storage.GetAllIncomes().Any(item => item.Person == person) || Storage.GetAllExpenses().Any(item => item.Person == person));
         }

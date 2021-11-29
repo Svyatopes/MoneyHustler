@@ -47,7 +47,7 @@ namespace MoneyHustler.Tabs
         {
             var button = (Button)sender;
             var person = (Person)button.DataContext;
-            if (Storage.IsPesonUsedInVaults(person))
+            if (Storage.IsPersonUsedInVaults(person))
             {
                 MessageBox.Show("Этот человек присутствует в доходах или расходах, его удалить нельзя");
                 return;
