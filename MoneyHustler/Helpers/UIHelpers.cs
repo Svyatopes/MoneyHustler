@@ -40,7 +40,7 @@ namespace MoneyHustler.Helpers
             comboBox.SelectedIndex = 0;
         }
 
-        public static void ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(bool isEnableAndVisible, StackPanel stackPanel)
+        public static void ChangeStackPanelVisibilityAndEnabled(bool isEnableAndVisible, StackPanel stackPanel)
         {
             if (isEnableAndVisible)
                 stackPanel.Visibility = Visibility.Visible;

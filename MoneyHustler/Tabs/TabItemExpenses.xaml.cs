@@ -346,22 +346,22 @@ namespace MoneyHustler.Tabs
             {
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.AllTime:
                     ChangeFilterByDatesInListView(DateTime.MinValue);
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateExpensesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.Today:
                     ChangeFilterByDatesInListView(DateTime.Now.Date);
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateExpensesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.LastWeek:
                     ChangeFilterByDatesInListView(DateTime.Now.AddDays(-7).Date);
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateExpensesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.LastMonth:
                     ChangeFilterByDatesInListView(DateTime.Now.AddMonths(-1).Date);
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateExpensesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastExpenses.ChooseYourself:
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true, StackPanelSelectDateExpensesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(true, StackPanelSelectDateExpensesOnDisplay);
                     break;
                 default:
                     return;

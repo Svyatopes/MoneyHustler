@@ -351,22 +351,22 @@ namespace MoneyHustler.Tabs
             {
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.AllTime:
                     ChangeFilterByDatesInListView(DateTime.MinValue);
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateIncomesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.Today:
                     ChangeFilterByDatesInListView(DateTime.Now.Date);
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateIncomesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastWeek:
                     ChangeFilterByDatesInListView(DateTime.Now.AddDays(-7).Date);
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateIncomesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.LastMonth:
                     ChangeFilterByDatesInListView(DateTime.Now.AddMonths(-1).Date);
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(false, StackPanelSelectDateIncomesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(false, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 case (int)ItemsOfComboBoxSelectPeriodLastIncomes.ChooseYourself:
-                    UIHelpers.ChangeStateAndVisibilityStackPanelSelectDateOnDisplay(true, StackPanelSelectDateIncomesOnDisplay);
+                    UIHelpers.ChangeStackPanelVisibilityAndEnabled(true, StackPanelSelectDateIncomesOnDisplay);
                     break;
                 default:
                     return;
