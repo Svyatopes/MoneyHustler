@@ -34,7 +34,7 @@ namespace MoneyHustler.Helpers
             {
                 0 => string.Empty,
                 1 => "1 месяц",
-                <= 4 => $"{months} месяцев",
+                <= 4 => $"{months} месяца",
                 _ => $"{months} месяцев"
             };
 

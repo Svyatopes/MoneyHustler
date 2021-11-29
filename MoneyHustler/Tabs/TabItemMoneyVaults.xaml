@@ -96,7 +96,7 @@
                 <TextBox x:Name="TextBoxPercent" Grid.Row="1" Grid.Column="1" MinWidth="100" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
                 <StackPanel x:Name="StackPanelHowLong" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Vertical">
                     <Label Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Center">На какой срок</Label>
-                    <Slider x:Name="SliderHowLong" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Minimum="3" Maximum="120" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="Slider_ValueChanged"></Slider>
+                    <Slider x:Name="SliderHowLong" Margin="50,0" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Minimum="3" Maximum="120" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="Slider_ValueChanged"></Slider>
                     <Label x:Name="LabelHowLong" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center"></Label>
                 </StackPanel>
             </Grid>
